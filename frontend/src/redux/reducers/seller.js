@@ -2,20 +2,20 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     isAuthenticated: false,
-    user: {},
+    seller: {},
 }
 
-export const userSlice = createSlice({
-    name: "user",
+export const sellerSlice = createSlice({
+    name: "seller",
     initialState,
     reducers: {
-        addUser:(state,action)=>{
+        addSeller:(state,action)=>{
             state.isAuthenticated = true;
-            state.user=action.payload
+            state.seller=action.payload
         },
-        logout: (state) => {
+        sellerLogout: (state) => {
             state.isAuthenticated = false;
-            state.user=""
+            state.seller=""
         },
         clearErrors: (state) => {
             state.error = null;
@@ -24,10 +24,10 @@ export const userSlice = createSlice({
 })
 
 export const {
-    login,
-    logout,
-    addUser,
+    sellerLogin,
+    sellerLogout,
+    addSeller,
     clearErrors
-}=userSlice.actions
+}=sellerSlice.actions
 
-export default userSlice.reducer
+export default sellerSlice.reducer

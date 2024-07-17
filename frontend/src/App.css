@@ -3,3 +3,32 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+:root{
+    --color-50:#fff1f2;
+    --color-100:#ffe4e6;
+    --color-200:#fecdd3;
+    --color-300:#fda4af;
+    --color-400:#fb7185;
+    --color-500:#f43f5e;
+    --color-600:#e11d48;
+    --color-700:#be123c;
+    --color-800:#9f1239;
+    --color-900:#881337;
+    --color-950:#4c0519;
+}
+
+/* how to use it */
+/* var(--color-50) */
+
+/* rose50  #fff1f2
+rose100 #ffe4e6
+rose200 #fecdd3
+rose300 #fda4af
+rose400 #fb7185
+rose500 #f43f5e
+rose600 #e11d48
+rose700 #be123c
+rose800 #9f1239
+rose900 #881337
+rose950 #4c0519 */

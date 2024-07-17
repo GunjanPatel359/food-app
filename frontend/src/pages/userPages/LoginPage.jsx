@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
 import TextField from '@mui/material/TextField';
 import Button from "@mui/material/Button"
@@ -12,13 +12,28 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { backend_url } from "../../server";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../../redux/reducers/user";
 
 const LoginPage = () => {
+  const {user}=useSelector((state)=>state.user);
+
+  const dispatch=useDispatch()
+  const navigate=useNavigate();
+
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [visible, setVisible] = useState(false);
+  const [loading,setLoading]=useState(false);
 
-  const navigate=useNavigate();
+  useEffect(()=>{
+    setLoading(true)
+    if(user){
+      navigate("/profile")
+    }
+    setLoading(false)
+  },[user,navigate])
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -36,7 +51,9 @@ const LoginPage = () => {
       ).then((res) => {
         if (res.data.success) {
           toast.success("Logged in successfully")
-          navigate("/")
+          console.log(res.data)
+          dispatch(addUser(res.data.user))
+          navigate("/profile")
         } else {
           toast.error("Invalid credentials")
         }
@@ -47,7 +64,9 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="min-w-screen min-h-screen items-center justify-center flex">
+    <>
+    {!loading?(
+      <div className="min-w-screen min-h-screen items-center justify-center flex">
       <div className="w-[470px] m-auto justify-center items-center flex flex-col gap-3 border-e-blue-50 border py-[90px]">
         <h1 className="text-[30px] font-[600]">Login In</h1>
         <form className="flex flex-col gap-4 justify-center" onSubmit={handleSubmit}>
@@ -73,7 +92,8 @@ const LoginPage = () => {
         </form>
         <Link href="/sign-up"><p className="text-[15px]">{`Don't have an Account`}</p></Link>
       </div>
-    </div>
+    </div>):("")}
+    </>
   )
 }
 

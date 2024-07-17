@@ -9,20 +9,35 @@ import {
   HomePage,
   LoginPage,
   SignupPage,
-  ActivationPage
+  ActivationPage,
+  ProfilePage
 } from "./routes/userRoute"
 
-function App() {
+import {
+  SellerLoginPage,
+  SellerSignupPage,
+  SellerActivationPage,
+  SellerProfilePage
+} from "./routes/sellerRoute"
 
+function App() {
   return(
     <>
       <BrowserRouter>
       {/* router settings */}
         <Routes>
-          <Route path='/' element={<HomePage />} />
+          <Route path='/home' element={<HomePage />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/sign-up' element={<SignupPage />} />
+          <Route path='/profile' element={<ProfilePage />} />
           <Route path='/user/activation/:token' element={<ActivationPage/>}/>
+        </Routes>
+
+        <Routes>
+          <Route path='/seller/login' element={<SellerLoginPage/>} />
+          <Route path='/seller/sign-up' element={<SellerSignupPage/>} />
+          <Route path='/seller/profile' element={<SellerProfilePage/>} />
+          <Route path='/seller/activation/:token' element={<SellerActivationPage/>}/>
         </Routes>
 
         {/* react toastify configuration */}

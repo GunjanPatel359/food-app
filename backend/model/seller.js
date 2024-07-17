@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 const bcryptjs = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
-const userSchema = new mongoose.Schema({
+const sellerSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Please enter your name!"]
@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema({
   },
   addresses: [
     {
-      country:{
-        type:String,
+      country: {
+        type: String,
       },
       state:{
         type: String,
@@ -64,17 +64,17 @@ const userSchema = new mongoose.Schema({
 })
 
 //Hash password
-userSchema.pre("save", async function (next) {
+sellerSchema.pre("save", async function (next) {
   this.password = await bcryptjs.hash(this.password, 10)
 })
 
 //create token
-userSchema.methods.getJwtToken = async(id)=>{
-  return jwt.sign({ id }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRES })
+sellerSchema.methods.getJwtToken = async function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRES })
 }
 
 //comparepasswaord
-userSchema.methods.comparePass = async function (enteredPassword) {
+sellerSchema.methods.comparePass = async function (enteredPassword) {
   return await bcryptjs.compare(enteredPassword, this.password)
 }
 
@@ -94,4 +94,4 @@ userSchema.methods.comparePass = async function (enteredPassword) {
 //     return true
 // }
 
-module.exports = mongoose.model("User", userSchema)
+module.exports = mongoose.model("Seller", sellerSchema)

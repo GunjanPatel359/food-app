@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const path=require("path")
+const fs=require("fs")
 
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
@@ -12,6 +13,15 @@ const transporter = require("../utils/sendmailer");
 const sendToken = require("../utils/jwtToken");
 const {isAuthenticated} = require("../middleware/auth");
 const {upload}=require("../multer");
+
+router.get("/userinfo",isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const user=req.user
+        res.status(200).json({user})
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 400));
+    }
+}))
 
 router.post("/create-user", catchAsyncErrors(async (req, res, next) => {
     const { name, email, password, phoneNumber } = req.body
@@ -79,34 +89,65 @@ router.post('/login', catchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler("User doesn't exists", 400))
         }
         const isPasswordValid = await user.comparePass(password);
-
+        const {password:newPassword,...rest}=user
         if (!isPasswordValid) {
             return next(new ErrorHandler("Please provide the correct information", 400))
         }
-        sendToken(user, 200, res, "logged in successfull");
+        sendToken(user, 200, res, "logged in successfull",rest);
     } catch (err) {
         return next(new ErrorHandler(err.message, 400))
     }
 }))
 
-router.post('/setimage',isAuthenticated,upload.single('userimage'),catchAsyncErrors(async(req,res,next)=>{
-    try {
-        const {id}=req.user.id
-        const user=await User.findById({_id:id})
-        if(user.avatar){
-            fs.unlinkSync(path.join(__dirname,'../../uploads',user.avatar))
+router.post('/setimage',isAuthenticated,upload.single('userimage'),catchAsyncErrors(async (req, res, next) => {
+      try {
+        const { _id } = req.user._id;
+        const user = await User.findById(_id);
+        if (user.avatar) {
+          fs.unlinkSync(path.join(__dirname, '../../uploads', user.avatar));
         }
+        const filename = req.file.filename;
 
-        const filename=req.file.filename
-        const filepath=path.join(filename)
-        
-        const tempuser=await User.findByIdAndUpdate({_id:id},{avatar:filepath})
+        const tempuser = await User.findByIdAndUpdate(
+          { _id: _id },
+          { avatar: filename },
+          {new:true}
+        );
         res.status(201).json({
+          success: true,
+          user: tempuser
+        });
+      } catch (err) {
+        return next(new ErrorHandler(err.message, 400));
+      }
+    })
+  );
+
+router.patch('/add-address',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {_id}=req.user._id;
+        console.log(req.user)
+        if(req.user.addresses.length>=5){
+            return next( new ErrorHandler("you can't hold more than 5 Address",400))
+        }
+        const {country,state,city,address,zipCode}=req.body
+        if(!country||!city || !address || !zipCode){
+            return next (new ErrorHandler("please fill all the required fields",400))
+        }
+        if(zipCode.length!==6){
+            return next (new ErrorHandler("please provide valid zipcode",400))
+        }
+        const user = await User.findByIdAndUpdate(
+            {_id},
+            {$push:{addresses:{country,state,city,address,zipCode}}},
+            {new:true})
+        console.log(user)
+        res.status(200).json({
             success:true,
-            user:tempuser
+            user:user
         })
-    } catch (error) {
-        return next(new ErrorHandler(err.message, 400))
+    } catch (err) {
+        return next (new ErrorHandler(err.message,400))
     }
 }))
 

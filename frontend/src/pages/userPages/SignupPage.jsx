@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import TextField from '@mui/material/TextField';
 import Button from "@mui/material/Button"
@@ -12,6 +11,8 @@ import { toast } from "react-toastify";
 
 import axios from "axios"
 import {backend_url} from "../../server"
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
   const [name, setName] = useState("")
@@ -20,6 +21,19 @@ const SignupPage = () => {
   const [confirmPassword, setConfirmPassword] = useState()
   const [phoneNumber, setPhoneNumber] = useState()
   const [visible, setVisible] = useState(false);
+  const [loading,setLoading]=useState(false);
+
+  const navigate=useNavigate()
+
+  const {user}=useSelector((state)=>state.user)
+
+  useEffect(()=>{
+    setLoading(true)
+    if(user){
+      navigate("/profile")
+    }
+    setLoading(false)
+  },[user,navigate])
   
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -65,8 +79,10 @@ const SignupPage = () => {
       console.log(err)
     }
   }
-
+  
   return (
+    <>
+    {!loading?(
     <div className="min-w-screen min-h-screen items-center justify-center flex">
       <div className="w-[470px] align-middle m-auto justify-center items-center flex flex-col gap-3 border-e-blue-50 border py-[70px]">
         <h1 className="text-[30px] font-[600]">Sign up</h1>
@@ -96,7 +112,8 @@ const SignupPage = () => {
         </form>
         <Link href="/login"><p className="text-[15px]">Already have an existing account!</p></Link>
       </div>
-    </div>
+    </div>):("")}
+    </>
   )
 }
 

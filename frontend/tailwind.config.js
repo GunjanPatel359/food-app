@@ -17,9 +17,6 @@ module.exports = {
       },
     },
     extend: {
-      backgroundImage: {
-        'foodmain':"url('/frontend/public/food3.jpg')"
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
