@@ -10,7 +10,7 @@ const SlideMenu = ({menuItemList, select, setSelected }) => {
   return (
     <aside className='h-screen mt-1'>
       <nav className='h-full flex flex-col bg-white border-r shadow rounded border-rose-200 transition-all duration-1000'>
-        <div className='p-4 pb-2 flex justify-between items-center transition-all duration-1000'>
+        <div className='p-4 pb-2 flex justify-between items-center transition-all duration-1000 bg-transparent'>
           {/* <img
             src="https://img.logoipsum.com/243.svg"
             className={`overflow-hidden transition-all duration-1000 ${
@@ -23,7 +23,7 @@ const SlideMenu = ({menuItemList, select, setSelected }) => {
               expanded ? 'w-10 text-rose-500' : 'w-0 text-white '
             }`}
           >
-            <IoFastFoodOutline className='inline' size={40} />
+            <IoFastFoodOutline className='inline bg-transparent' size={40} />
           </span>
           <span
             className={`overflow-hidden bg-transparent text-[30px] text-rose-500 transition-all duration-1000 ${

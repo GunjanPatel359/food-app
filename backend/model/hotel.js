@@ -1,5 +1,4 @@
-import mongoose from 'mongoose'
-
+const mongoose=require('mongoose')
 const hotelSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -12,6 +11,10 @@ const hotelSchema = new mongoose.Schema({
   addresses: {
     country: {
       type: String,
+      required:true
+    },
+    state:{
+      type:String,
       required:true
     },
     city: {
@@ -28,23 +31,43 @@ const hotelSchema = new mongoose.Schema({
     }
   },
   avgreview:{
-    type:Double,
+    type:Number,
+  },
+  cusineTypes:{
+    type:[String]
   },
   // review:{
   //   type:[mongoose.Schema.Types.ObjectId],
   //   ref:'Review'
   // },
-  createdAt:{
-    type:Date,
-    default:Date.now()
-  },
   sellerId:{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Seller",
     required:true
   },
-  cusineTypes:{
-    type:[String]
+  // orderLimit:{
+  //   type:Number,
+  //   default:500,
+  // },
+  // currentOrderCount:{
+  //   type:Number,
+  //   default:0
+  // },
+  // subscriptions:{
+  //   type:mongoose.Schema.Types.ObjectId,
+  //   ref:'Subscription'
+  // },
+  addOns:{
+    type:[mongoose.Schema.Types.ObjectId],
+    ref:'AddOn'
+  },
+  createdAt:{ 
+    type:Date,
+    default:Date.now()
+  },
+  updatedAt:{
+    type:Date,
+    default:Date.now()
   }
 })
 

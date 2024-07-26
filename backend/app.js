@@ -9,12 +9,11 @@ app.use(cors({
     origin:"http://localhost:5174",
     credentials:true
 }))
-
 app.use(express.json())
 app.use(cookieParser())
-app.use("/",express.static("uploads"));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-
+app.use(bodyParser.json())
+app.use("/",express.static("uploads"));
 
 //config
 if(process.env.NODE_ENV !== "PRODUCTION"){
@@ -26,9 +25,13 @@ if(process.env.NODE_ENV !== "PRODUCTION"){
 //import routes
 const user=require("./controller/user");
 const seller=require("./controller/seller");
+const hotel=require("./controller/hotel");
+const subscription=require("./controller/subscription");
 
 app.use("/api/v1/user",user)
 app.use("/api/v1/seller",seller)
+app.use("/api/v1/restaurant",hotel)
+app.use("/api/v1/subscription",subscription)
 
 
 

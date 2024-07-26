@@ -1,23 +1,31 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useDispatch } from 'react-redux'
 import { addSeller, sellerLogout } from '../../redux/reducers/seller'
-import { backend_url } from '../../server'
-import { toast } from 'react-toastify'
+
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { backend_url } from '../../server'
+
 import { User } from 'lucide-react'
-import SlideMenuVariant2 from '../../components/slidemenu/SlideMenuVariant2'
-import SellerProfileHeader from '../../components/sellerprofile/SellerProfileHeader'
+import { BiPurchaseTagAlt } from "react-icons/bi";
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
-import SellerInfo from '../../components/sellerprofile/sellerprofilemodals/SellerInfo'
+
+// import SlideMenuVariant2 from '../../components/slidemenu/SlideMenuVariant2'
+import SellerInfo from '../../components/sellerprofile/SellerInfo'
+import SlideMenu from '../../components/slidemenu/SlideMenu'
+import SellerProfileHeader from '../../components/sellerprofile/SellerProfileHeader'
+import SellerResturantInfo from '../../components/sellerprofile/SellerResturantInfo'
+import SellerProfileModalProvider from '../../provider/SellerProfileModalProvider'
+import SellerSubscription from '../../components/sellerprofile/SellerSubscription'
 
 const SellerProfilePage = () => {
 const dispatch = useDispatch()
 const navigate=useNavigate()
 
 const [select, setSelected] = useState(0)
-const [loading,setLoading]=useState(false)
+const [loading,setLoading]=useState(true)
 
 useEffect(() => {
     const userinfo = async () => {
@@ -43,7 +51,8 @@ useEffect(() => {
 
   const menuItemList=[
     { icon:<User size={22}/>,text:"Profile", alert:false},
-    { icon:<HiOutlineBuildingStorefront size={22} />,text:"Hotel",alert:false }
+    { icon:<HiOutlineBuildingStorefront size={22} />,text:"Hotel",alert:false },
+    { icon:<BiPurchaseTagAlt size={22}/>,text:"subscription",alert:false},
   ]
 
   return (
@@ -54,14 +63,16 @@ useEffect(() => {
       
       <div className='flex w-full transition-all duration-1000'>
       
-        <SlideMenuVariant2 select={select} setSelected={setSelected} menuItemList={menuItemList}/>
+        <SlideMenu select={select} setSelected={setSelected} menuItemList={menuItemList}/>
 
         <div className='w-full'>
           {select === 0 && <SellerInfo/>} 
+          {select === 1 && <SellerResturantInfo/>}
+          {select === 2 && <SellerSubscription/>}
           {/* {select === 1 && <ProfileAddresses/>}  */}
         </div>
       </div>
-      {/* <ProfileModalProvider/> */}
+      <SellerProfileModalProvider/>
     </>
     ):("") }
     </>

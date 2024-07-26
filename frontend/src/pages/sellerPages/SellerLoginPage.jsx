@@ -19,13 +19,11 @@ import { backend_url } from '../../server'
 import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { sellerLogin } from '../../redux/reducers/seller'
+import { useSelector } from 'react-redux'
 
 const SellerLoginPage = () => {
   const [loading,setLoading]=useState(false);
   const navigate=useNavigate()
-  const dispatch=useDispatch()
 
   const {seller}=useSelector((state)=>state.seller)
 
@@ -55,7 +53,6 @@ const SellerLoginPage = () => {
   })
   const onSubmit = async(values) => {
     try {
-      console.log(values)
       axios.post(`${backend_url}/seller/login`,{
         email:values.email,
         password:values.password,
@@ -63,9 +60,10 @@ const SellerLoginPage = () => {
         headers:{"Content-Type":"application/json"},
         withCredentials:true
       }).then((res)=>{
+        console.log(res.data)
         if(res.data.success){
           toast.success(res.data.message)
-          dispatch(sellerLogin(res.data.seller))
+          // dispatch(sellerLogin(res.data.seller))
           form.reset()
           navigate("/seller/profile")
         }

@@ -20,11 +20,10 @@ const ProfilePage = () => {
   const navigate=useNavigate()
   
   const [select, setSelected] = useState(0)
-  const [loading,setLoading]=useState(false)
+  const [loading,setLoading]=useState(true)
 
   useEffect(() => {
     const userinfo = async () => {
-      setLoading(true)
       try {
         const res = await axios.get(`${backend_url}/user/userinfo`, {
           withCredentials: true
@@ -51,7 +50,7 @@ const ProfilePage = () => {
 
   return (
     <>{!loading ? (
-      <>
+      <div>
       <ProfileHeader />
       
       <div className='flex w-full transition-all duration-1000'>
@@ -65,7 +64,7 @@ const ProfilePage = () => {
         </div>
       </div>
       <ProfileModalProvider/>
-    </>
+    </div>
     ):("") }
     </>
   )

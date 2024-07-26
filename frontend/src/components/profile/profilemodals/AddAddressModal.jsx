@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react'
 import { useModal } from '../../../customhooks/zusthook'
 
@@ -25,84 +26,96 @@ import { backend_url } from '../../../server'
 import { addUser } from '../../../redux/reducers/user'
 import { useDispatch } from 'react-redux'
 
-const AddAddressModal = () => {
-  const dispatch = useDispatch()
-  const { isOpen, type, onClose } = useModal()
-  const isModalOpen = isOpen && type === 'add-address'
-
-  const [mcountry, setCountry] = useState('')
-  const [mstate, setState] = useState('')
-  const [city, setCity] = useState('')
-  const [address, setAddress] = useState('')
-  const [zipCode, setZipCode] = useState()
-
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = 'hidden' 
-    } else {
-      document.body.style.overflow = '' 
-    }
-
-    return () => {
-      document.body.style.overflow = '' 
-    }
-  }, [isModalOpen])
-
-  if (!isModalOpen) {
-    return null
-  }
-
-  const closeModal = () => {
-    onClose()
-  }
-
-  const handleSubmit = async e => {
-    e.preventDefault()
-    if (!mcountry || !mstate || !city || !address || !zipCode) {
-      return toast.error('Please fill all the required fields')
-    }
-    const country = Country.getCountryByCode(mcountry).name
-    const state = State.getStateByCode(mstate).name
-    if (zipCode.length !== 6) {
-      return toast.error('invalid zipcode')
-    }
-    try {
-      const res = await axios.patch(
-        `${backend_url}/user/add-address`,
-        {
-          country,
-          state,
-          city,
-          address,
-          zipCode
-        },
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true
-        }
-      )
-      if (res.status === 200 || res.status === 201) {
-        dispatch(addUser(res.user))
-        toast.success('Address added successfully')
-        onClose()
-      } else {
-        return toast.error(res.data.message)
-      }
-    } catch (err) {
-      return toast.error(err.response.data.message)
-    }
-  }
+const Transition = ({ children, show, duration = 500, easing = 'ease-in' }) => {
+  const className = `fixed inset-0 width-[100%] height-[100%] flex justify-center items-center transition-all duration-${duration} ease-${easing} ${
+    show ? 'backdrop-brightness-50 opacity-100 visible' : 'backdrop-brightness-100 opacity-0 invisible'
+  }`;
 
   return (
-    <>
-      <div className='fixed top-0 left-0 w-[100vw] h-[100vh] flex justify-center backdrop-brightness-50 items-center'>
-        <div className='w-[450px] h-fit flex flex-col bg-gradient-to-tr from-rose-500 to-rose-400 border-2 border-rose-200 text-white shadow-2xl rounded-xl'>
-          <div className='flex justify-end text-right pr-3 pt-3'>
-            <MdCancel onClick={() => closeModal()} size={25} />
-          </div>
-          <div className='p-6 pt-0 gap-y-1 flex flex-col'>
-            <div className='text-center text-xl mb-3'>Add Address</div>
-            <Select
+    <div className={className}>
+      <div className={`transition-all ease-${easing} duration-${duration} w-[450px] flex flex-col bg-gradient-to-tr from-rose-500 to-rose-400 border-2 border-rose-200 text-white shadow-2xl rounded-xl ${show?"scale-100 opacity-100":"scale-125 opacity-0"}`}>
+        {children}  
+      </div>
+    </div>
+  );
+};
+
+const AddAddressModal = () => {
+  const dispatch = useDispatch()
+    const { isOpen, type, onClose } = useModal()
+    const isModalOpen = isOpen && type === 'add-address'
+  
+    const [mcountry, setCountry] = useState('')
+    const [mstate, setState] = useState('')
+    const [city, setCity] = useState('')
+    const [address, setAddress] = useState('')
+    const [zipCode, setZipCode] = useState()
+  
+    useEffect(() => {
+      if (isModalOpen) {
+        document.body.style.overflow = 'hidden' 
+      } else {
+        document.body.style.overflow = '' 
+      }
+  
+      return () => {
+        document.body.style.overflow = '' 
+      }
+    }, [isModalOpen])
+  
+    if (!isModalOpen) {
+      return <Transition show={isModalOpen}></Transition>
+    }
+  
+    const closeModal = () => {
+      onClose()
+    }
+  
+    const handleSubmit = async e => {
+      e.preventDefault()
+      if (!mcountry || !mstate || !city || !address || !zipCode) {
+        return toast.error('Please fill all the required fields')
+      }
+      const country = Country.getCountryByCode(mcountry).name
+      const state = State.getStateByCodeAndCountry(mstate,mcountry).name
+      if (zipCode.length !== 6) {
+        return toast.error('invalid zipcode')
+      }
+      try {
+        const res = await axios.patch(
+          `${backend_url}/user/add-address`,
+          {
+            country,
+            state,
+            city,
+            address,
+            zipCode
+          },
+          {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true
+          }
+        )
+        if (res.status === 200 || res.status === 201) {
+          dispatch(addUser(res.data.user))
+          toast.success('Address added successfully')
+          onClose()
+        } else {
+          return toast.error(res.data.message)
+        }
+      } catch (err) {
+        return toast.error(err.response.data.message)
+      }
+    }
+
+  return (
+    <Transition show={isModalOpen}>
+           <div className='flex justify-end text-right pr-3 pt-3'>
+             <MdCancel onClick={() => closeModal()} size={25} />
+           </div>
+           <div className='p-6 pt-0 gap-y-1 flex flex-col'>
+             <div className='text-center text-white text-xl mb-3'>Add Address</div>
+             <Select
               onValueChange={value => setCountry(value)}
               className='border-2 rounded-xl'
               required
@@ -213,10 +226,8 @@ const AddAddressModal = () => {
               Submit
             </Button>
           </div>
-        </div>
-      </div>
-    </>
-  )
-}
+    </Transition>
+  );
+};
 
-export default AddAddressModal
+export default AddAddressModal 

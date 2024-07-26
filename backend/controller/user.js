@@ -11,8 +11,17 @@ const User = require("../model/user");
 
 const transporter = require("../utils/sendmailer");
 const sendToken = require("../utils/jwtToken");
-const {isAuthenticated} = require("../middleware/auth");
+const {isAuthenticated, isSellerAuthenticated} = require("../middleware/auth");
 const {upload}=require("../multer");
+
+router.get("/getpaypalclientdetail",isAuthenticated || isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try{
+
+        return res.status(200).json({clientId:process.env.PAYPAL_CLIENT_ID})
+    }catch{
+        return res.status(401).json({msg:"please try again later"})
+    }
+}))
 
 router.get("/userinfo",isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
     try {

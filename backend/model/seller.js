@@ -49,6 +49,14 @@ const sellerSchema = new mongoose.Schema({
     // required: true,
     // }
   },
+  subscriptionIds:{
+    type:[mongoose.Schema.Types.ObjectId],
+    ref:"Subscription"
+  },
+  restaurantIDs:{
+    type:[mongoose.Schema.Types.ObjectId],
+    ref:"Hotel"
+  },
   createdAt: {
     type: Date,
     default: Date.now(),

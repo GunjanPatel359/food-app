@@ -15,6 +15,7 @@ const ProfileInfo = () => {
   const [previewImage, setPreviewImage] = useState(null)
   const form=user.name
   const [name,setName]=useState(user.name)
+  
   useEffect(()=>{
     setPreviewImage(user.avatar)
   },[user.avatar])

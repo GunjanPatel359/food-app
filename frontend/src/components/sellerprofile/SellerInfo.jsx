@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { FaRegUser } from 'react-icons/fa'
-import { addSeller } from '../../../redux/reducers/seller'
+import { addSeller } from '../../redux/reducers/seller'
 import { useDispatch, useSelector } from 'react-redux'
-import { backend_url, img_url } from '../../../server'
+import { backend_url, img_url } from '../../server'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 
@@ -29,6 +29,7 @@ const SellerInfo = () => {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       }).then((res) => {
+        console.log(res)
           toast.success(res.data);
           dispatch(addSeller(res.data.seller))
           setPreviewImage(res.data.seller.avatar)

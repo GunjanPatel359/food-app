@@ -17,12 +17,21 @@ import {
   SellerLoginPage,
   SellerSignupPage,
   SellerActivationPage,
-  SellerProfilePage
+  SellerProfilePage,
+  SellerRestaurant
 } from "./routes/sellerRoute"
 
+// import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+
 function App() {
+  // const initialOptions = {
+  //   clientId: "AfFPQyFjoighEawdekfr2QzGVeVSuMwbZoldGgZ-6GQ8T04sCkit6SPfw0zMeOJQ-LZ_Ma8S_S9Mxplq",
+  //   currency: "USD",
+  //   intent: "capture",
+  // };
   return(
     <>
+    {/* <PayPalScriptProvider options={initialOptions}> */}
       <BrowserRouter>
       {/* router settings */}
         <Routes>
@@ -38,6 +47,7 @@ function App() {
           <Route path='/seller/sign-up' element={<SellerSignupPage/>} />
           <Route path='/seller/profile' element={<SellerProfilePage/>} />
           <Route path='/seller/activation/:token' element={<SellerActivationPage/>}/>
+          <Route path='/seller/:hotelId' element={<SellerRestaurant/>} />
         </Routes>
 
         {/* react toastify configuration */}
@@ -55,6 +65,7 @@ function App() {
           />
 
       </BrowserRouter>
+    {/* </PayPalScriptProvider> */}
     </>
   )
 }

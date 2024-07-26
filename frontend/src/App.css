@@ -4,6 +4,15 @@
     box-sizing: border-box;
 }
 
+*::-webkit-scrollbar {
+    display: none;
+  }
+  
+*{
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+  }
+
 :root{
     --color-50:#fff1f2;
     --color-100:#ffe4e6;
