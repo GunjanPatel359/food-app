@@ -6,8 +6,9 @@ const SellerBuyingSubscriptionModal = () => {
     const {data,isOpen, type } = useModal()
   const isModelOpen = isOpen && type === 'purchase-subscription'
   return (
-    <div className='h-auto w-[550px]'>
-        {isModelOpen?(
+    <>
+    {isModelOpen?(
+      <div className='h-auto w-[550px]'>
             <>
                 <div className='w-full font-bold text-2xl p-6'>
                     Purchasing subscription
@@ -42,8 +43,9 @@ const SellerBuyingSubscriptionModal = () => {
             </div>
             </div>
             </>
+            </div>
         ):""}
-        </div>
+      </>
   )
 }
 

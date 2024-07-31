@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import SellerProfileHeader from '../../components/sellerprofile/SellerProfileHeader'
 import { backend_url, img_url } from '../../server'
 import axios from 'axios'
 import { X } from 'lucide-react'
@@ -54,17 +53,17 @@ const SellerRestaurant = () => {
     }
   }
   return (
-    <div>
+    <div className='flex justify-center '>
       {isUserVerified && hotel && (
         <>
-          <SellerProfileHeader />
-          <div className='flex mt-16 lg:mt-0'>
-            <div className=' m-10 border border-rose-400 w-full flex rounded-xl shadow-xl shadow-rose-50 lg:m-32 p-2'>
-              <div className='w-[50%] flex items-center'>
-                <div className='w-full flex border border-rose-100'>
+          <div className='flex flex-col m-14 lg:mx-20 mb-3 max-w-[900px]'>
+            <div className='text-rose-500 text-3xl font-semibold mb-4'>Restaurant Info</div>
+            <div className='border border-rose-400 w-full rounded-xl shadow-xl shadow-rose-50 p-2 flex flex-col align-center'>
+              <div className='flex items-center p-3'>
+                <div className='w-full flex border rounded-xl border-rose-100 shadow-md shadow-rose-200'>
                   <form className='m-auto w-full'>
                     <img
-                      className='m-auto w-auto transition-all'
+                      className='m-auto w-auto transition-all rounded-xl'
                       src={`${img_url}/${previewImage}`}
                       onClick={() => fileInputRef.current.click()}
                     />
@@ -78,7 +77,7 @@ const SellerRestaurant = () => {
                   </form>
                 </div>
               </div>
-              <div className='w-[50%]'>
+              <div className=''>
                 <HotelInfo
                   hotel={{
                     name: hotel.name,
@@ -221,7 +220,7 @@ const HotelInfo = ({ hotel ,setHotel,hotelId }) => {
         onSubmit={handleSubmit}
       >
         <div className='flex'>
-          <div className='m-auto mx-0 text-rose-500 font-bold'>
+          <div className='m-auto mx-0 text-rose-500 font-bold w-[200px]'>
             Restaurant name:{' '}
           </div>
         </div>

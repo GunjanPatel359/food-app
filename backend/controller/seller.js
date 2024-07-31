@@ -9,6 +9,8 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 
 const User = require("../model/user");
 const Hotel = require("../model/hotel");
+const Member = require("../model/member");
+const Role = require("../model/role");
 const Subscription = require("../model/subscription");
 const SubscriptionLog = require("../model/subscriptionlog")
 
@@ -18,6 +20,7 @@ const { upload } = require("../multer");
 const Seller = require("../model/seller");
 const { createSellerSubscription, captureSellerSubscriptionOrder } = require("../utils/paypal-api");
 const { SubscriptionPlans } = require("../utils/SubscriptionPlans");
+const { checkForSellerSubscription } = require("../utils/repeatQuery");
 
 router.get("/sellerinfo", isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
@@ -237,6 +240,24 @@ router.post('/subscription', async (req, res, next) => {
         if (!subscriptionpack) {
             return next(new ErrorHandler("subscription not found", 400))
         }
+        if (seller.subscriptionIds.length < 1) {
+            if (seller.restaurantIDs.length > subscriptionpack.hotelLimits) {
+                return next(new ErrorHandler("You can't downgrade your subscription while you have more restaurant than subscription pack provide", 400))
+            }
+        } else {
+            const currentSubscription = await Subscription.findOne({
+                _id: seller.subscriptionIds[seller.subscriptionIds.length - 1],
+                sellerId: seller._id
+            })
+            const currentSubscriptionpack = SubscriptionPlans.find((item) => {
+                if (item.id === currentSubscription.subscriptionId) {
+                    return item
+                }
+            })
+            if (subscriptionpack.level < currentSubscriptionpack.level) {
+                return next(new ErrorHandler("You can't downgrade your subscription while it's running", 400))
+            }
+        }
         const { jsonResponse, httpStatusCode } = await createSellerSubscription(subscriptionpack);
         const subscriptionlog = await SubscriptionLog.create({
             orderID: jsonResponse.id,
@@ -261,37 +282,53 @@ router.post('/subscription/:orderID', async (req, res, next) => {
             const subscriptionlog = await SubscriptionLog.findOneAndUpdate({
                 orderID: orderID,
                 sellerId: seller._id
-            },{
-                status: "subscriptionCompleted"
-            },{new:true})
+            }, {
+                status: "transactionCompleted"
+            }, { new: true })
+            const checkcurrentsellersubscriptionpack = await checkForSellerSubscription(seller)
             const subscriptionpack = SubscriptionPlans.find((item) => {
                 if (item.id === subscriptionlog.subscriptionId) {
                     return item
                 }
             })
-            let enddate
-            if(subscriptionpack.duration=="month"){
-                enddate=Date.now() + 86400000 * 30
-            }else if(subscriptionpack.duration=="year"){
-                enddate=Date.now() + 86400000 * 365
-            }else{
-                enddate=Date.now() + 86400000 * 1
+            let subscription
+            if (checkcurrentsellersubscriptionpack == null) {
+                let enddate
+                if (subscriptionpack.duration == "month") {
+                    enddate = Date.now() + 86400000 * 30
+                } else if (subscriptionpack.duration == "year") {
+                    enddate = Date.now() + 86400000 * 365
+                } else {
+                    enddate = Date.now() + 86400000 * 1
+                }
+                subscription = await Subscription.create({
+                    sellerId: seller._id,
+                    orderID: jsonResponse.id,
+                    active: true,
+                    price: jsonResponse.purchase_units[0].payments.captures[0].value,
+                    currencyCode: jsonResponse.purchase_units[0].payments.captures[0].currency_code,
+                    subscriptionId: subscriptionpack.id,
+                    plan: subscriptionpack.title,
+                    orderLimit: subscriptionpack.orderLimit,
+                    startingDate: Date.now(),
+                    endingDate: enddate
+                })
+            } else {
+                subscription = await Subscription.create({
+                    sellerId: seller._id,
+                    orderID: jsonResponse.id,
+                    active: false,
+                    price: jsonResponse.purchase_units[0].payments.captures[0].value,
+                    currencyCode: jsonResponse.purchase_units[0].payments.captures[0].currency_code,
+                    subscriptionId: subscriptionpack.id,
+                    plan: subscriptionpack.title,
+                    orderLimit: subscriptionpack.orderLimit,
+                })
             }
-            const subscription = await Subscription.create({
-                sellerId: seller._id,
-                orderID: jsonResponse.id,
-                price: jsonResponse.purchase_units[0].payments.captures[0].value,
-                currencyCode: jsonResponse.purchase_units[0].payments.captures[0].currency_code,
-                subscriptionId:subscriptionpack.id,
-                plan: subscriptionpack.title,
-                orderLimit:subscriptionpack.orderLimit,
-                startingDate: Date.now(),
-                endingDate: enddate
-            })
-            const sellerres=await Seller.findOneAndUpdate({
-                _id:seller._id,
-            },{
-                $push:{subscriptionIds:subscription._id}
+            const sellerres = await Seller.findOneAndUpdate({
+                _id: seller._id,
+            }, {
+                $push: { subscriptionIds: subscription._id }
             })
         }
         res.status(httpStatusCode).json(jsonResponse);
@@ -300,5 +337,84 @@ router.post('/subscription/:orderID', async (req, res, next) => {
         res.status(500).json({ error: "Failed to capture order." });
     }
 })
+
+router.get('/gethoteldata/:hotelId', isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const seller = req.seller
+        const { hotelId } = req.params;
+        const hotel = await Hotel.findOne({ _id: hotelId }).populate("roleIds");
+        const member = await Member.findOne({
+            restaurantId: hotel._id,
+            sellerId: seller._id,
+        })
+
+        if (!member) {
+            return next(new ErrorHandler("Unauthorized access", 401))
+        }
+
+        const role = await Role.findOne({
+            _id: member.roleId,
+            restaurantId: hotelId
+        })
+
+        res.status(200).json({ success: true, role, hotel, member })
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 400))
+    }
+}))
+
+router.get('/search/inviteseller',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const { query } = req.query
+        if(!query || query.length <2){
+            return next(new ErrorHandler("Invalid search query", 400))
+        }
+        const data = await Seller.find({ 
+            $or: [
+                { name: { $regex: query, $options: 'i' } },
+                { email: { $regex: query, $options: 'i' } }
+            ]
+         });
+         if(data.length>0){
+            const parsingData=data.map((item)=>{
+                return {
+                    _id:item._id,
+                    name:item.name,
+                    email:item.email,
+                    avatar:item.avatar
+                }
+            })
+           return res.status(200).json({success:true,data:parsingData})
+         }
+         return res.status(200).json({success:false,message:"member not found"})
+    } catch (error) {
+        console.log(error)
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+router.get('/search/invitesellerwithid',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const { query } = req.query
+        if(!query || query.length!=24){
+            return next(new ErrorHandler("Invalid search query", 400))
+        }
+        const data = await Seller.findOne({ 
+            _id:query
+         });
+         if(!data){
+           return res.status(200).json({success:false,message:"member not found"})
+         }
+         const parsingData={
+            _id:data._id,
+            name:data.name,
+            email:data.email,
+            avatar:data.avatar
+         } 
+         res.status(200).json({success:true,data:parsingData})
+    } catch (error) {
+        console.log(error)
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
 
 module.exports = router

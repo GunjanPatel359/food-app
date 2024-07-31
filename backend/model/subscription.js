@@ -19,8 +19,7 @@ const subscriptionSchema = new mongoose.Schema({
         type:Number,
     },
     active:{
-        type:Boolean,
-        default:true
+        type:Boolean
     },
     plan:{
         type:String,
@@ -31,10 +30,12 @@ const subscriptionSchema = new mongoose.Schema({
     },
     startingDate:{
         type:Date,
-        default:Date.now()
     },
     endingDate:{
         type:Date,
+    },
+    hotelLimit:{
+        type:Number,
     },
     orderLimit:{
         type:Number,

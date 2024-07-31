@@ -6,51 +6,82 @@ const path = require('path')
 const { upload } = require('../multer')
 const ErrorHandler = require('../utils/ErrorHandler')
 const catchAsyncErrors = require('../middleware/catchAsyncErrors')
-const { isSellerAuthenticated, isRestaurantSellerAuthenticated } = require('../middleware/auth')
+const { isSellerAuthenticated } = require('../middleware/auth')
 
 const Hotel = require('../model/hotel')
 const Seller = require('../model/seller')
+const Role = require('../model/role')
+const Member = require('../model/member')
 const Subscription = require('../model/subscription')
+
+const {checkForSellerSubscription}=require("../utils/repeatQuery")
 
 router.post('/create-restaurant', isSellerAuthenticated, upload.single('restaurantimage'), catchAsyncErrors(async (req, res, next) => {
     try {
-        const {
-            name,
-            country,
-            state,
-            city,
-            address,
-            zipCode,
-            cusineTypes
-        } = req.body
-        const subscription=await Subscription.findOne({
-            sellerId:req.seller._id,
-            active:true
-        })
-        const addresses = {
-            country,
-            state,
-            city,
-            address,
-            zipCode
+        let sellerinfo=req.seller;
+
+        const {name,country,state,city,address,zipCode,cusineTypes} = req.body
+
+        let subscription=await checkForSellerSubscription(sellerinfo)
+        if(subscription==null){
+            return next(new ErrorHandler('You do not have any active plan to continue with', 400))
         }
+        if(sellerinfo.restaurantIDs.length>=subscription.hotelLimit){
+            return next(new ErrorHandler(`You cannot create more than ${subscription.hotelLimit} restaurant`))
+        }
+
+        const addresses = {country,state,city,address,zipCode}
         const filename = req.file.filename;
-        const hotel = await Hotel.create({
+        let hotel = await Hotel.create({
             name,
             imgUrl: filename,
             addresses,
             cusineTypes,
-            sellerId: req.seller._id
+            sellerId: sellerinfo._id
         })
         if (!hotel) {
-            return next(new Error('Something went wrong',400))
+            return next(new ErrorHandler('Something went wrong',400))
         }
+
+        let role=await Role.create({
+            sellerId:sellerinfo._id,
+            restaurantId:hotel._id,
+            roleName:"Owner",
+            order:1,
+            roleDescription:"Owner",
+            canUpdateRestaurantImg:true,
+            canUpdateRestaurantDetails:true,
+            adminPower:true,
+            canAddMember:true
+        })
+
+        hotel=await Hotel.findOneAndUpdate({
+            _id:hotel._id,
+        },{
+            $push:{roleIds:role._id}
+        })
+
+        const member=await Member.create({
+            sellerId:sellerinfo._id,
+            restaurantId:hotel._id,
+            roleId:role._id
+        })
+
+        role=await Role.findOneAndUpdate({
+            _id:role._id
+        },{
+            $push:{memberList:member._id}
+        })
+
         const seller = await Seller.findOneAndUpdate({
-            _id: req.seller._id
+            _id: sellerinfo._id
         }, {
             $push: { restaurantIDs: hotel._id }
         }, { new: true })
+
+
         res.status(200).json({ success: true, seller })
+
     } catch (err) {
         return next(new ErrorHandler(err.message, 400));
     }

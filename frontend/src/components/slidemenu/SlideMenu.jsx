@@ -70,6 +70,9 @@ const SlideMenu = ({menuItemList, select, setSelected }) => {
 }
 
 export function SidebarItem ({ item, expanded,active,setSelected,index }) {
+  if(!item || item==undefined || item==null){
+    return <></>
+  }
   const icon=item.icon;
   const text=item.text;
   const alert=item.alert;
@@ -81,8 +84,8 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
         group transition-all duration-1000 h-[47px] shadow
         ${
           active
-            ? ' bg-rose-400 text-white' //bg-gradient-to-tr from-rose-400 to-rose-300
-            : 'hover:bg-red-100 bg-white text-rose-400'
+            ? ' bg-rose-500 text-white' //bg-gradient-to-tr from-rose-400 to-rose-300
+            : 'hover:bg-red-100 bg-white text-rose-500'
         }
     `}
     onClick={()=>setSelected(index)}
@@ -100,7 +103,7 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
         <div
           className={`absolute right-2 w-2 h-2 rounded ${
             expanded ? '' : 'top-2'
-          } ${active?"bg-white":"bg-rose-300"} `}
+          } ${active?"bg-white":"bg-rose-500"} `}
         />
       )}
 
@@ -111,7 +114,7 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
           text-sm
           invisible opacity-20 -translate-x-3 transition-all duration-200
           group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
-          ${active?"bg-gradient-to-tr from-rose-400 to-rose-300 text-white":"bg-rose-50"}
+          ${active?"bg-gradient-to-tr from-rose-500 to-rose-300 text-white":"bg-rose-50"}
       `}
         >
           {text}

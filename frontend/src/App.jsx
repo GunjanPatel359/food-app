@@ -18,7 +18,7 @@ import {
   SellerSignupPage,
   SellerActivationPage,
   SellerProfilePage,
-  SellerRestaurant
+  SellerRestaurantPage
 } from "./routes/sellerRoute"
 
 // import { PayPalScriptProvider } from '@paypal/react-paypal-js';
@@ -47,7 +47,7 @@ function App() {
           <Route path='/seller/sign-up' element={<SellerSignupPage/>} />
           <Route path='/seller/profile' element={<SellerProfilePage/>} />
           <Route path='/seller/activation/:token' element={<SellerActivationPage/>}/>
-          <Route path='/seller/:hotelId' element={<SellerRestaurant/>} />
+          <Route path='/seller/:hotelId' element={<SellerRestaurantPage/>} />
         </Routes>
 
         {/* react toastify configuration */}

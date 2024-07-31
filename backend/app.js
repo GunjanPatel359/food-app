@@ -27,11 +27,15 @@ const user=require("./controller/user");
 const seller=require("./controller/seller");
 const hotel=require("./controller/hotel");
 const subscription=require("./controller/subscription");
+const role=require("./controller/role");
+const category=require("./controller/category");
 
 app.use("/api/v1/user",user)
 app.use("/api/v1/seller",seller)
 app.use("/api/v1/restaurant",hotel)
 app.use("/api/v1/subscription",subscription)
+app.use("/api/v1/role",role)
+app.use("/api/v1/category",category)
 
 
 

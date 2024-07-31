@@ -8,7 +8,8 @@ const subscriptionLogSchema=new mongoose.Schema({
         type:String,
     },
     sellerId:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Seller"
     },
     subscriptionId:{
         type:String,

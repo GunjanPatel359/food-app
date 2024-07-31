@@ -1,6 +1,6 @@
 const express= require('express')
-const { SubscriptionPlans } = require('../utils/SubscriptionPlans')
 const router= express.Router()
+const { SubscriptionPlans } = require('../utils/SubscriptionPlans')
 
 router.get('/all/subscription-plans',async(req,res,next)=>{
     const plans=SubscriptionPlans

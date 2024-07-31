@@ -24,7 +24,7 @@ const SellerSubscription = () => {
     <div className="m-10">
     <div className="flex justify-evenly flex-wrap">
       {sellerPlans.map((card)=>
-            <Card key={card.title} className={clsx('w-[300px] flex flex-col justify-between m-2 text-rose-400 rounded-xl shadow-md shadow-rose-50',{"border-2 border-rose-300 text-white bg-rose-400":card.title==="Premium"})}>
+            <Card key={card.title} className={clsx('w-[300px] flex flex-col justify-between m-2 text-rose-500 rounded-xl shadow-md border-rose-400 shadow-rose-200',{"border-2 border-rose-300 text-white bg-rose-500":card.title==="Premium"})}>
               <CardHeader>
                 <CardTitle className={clsx('',{'text-muted-foreground':card.title!=='Premium'})}>
                   {card.title}
@@ -42,8 +42,8 @@ const SellerSubscription = () => {
                     <p>{feature}</p>
                   </div>
                 )}</div>
-                <Button className={clsx('w-full text-center bg-primary p-2 text-rose-400 bg-white shadow-md hover:text-rose-500 hover:bg-white hover:border-rose-400 hover:border transition-all rounded-2xl text-md',{
-                    '!bg-muted-foreground border border-rose-400 hover:border-rose-500':card.title !== 'Premium'
+                <Button className={clsx('w-full text-center bg-primary p-2 text-rose-500 bg-white shadow-md hover:text-rose-500 hover:bg-white hover:border-rose-400 hover:border transition-all rounded-2xl text-md',{
+                    '!bg-muted-foreground border border-rose-500 hover:border-rose-500 shadow-rose-100 ':card.title !== 'Premium'
                 })}
                 onClick={()=>onOpen('purchase-subscription',card)}
                 >

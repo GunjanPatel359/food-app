@@ -30,11 +30,22 @@ const hotelSchema = new mongoose.Schema({
         required:true
     }
   },
+  foodCategoryIds:{
+    type:[mongoose.Schema.Types.ObjectId],
+    ref:'FoodCategory'
+  },
+  roleIds:{
+    type:[mongoose.Schema.Types.ObjectId],
+    ref:'Role'
+  },
   avgreview:{
     type:Number,
   },
   cusineTypes:{
     type:[String]
+  },
+  activeDate:{
+    type:Date
   },
   // review:{
   //   type:[mongoose.Schema.Types.ObjectId],

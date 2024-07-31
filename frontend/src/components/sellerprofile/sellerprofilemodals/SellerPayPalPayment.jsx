@@ -33,8 +33,10 @@ const SellerPayPalPayment = ({item}) => {
           },
         ),
         });
-
         const orderData = await response.json();
+        if(orderData.success==false){
+          return toast.error(orderData.message)
+        }
         if (orderData.id) {
           return orderData.id;
         } else {
@@ -43,10 +45,10 @@ const SellerPayPalPayment = ({item}) => {
             ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
             : JSON.stringify(orderData);
 
-          throw new Error(errorMessage);
+          return toast.error(errorMessage);
         }
       } catch (error) {
-        console.error(error);
+        console.log(error);
         toast.error(`Could not initiate PayPal Checkout...${error}`);
       }
     }

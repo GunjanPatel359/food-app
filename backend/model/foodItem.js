@@ -22,6 +22,17 @@ const foodItemSchema=new mongoose.Schema({
     avgreview:{
         type:Double,
     },
+    order:{
+       type: Number
+    },
+    foodCategoryId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"FoodCategory"
+    },
+    restaurantId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Hotel"
+    },
     // countOrder:{
     //     type:Number,
     // },

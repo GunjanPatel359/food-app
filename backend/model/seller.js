@@ -102,4 +102,6 @@ sellerSchema.methods.comparePass = async function (enteredPassword) {
 //     return true
 // }
 
+sellerSchema.index({name:'text',email:'text'})
+
 module.exports = mongoose.model("Seller", sellerSchema)
