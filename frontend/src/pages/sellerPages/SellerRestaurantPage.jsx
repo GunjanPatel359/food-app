@@ -5,7 +5,8 @@ import SellerRestaurant from "../../components/sellerhotel/SellerRestaurant"
 import { BsFillInfoCircleFill } from "react-icons/bs";
 import { MdOutlineManageAccounts } from "react-icons/md"
 import {IoFastFoodOutline} from "react-icons/io5"
-import { MdManageAccounts } from "react-icons/md";
+// import { MdManageAccounts } from "react-icons/md";
+import { MdOutlineTableBar } from "react-icons/md";
 import SellerManageRole from "../../components/sellerhotel/SellerManageRole";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -24,6 +25,7 @@ const SellerRestaurantPage = () => {
         { icon:<BsFillInfoCircleFill size={22} />,text:"Hotel",alert:false },
         { icon:<MdOutlineManageAccounts size={22} />,text:"roles",alert:false },
         { icon:<IoFastFoodOutline size={22} />,text:"foodItem",alert:false },
+        { icon:<MdOutlineTableBar size={22} />,text:"foodItem",alert:false },
     ]
     useEffect(()=>{
         const initiatePage=async()=>{
@@ -45,6 +47,7 @@ const SellerRestaurantPage = () => {
             {select === 0 && <SellerRestaurant/>} 
             {select === 1 && <SellerManageRole/>} 
             {select === 2 && <HotelFoodItems />}
+            {select === 3 && <HotelFoodItems />}
             </div>
         </div>
         <SellerHotelModalProvider />

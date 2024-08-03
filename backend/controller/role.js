@@ -134,15 +134,9 @@ router.post('/edit-role/:roleId',isSellerAuthenticated,catchAsyncErrors(async(re
         canUpdateRestaurantDetails,
         canManageRoles,
         adminPower,
+        canManageFoodItemData,
         canAddMember
     }=req.body
-    console.log(roleName,
-        roleDescription,
-        canUpdateRestaurantImg,
-        canUpdateRestaurantDetails,
-        canManageRoles,
-        adminPower,
-        canAddMember)
     if(!roleId){
         return next(new ErrorHandler("role id is not given"))
     }
@@ -177,6 +171,7 @@ router.post('/edit-role/:roleId',isSellerAuthenticated,catchAsyncErrors(async(re
                 canUpdateRestaurantDetails,
                 canManageRoles,
                 adminPower,
+                canManageFoodItemData,
                 canAddMember
             },{
                 new:true
@@ -190,6 +185,7 @@ router.post('/edit-role/:roleId',isSellerAuthenticated,catchAsyncErrors(async(re
                 canUpdateRestaurantImg,
                 canUpdateRestaurantDetails,
                 canManageRoles,
+                canManageFoodItemData,
                 canAddMember
             },{
                 new:true
@@ -275,5 +271,29 @@ router.post('/reorder-roles/:hotelId',isSellerAuthenticated,catchAsyncErrors(asy
     }
 }))
 
+router.get('/memberrole-info/:hotelId',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId}=req.params
+        if(!hotelId){
+            return next(new ErrorHandler("hotelId is not provided",400))
+        }
+        const member=await Member.findOne({
+            restaurantId:hotelId,
+            sellerId:req.seller._id
+        })
+        if(!member){
+            return next(new ErrorHandler("seller is not a member of this hotel",400))
+        }
+        const role=await Role.findOne({
+            _id:member.roleId
+        })
+        if(!role){
+            return next(new ErrorHandler("role not found",400))
+        }
+        res.status(200).json({success:true,role})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
 
 module.exports=router

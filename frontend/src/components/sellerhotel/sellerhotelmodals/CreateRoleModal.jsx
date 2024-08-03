@@ -20,13 +20,14 @@ const CreateRoleModal = () => {
   const [canUpdateRestaurantImg,setCanUpdateRestaurantImg]=useState(false)
   const [canUpdateRestaurantDetails,setCanUpdateRestaurantDetails]=useState(false)
   const [canManageRoles,setCanManageRoles]=useState(false)
+  const [canManageFoodItemData,setCanManageFoodItemData]=useState(false)
   const [adminPower,setAdminPower]=useState(false)
   const [canAddMember,setCanAddMember]=useState(false)
 
   const handleSubmit=async(e)=>{
     e.preventDefault()
     try {
-        const response=await axios.post(`${backend_url}/role/create-role/${hotelId}`,{roleName,roleDescription,canUpdateRestaurantImg,canUpdateRestaurantDetails,canManageRoles,canAddMember,adminPower},{withCredentials:true})
+        const response=await axios.post(`${backend_url}/role/create-role/${hotelId}`,{roleName,roleDescription,canUpdateRestaurantImg,canUpdateRestaurantDetails,canManageRoles,canAddMember,adminPower,canManageFoodItemData},{withCredentials:true})
         if(response.data.success){
           toast.success(response.data.message)
           
@@ -79,6 +80,18 @@ const CreateRoleModal = () => {
                             <div className='flex justify-between'>
                             <span className='pl-1 font-semibold'>Manage roles</span>
                         <Switch checked={canManageRoles} onCheckedChange={()=>setCanManageRoles(!canManageRoles)} className="my-auto mr-1" 
+                            //  disabled={data.role.adminPower?false:true}
+                             />
+                             </div>
+                             <p className='pl-1 h-auto text-justify mt-1'>
+                                 
+                             </p>
+                        </div>
+
+                        <div className='p-2 bg-white rounded'>
+                            <div className='flex justify-between'>
+                            <span className='pl-1 font-semibold'>Manage food items</span>
+                        <Switch checked={canManageFoodItemData} onCheckedChange={()=>setCanManageFoodItemData(!canManageFoodItemData)} className="my-auto mr-1" 
                             //  disabled={data.role.adminPower?false:true}
                              />
                              </div>

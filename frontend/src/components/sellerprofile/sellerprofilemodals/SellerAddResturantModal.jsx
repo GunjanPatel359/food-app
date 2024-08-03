@@ -101,7 +101,7 @@ const SellerAddResturantModal = () => {
     formData.append('city', city)
     formData.append('address', address)
     formData.append('zipCode', zipcode)
-    formData.append('cusineTypes', cusineTypes)
+    formData.append('cusineTypes', JSON.stringify(cusineTypes))
     formData.append('restaurantimage', previewImage)
 
       const res=await axios.post(

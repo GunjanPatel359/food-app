@@ -13,6 +13,7 @@ const Seller = require('../model/seller')
 const Role = require('../model/role')
 const Member = require('../model/member')
 const Subscription = require('../model/subscription')
+const FoodCategory = require('../model/foodCategory')
 
 const {checkForSellerSubscription}=require("../utils/repeatQuery")
 
@@ -108,6 +109,28 @@ router.post('/updateImage/:hotelId',isSellerAuthenticated, upload.single('update
         res.status(200).json({success:true,filename})
     } catch (err) {
         return next(new ErrorHandler(err.message,400))
+    }
+}))
+
+router.get('/:hotelId/food-items-with-categories',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId}=req.params
+        if(!hotelId){
+            return next(new ErrorHandler("hotel Id not found",400))
+        }
+        const member=await Member.findOne({
+            restaurantId:hotelId,
+            sellerId:req.seller._id
+        })
+        if(!member){
+            return next(new ErrorHandler("You are not member of this hotel",400))
+        }
+        const category=await FoodCategory.find({
+            restaurantId:hotelId
+        }).populate("foodItemIds")
+        return res.status(200).json({success:true,category})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
     }
 }))
 

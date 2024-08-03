@@ -1,10 +1,13 @@
-import mongoose from "mongoose"
+const mongoose=require("mongoose")
 
 const foodItemSchema=new mongoose.Schema({
     name:{
         type:String
     },
     imageUrl:{
+        type:String
+    },
+    smallDescription:{
         type:String
     },
     description:{
@@ -20,7 +23,7 @@ const foodItemSchema=new mongoose.Schema({
         type:[String]
     },
     avgreview:{
-        type:Double,
+        type:Number,
     },
     order:{
        type: Number

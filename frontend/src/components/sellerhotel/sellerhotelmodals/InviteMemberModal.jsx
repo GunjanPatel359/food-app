@@ -16,7 +16,7 @@ import axios from 'axios'
 const InviteMemberModal = () => {
   const { isOpen, type, data } = useModal()
   const isModelOpen = isOpen && type === 'invite-member'
-  const item = data
+  const {item}= data
 
   const [openArrow, setOpenArrow] = useState(false)
   const [usingId, setUsingId] = useState(false)
@@ -69,7 +69,6 @@ const InviteMemberModal = () => {
       console.log(error)
     }
   }
-
   return (
     <div>
       {isModelOpen && (

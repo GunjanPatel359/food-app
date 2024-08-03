@@ -4,8 +4,13 @@ import { toast } from 'react-toastify'
 import { Plus, X } from 'lucide-react'
 import { Switch } from '../../../components/ui/switch'
 import { IoWarning } from 'react-icons/io5'
+import axios from 'axios'
+import { backend_url } from '../../../server'
+import { useParams } from 'react-router-dom'
 
 const CreateFoodItemModal = () => {
+  const params=useParams()
+  const {hotelId}=params
   const { isOpen, type, data, reloadCom } = useModal()
   const isModelOpen = isOpen && type === 'create-food-item'
 
@@ -14,6 +19,7 @@ const CreateFoodItemModal = () => {
   const [loading, setloading] = useState(false)
 
   const [name, setName] = useState('')
+  const [smallDescription, setSmallDescription] = useState('')
   const [description, setDescription] = useState('')
   const [veg, setVeg] = useState(false)
   const [price, setPrice] = useState(0)
@@ -42,19 +48,38 @@ const CreateFoodItemModal = () => {
       e.preventDefault()
     }
   }
+
   const handletagchange = e => {
-    setTag(e.target.value)
+    if(e.target.value!=" "){
+      setTag(e.target.value)
+    }
   }
   const handletagcancelbtn = ind => {
-    console.log(ind)
     setFoodTypes(foodTypes.filter((item, i) => i !== ind))
   }
 
-  const handleSubmit = async e => {
+  const handleSubmit = async(e)=> {
     e.preventDefault()
+    if(price<0){
+      return toast.warning("Please set the price")
+    }
     setloading(true)
     try {
-        console.log("hi")
+        const category=data.addfooditem
+        const formdata=new FormData()
+        formdata.append('name',name)
+        formdata.append('smallDescription',smallDescription)
+        formdata.append('description',description)
+        formdata.append('veg',veg)
+        formdata.append('price',price)
+        formdata.append('item-image',previewImage)
+        console.log(foodTypes)
+        formdata.append('foodTypes',JSON.stringify(foodTypes))
+        formdata.append('categoryId',category._id)
+        const response = await axios.post(`${backend_url}/fooditem/${hotelId}/create-food-item`,formdata,{withCredentials:true})
+        if(response.data.success){
+          return reloadCom()
+        }
     } catch (error) {
       toast.error(error.message)
     }finally{
@@ -75,7 +100,6 @@ const CreateFoodItemModal = () => {
                 className='flex flex-col text-red-500 gap-y-1'
                 onSubmit={handleSubmit}
                 encType='multipart/form-data'
-                method='post'
               >
                 <div
                   onClick={() => fileInputRef.current.click()}
@@ -107,17 +131,27 @@ const CreateFoodItemModal = () => {
                 <div className=' font-semibold mt-3'>Food Name:</div>
                 <input
                   type='text'
-                  placeholder='Enter the Role name'
+                  placeholder='Enter the Food name'
                   className='p-2 w-full text-rose-500 border border-rose-500 outline-rose-400 rounded  hover:border-rose-400 placeholder:text-rose-300 shadow'
                   required
                   value={name}
                   onChange={e => setName(e.target.value)}
                 />
 
+                <div className=' font-semibold'>small description:</div>
+                <input
+                  type='text'
+                  placeholder='Enter the short description'
+                  className='p-2 w-full text-rose-500 border border-rose-500 outline-rose-400 rounded  hover:border-rose-400 placeholder:text-rose-300 shadow'
+                  required
+                  value={smallDescription}
+                  onChange={e => setSmallDescription(e.target.value)}
+                />
+
                 <div className=' font-semibold'>Food description:</div>
                 <input
                   type='text'
-                  placeholder='Enter the Role name'
+                  placeholder='Enter the Food description'
                   className='p-2 w-full text-rose-400 border border-rose-500 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 shadow'
                   required
                   value={description}

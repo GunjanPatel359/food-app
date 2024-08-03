@@ -17,6 +17,7 @@ const EditRolePermissionModal = () => {
   const [canUpdateRestaurantImg,setCanUpdateRestaurantImg]=useState()
   const [canUpdateRestaurantDetails,setCanUpdateRestaurantDetails]=useState()
   const [canManageRoles,setCanManageRoles]=useState()
+  const [canManageFoodItemData,setCanManageFoodItemData]=useState()
   const [adminPower,setAdminPower]=useState()
   const [canAddMember,setCanAddMember]=useState()
   
@@ -32,6 +33,7 @@ const EditRolePermissionModal = () => {
           setCanUpdateRestaurantImg(item.canUpdateRestaurantImg)
           setCanUpdateRestaurantDetails(item.canUpdateRestaurantDetails)
           setCanManageRoles(item.canManageRoles)
+          setCanManageFoodItemData(item.canManageFoodItemData)
           setAdminPower(item.adminPower)
           setCanAddMember(item.canAddMember)
         }
@@ -53,7 +55,7 @@ const EditRolePermissionModal = () => {
   const handleSubmit=async(e)=>{
     e.preventDefault()
     try {
-        const response=await axios.post(`${backend_url}/role/edit-role/${data.item._id}`,{roleName,roleDescription,canUpdateRestaurantImg,canUpdateRestaurantDetails,canManageRoles,canAddMember,adminPower},{withCredentials:true})
+        const response=await axios.post(`${backend_url}/role/edit-role/${data.item._id}`,{roleName,roleDescription,canUpdateRestaurantImg,canUpdateRestaurantDetails,canManageRoles,canAddMember,adminPower,canManageFoodItemData},{withCredentials:true})
         if(response.data.success){
           toast.success(response.data.message)
           return onClose()
@@ -105,6 +107,18 @@ const EditRolePermissionModal = () => {
                             <div className='flex justify-between'>
                             <span className='pl-1 font-semibold'>Manage roles</span>
                         <Switch checked={canManageRoles} onCheckedChange={()=>setCanManageRoles(!canManageRoles)} className="my-auto mr-1" 
+                            //  disabled={data.role.adminPower?false:true}
+                             />
+                             </div>
+                             <p className='pl-1 h-auto text-justify mt-1'>
+                                 
+                             </p>
+                        </div>
+
+                        <div className='p-2 bg-white rounded'>
+                            <div className='flex justify-between'>
+                            <span className='pl-1 font-semibold'>Manage Food items</span>
+                        <Switch checked={canManageFoodItemData} onCheckedChange={()=>setCanManageFoodItemData(!canManageFoodItemData)} className="my-auto mr-1" 
                             //  disabled={data.role.adminPower?false:true}
                              />
                              </div>
