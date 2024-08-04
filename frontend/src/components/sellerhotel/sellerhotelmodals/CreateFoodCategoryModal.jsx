@@ -36,20 +36,20 @@ const CreateFoodCategoryModal = () => {
               <div className='w-full h-[2px] bg-rose-500 mb-3'></div>
               <div>
                 <form className='flex flex-col gap-1' onSubmit={handleSubmit}>
-                <div className=' font-semibold'>Role Name:</div>
+                <div className=' font-semibold'>Category Name:</div>
                 <input
                   type='text'
-                  placeholder='Enter the Role name'
+                  placeholder='Enter the category name'
                   className='p-2 w-full text-rose-500 border border-rose-100 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 mb-1'
                   required
                   value={categoryName}
                   onChange={e => setCategoryName(e.target.value)}
                 />
 
-                <div className=' font-semibold'>Role Description:</div>
+                <div className=' font-semibold'>Category Description:</div>
                 <input
                   type='text'
-                  placeholder='Enter the role description'
+                  placeholder='Enter the category description'
                   className='p-2 w-full text-rose-500 border border-rose-100 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 mb-1'
                   required
                   value={description}

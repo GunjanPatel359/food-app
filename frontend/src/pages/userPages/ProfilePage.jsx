@@ -28,6 +28,10 @@ const ProfilePage = () => {
         const res = await axios.get(`${backend_url}/user/userinfo`, {
           withCredentials: true
         })
+        if(!res.data.user){
+          dispatch(logout())
+          navigate('/login')
+        }
         dispatch(addUser(res.data.user))
       } catch (err) {
         toast.error(err)

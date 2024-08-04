@@ -58,6 +58,7 @@ router.post("/create-user", catchAsyncErrors(async (req, res, next) => {
         }
         return next(new ErrorHandler("provide all the detils", 400))
     } catch (error) {
+        console.log(error)
         return next(new ErrorHandler(error.message, 400));
     }
 }))

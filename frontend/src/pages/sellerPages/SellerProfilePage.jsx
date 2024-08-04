@@ -34,6 +34,10 @@ useEffect(() => {
         const res = await axios.get(`${backend_url}/seller/sellerinfo`, {
           withCredentials: true
         })
+        if(!res.data.seller){
+          dispatch(sellerLogout())
+          navigate('/seller/login')
+        }
         dispatch(addSeller(res.data.seller))
       } catch (err) {
         toast.error(err)

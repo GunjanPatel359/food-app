@@ -15,9 +15,10 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../../redux/reducers/user";
 
+import { GoogleLogin } from '@react-oauth/google';
+
 const LoginPage = () => {
   const {user}=useSelector((state)=>state.user);
-
   const dispatch=useDispatch()
   const navigate=useNavigate();
 
@@ -63,6 +64,13 @@ const LoginPage = () => {
     }
   }
 
+  const responseMessage = (response) => {
+    console.log(response);
+};
+const errorMessage = (error) => {
+    console.log(error);
+};
+
   return (
     <>
     {!loading?(
@@ -91,6 +99,7 @@ const LoginPage = () => {
           <Button variant="contained" type="submit">Login In</Button>
         </form>
         <Link href="/sign-up"><p className="text-[15px]">{`Don't have an Account`}</p></Link>
+        <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
       </div>
     </div>):("")}
     </>

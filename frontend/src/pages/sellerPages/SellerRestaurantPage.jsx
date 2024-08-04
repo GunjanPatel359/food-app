@@ -14,6 +14,7 @@ import axios from "axios";
 import { backend_url } from "../../server";
 import SellerHotelModalProvider from "../../provider/SellerHotelModalProvider";
 import HotelFoodItems from "../../components/sellerhotel/HotelFoodItems";
+import OrderTableManage from "../../components/sellerhotel/OrderTableManage";
 
 
 const SellerRestaurantPage = () => {
@@ -25,7 +26,7 @@ const SellerRestaurantPage = () => {
         { icon:<BsFillInfoCircleFill size={22} />,text:"Hotel",alert:false },
         { icon:<MdOutlineManageAccounts size={22} />,text:"roles",alert:false },
         { icon:<IoFastFoodOutline size={22} />,text:"foodItem",alert:false },
-        { icon:<MdOutlineTableBar size={22} />,text:"foodItem",alert:false },
+        { icon:<MdOutlineTableBar size={22} />,text:"OrderTables",alert:false },
     ]
     useEffect(()=>{
         const initiatePage=async()=>{
@@ -37,7 +38,7 @@ const SellerRestaurantPage = () => {
             }
         }
         initiatePage()
-    },[])
+    },[hotelId])
   return (
     <div>
         <SellerProfileHeader />
@@ -47,7 +48,7 @@ const SellerRestaurantPage = () => {
             {select === 0 && <SellerRestaurant/>} 
             {select === 1 && <SellerManageRole/>} 
             {select === 2 && <HotelFoodItems />}
-            {select === 3 && <HotelFoodItems />}
+            {select === 3 && <OrderTableManage />}
             </div>
         </div>
         <SellerHotelModalProvider />

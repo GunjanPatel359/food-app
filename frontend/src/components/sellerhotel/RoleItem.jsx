@@ -9,7 +9,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities"
 import { useModal } from "../../customhooks/zusthook";
 
-const RoleItem = ({item,role}) => {
+const RoleItem = ({item,role,ownerId}) => {
     const {onOpen}=useModal()
     const {
         attributes,
@@ -34,7 +34,7 @@ const RoleItem = ({item,role}) => {
         <div className=" flex justify-between">
             <div className="flex">{item.roleName}{item.roleName=="Owner"?<FaUserShield className=" ml-2 cursor-pointer m-auto" size={22}/>:<></>}</div>
                 <div className="flex gap-x-3 pr-4">
-                    {ManageButtons(item,role,onOpen)}
+                    {ManageButtons(item,role,onOpen,ownerId)}
                     {/* {item.roleName!="Owner" &&(
                         <>
                         {(role.canManageRoles || role.adminPower || role.canAddMember)?<FaUserPlus className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('invite-member',{item})}/>:<></>}
@@ -49,28 +49,32 @@ const RoleItem = ({item,role}) => {
 
 }
 
-function ManageButtons(item,role,onOpen){
+function ManageButtons(item,role,onOpen,ownerId){
 
-    if(item.roleName!="Owner" && role.adminPower){
+    if(item.roleName=="Owner" || item.order<=role.order){
+        return <></>
+    }
+
+    if(role.adminPower){
         return (<>
-        {<FaUserPlus className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('invite-member',{item})}/>}
+        {<FaUserPlus className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('invite-member',{inviteRole:item,role,ownerId})}/>}
         {<BiSolidEdit className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('Edit-role-Permission',{editrole:item,role})}/>}
-        {<MdDelete className="cursor-pointer m-auto" size={22} />}
+        {<MdDelete className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('Delete-role',{deleterole:item,rolefordelete:role})} />}
         </>)
     }
 
-    if(item.roleName!="Owner" && !role.adminPower && role.canManageRoles && item.order<role.order ){
-       return (
-        <>
-        </>
-       )
-    }
+    // if(!role.adminPower && role.canManageRoles && item.order<role.order ){
+    //    return (
+    //     <>
+    //     </>
+    //    )
+    // }
 
-    if(item.roleName!="Owner" && !role.adminPower && role.canManageRoles && item.order>role.order ){
+    if(!role.adminPower && role.canManageRoles){
         return(<>
-        {<FaUserPlus className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('invite-member',{item})}/>}
+        {role.canAddMember&&(<FaUserPlus className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('invite-member',{inviteRole:item,role,ownerId})}/>)}
         {<BiSolidEdit className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('Edit-role-Permission',{editrole:item,role})}/>}
-        {<MdDelete className="cursor-pointer m-auto" size={22} />}
+        {<MdDelete className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('Delete-role',{deleterole:item,rolefordelete:role})} />}
         </>)
     }
 

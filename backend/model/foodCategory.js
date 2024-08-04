@@ -27,6 +27,10 @@ const foodCategorySchema=new mongoose.Schema({
         type:Date,
         default:Date.now()
     },
+    updatedAt:{
+        type:Date,
+        default:Date.now()
+    }
 })
 
 module.exports=mongoose.model("FoodCategory",foodCategorySchema)

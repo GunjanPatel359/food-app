@@ -44,7 +44,7 @@ router.get('/roleinfo/:roleId',isSellerAuthenticated,catchAsyncErrors(async(req,
         return next(new ErrorHandler(error.message,400))
     }
 }))
-
+///////////////////////////roles////////////////////////
 router.post('/create-role/:hotelId',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
     try {
         const seller=req.seller;
@@ -74,7 +74,6 @@ router.post('/create-role/:hotelId',isSellerAuthenticated,catchAsyncErrors(async
         const role=await Role.findOne({
             _id:member.roleId,
             restaurantId:hotelId,
-            memberList:member._id,
         })
         if(!role){
             return next(new ErrorHandler("Unauthorized",401))
@@ -124,7 +123,7 @@ router.post('/create-role/:hotelId',isSellerAuthenticated,catchAsyncErrors(async
         return next(new ErrorHandler(error.message,400))
     }
 }))
-
+///////////////////////////roles////////////////////////
 router.post('/edit-role/:roleId',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
     const {roleId}=req.params
     const {
@@ -156,10 +155,27 @@ router.post('/edit-role/:roleId',isSellerAuthenticated,catchAsyncErrors(async(re
     if(role.roleName=="Owner"){
         return next(new ErrorHandler("you cannot edit owner role",401))
     }
+    let newRole
+    if(memberRole.roleName=="Owner"||memberRole.order==1){
+        newRole=await Role.findOneAndUpdate({
+            _id:roleId
+        },{
+            roleName,
+            roleDescription,
+            canUpdateRestaurantImg,
+            canUpdateRestaurantDetails,
+            canManageRoles,
+            adminPower,
+            canManageFoodItemData,
+            canAddMember
+        },{
+            new:true
+        })
+        return res.status(200).json({success:true,message:"role updated successfully"})
+    }
     if(!memberRole.canManageRoles && !memberRole.adminPower){
         return next(new ErrorHandler("you do not have permission to edit this role",401))
     }
-    let newRole
     if(memberRole.order<role.order){
         if(role.adminPower){
             newRole=await Role.findOneAndUpdate({
@@ -191,6 +207,8 @@ router.post('/edit-role/:roleId',isSellerAuthenticated,catchAsyncErrors(async(re
                 new:true
             })
         }
+    }else{
+        return next(new ErrorHandler("you cannot update this role",401))
     }
     res.status(200).json({success:true,message:"role updated successfully"})
 }))
@@ -293,6 +311,55 @@ router.get('/memberrole-info/:hotelId',isSellerAuthenticated,catchAsyncErrors(as
         res.status(200).json({success:true,role})
     } catch (error) {
         return next(new ErrorHandler(error.message,400))
+    }
+}))
+
+///////////////////////////roles////////////////////////
+router.delete('/:hotelId/:roleId/delete-role',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId,roleId}=req.params
+        if(!hotelId && !roleId){
+            return next(new ErrorHandler("hotelId is not provided",400))
+        }
+        const member=await Member.findOne({
+            restaurantId:hotelId,
+            sellerId:req.seller._id
+        })
+        if(!member){
+            return next(new ErrorHandler("seller is not a member of this hotel",400))
+        }
+        const memberRole=await Role.findOne({
+            _id:member.roleId,
+            restaurantId:hotelId
+        })
+        if(!memberRole){
+            return next(new ErrorHandler("seller is not a member of this hotel",400))
+        }
+        let role=await Role.findOne({
+            _id:roleId
+        })
+        if(!role){
+            return next(new ErrorHandler("role not found",400))
+        }
+        if(!role.roleName=="Owner" && !role.order==1){
+            return next(new ErrorHandler("you are not authorized to delete this role",400))
+        }
+        if(role.order<=memberRole.order){
+        return next(new ErrorHandler("you are not authorized to delete this role",400))
+        }
+        if(!memberRole.adminPower && !memberRole.canAddMember){
+            return next(new ErrorHandler("you are not authorized to delete this role",400))
+        }
+        const deletedmembers=role.memberList.map((item)=>
+            Member.deleteOne({_id:item._id})
+        )
+        const deletingmember=await Promise.all(deletedmembers)
+        const deletingRole=await Role.deleteOne({
+            _id:roleId
+        })
+        res.status(200).json({success:true,message:"role deleted successfully"})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,404))
     }
 }))
 

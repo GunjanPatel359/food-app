@@ -12,6 +12,14 @@ const memberSchema=new mongoose.Schema({
     restaurantId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Hotel"
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now()
+    },
+    updatedAt:{
+        type:Date,
+        default:Date.now()
     }
 })
 

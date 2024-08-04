@@ -30,33 +30,38 @@ const SellerManageRole = () => {
   const params = useParams()
   const { hotelId } = params
   const [member, setMember] = useState('')
+  const [ownerId,setOwnerId]=useState('')
   const [role, setRole] = useState('')
   const [roles, setRoles] = useState('')
   const [oldRole, setOldRole] = useState('')
+  const [reloadcomponent,setReloadComponent]=useState(1);
   // const [loading,setLoading]=useState(false)
   // const isOwner=
-  const initiatePage = async () => {
-    try {
-      const hoteldata = await axios.get(
-        `${backend_url}/seller/gethoteldata/${hotelId}`,
-        { withCredentials: true }
-      )
-      if (hoteldata.data.success) {
-        setMember(hoteldata.data.member)
-        setRole(hoteldata.data.role)
-        setRoles(hoteldata.data.hotel.roleIds)
-        let sortingRoles = hoteldata.data.hotel.roleIds
-        sortingRoles.sort((a, b) => a.order - b.order)
-        setRoles(sortingRoles)
-        setOldRole(sortingRoles)
-      }
-    } catch (error) {
-      toast.error(error.response.data.message)
-    }
-  }
+  
   useEffect(() => {
+    const initiatePage = async () => {
+      try {
+        const hoteldata = await axios.get(
+          `${backend_url}/seller/gethoteldata/${hotelId}`,
+          { withCredentials: true }
+        )
+        if (hoteldata.data.success) {
+          setOwnerId(hoteldata.data.hotel.sellerId)
+          setMember(hoteldata.data.member)
+          setRole(hoteldata.data.role)
+          let sortingRoles = hoteldata.data.hotel.roleIds
+          sortingRoles.sort((a, b) => a.order - b.order)
+          setRoles(sortingRoles)
+          setOldRole(sortingRoles)
+        }
+      } catch (error) {
+        toast.error(error.response.data.message)
+      }
+    }
+
     initiatePage()
-  }, [reloadCmd])
+
+  }, [reloadCmd,hotelId,reloadcomponent])
 
   function findObjectIndexById (data, id) {
     return data.findIndex(obj => obj._id === id)
@@ -93,7 +98,8 @@ const SellerManageRole = () => {
         { withCredentials: true }
       )
       if (response.data.success) {
-        initiatePage()
+        setReloadComponent(Date.now())
+        toast.success(response.data.message)
       }
     } catch (error) {
       return toast.error(error.message)
@@ -112,6 +118,8 @@ const SellerManageRole = () => {
       {member && (
         <div className='m-5 mt-8'>
           <div className='text-rose-500 font-semibold text-2xl mb-4'>Roles</div>
+
+          {(role.adminPower || role.canManageRoles) &&
           <span
             className='bg-rose-50 p-2 py-2 transition-all text-rose-500 hover:opacity-80 cursor-pointer border border-rose-500 border-dashed rounded-full flex flex-row max-w-fit pr-5'
             onClick={() => onOpen('create-roles', { role })}
@@ -120,7 +128,8 @@ const SellerManageRole = () => {
               <Plus className='inline' />
             </span>{' '}
             Create Role
-          </span>
+          </span>}
+
           <div className='bg-rose-50 border border-rose-500 p-4 rounded mt-4 border-dashed text-lg flex flex-col gap-y-2'>
             <DndContext
               collisionDetection={closestCenter}
@@ -138,6 +147,7 @@ const SellerManageRole = () => {
                       key={item.order}
                       index={i + 1}
                       role={role}
+                      ownerId={ownerId}
                     />
                   )
                 })}

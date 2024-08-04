@@ -46,6 +46,18 @@ const roleSchema=new mongoose.Schema({
     canManageFoodItemData:{
         type:Boolean,
         default:false
+    },
+    canManageOrderTableInfo:{
+        type:Boolean,
+        default:false
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now()
+    },
+    updatedAt:{
+        type:Date,
+        default:Date.now()
     }
 })
 

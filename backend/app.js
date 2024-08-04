@@ -25,19 +25,23 @@ if(process.env.NODE_ENV !== "PRODUCTION"){
 //import routes
 const user=require("./controller/user");
 const seller=require("./controller/seller");
+const member=require("./controller/member");
 const hotel=require("./controller/hotel");
 const subscription=require("./controller/subscription");
 const role=require("./controller/role");
 const category=require("./controller/category");
 const fooditem=require("./controller/fooditem");
+const ordertable=require("./controller/ordertable");
 
 app.use("/api/v1/user",user)
 app.use("/api/v1/seller",seller)
 app.use("/api/v1/restaurant",hotel)
+app.use("/api/v1/member",member)
 app.use("/api/v1/subscription",subscription)
 app.use("/api/v1/role",role)
 app.use("/api/v1/category",category)
 app.use("/api/v1/fooditem",fooditem)
+app.use("/api/v1/order-table",ordertable)
 
 
 

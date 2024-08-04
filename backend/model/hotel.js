@@ -38,6 +38,10 @@ const hotelSchema = new mongoose.Schema({
     type:[mongoose.Schema.Types.ObjectId],
     ref:'Role'
   },
+  tableIds:{
+    type:[mongoose.Schema.Types.ObjectId],
+    ref:'OrderTable'
+  },
   avgreview:{
     type:Number,
   },

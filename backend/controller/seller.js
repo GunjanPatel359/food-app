@@ -392,6 +392,7 @@ router.get('/search/inviteseller',isSellerAuthenticated,catchAsyncErrors(async(r
         return next(new ErrorHandler(error.message,400))
     }
 }))
+
 router.get('/search/invitesellerwithid',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
     try {
         const { query } = req.query
