@@ -22,7 +22,7 @@ const InviteMemberModal = () => {
   const {seller}=useSelector((state)=>state.seller)
   const params = useParams()
   const { hotelId } = params
-  const { isOpen, type, data } = useModal()
+  const { isOpen, type, data,onlyReloadCom } = useModal()
   const isModelOpen = isOpen && type === 'invite-member'
 
   const [openArrow, setOpenArrow] = useState(false)
@@ -121,6 +121,7 @@ const InviteMemberModal = () => {
       if(response.data.success){
         setRoleMembers((rest) => [...rest, id]);
         toast.success(response.data.message)
+        onlyReloadCom()
       }
       if(!response.data.success){
         toast.error(response.data.message)
@@ -136,6 +137,7 @@ const InviteMemberModal = () => {
       if(response.data.success){
         setRoleMembers((rest) => rest.filter(memberId => memberId != id));
         toast.success(response.data.message)
+        onlyReloadCom()
       }
       if(!response.data.success){
         toast.error(response.data.message)

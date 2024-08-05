@@ -7,6 +7,8 @@ import CreateFoodCategoryModal from '../components/sellerhotel/sellerhotelmodals
 import CreateFoodItemModal from '../components/sellerhotel/sellerhotelmodals/CreateFoodItemModal'
 import CreateTableModal from '../components/sellerhotel/sellerhotelmodals/CreateTableModal'
 import DeleteRoleModal from '../components/sellerhotel/sellerhotelmodals/DeleteRoleModal'
+import ManageRoleMemberModal from '../components/sellerhotel/sellerhotelmodals/ManageRoleMemberModal'
+import EditFoodItemModal from '../components/sellerhotel/sellerhotelmodals/EditFoodItemModal'
 
 const SellerHotelModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false)
@@ -45,6 +47,8 @@ const SellerHotelModalProvider = () => {
           <CreateFoodItemModal />
           <CreateTableModal />
           <DeleteRoleModal />
+          <ManageRoleMemberModal />
+          <EditFoodItemModal />
           </div>
         )}
       </div>

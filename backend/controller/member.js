@@ -6,6 +6,47 @@ const ErrorHandler = require("../utils/ErrorHandler")
 
 const Role = require("../model/role")
 const Member = require("../model/member")
+const Seller = require("../model/seller")
+
+router.get('/:roleId/:hotelId/membersWithDetails', isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { roleId, hotelId } = req.params
+        if (!roleId && !hotelId) {
+            return next(new ErrorHandler("all the parameters are not the present", 400))
+        }
+        const member = await Member.findOne({
+            restaurantId: hotelId,
+            sellerId: req.seller._id
+        })
+        if (!member) {
+            return next(new ErrorHandler("seller is not the member of the hotel", 400))
+        }
+        const memberRole = await Role.findOne({
+            _id: member.roleId
+        })
+        if (!memberRole) {
+            return next(new ErrorHandler("unAuthorized access", 400))
+        }
+        if (!memberRole.adminPower && !memberRole.canAddMember) {
+            return next(new ErrorHandler("you do not have permission to invite members", 400))
+        }
+        const role = await Role.findOne({
+            _id: roleId,
+            restaurantId: hotelId
+        }).populate("memberList")
+        if (!role) {
+            return next(new ErrorHandler("role is not the member of the hotel", 400))
+        }
+        const members = role.memberList.map((item) => {
+            return Seller.findOne({_id:item.sellerId})
+        })
+        const roleMembers=await Promise.all(members)
+        res.status(200).json({ success: true,roleMembers,roleId:role._id })
+    } catch (error) {
+        console.log(error)
+        return next(new ErrorHandler(error.message, 404))
+    }
+}))
 
 router.get('/:roleId/:hotelId/members-sellerid', isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
@@ -84,7 +125,6 @@ router.post('/:hotelId/add-members', isSellerAuthenticated, catchAsyncErrors(asy
         }).populate("roleId")
         let newMember
         if (!addingMember) {
-            console.log("misssied")
             newMember = await Member.create({
                 sellerId: sellerId,
                 roleId: roleId,

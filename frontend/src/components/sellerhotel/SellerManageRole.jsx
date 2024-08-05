@@ -36,7 +36,6 @@ const SellerManageRole = () => {
   const [oldRole, setOldRole] = useState('')
   const [reloadcomponent,setReloadComponent]=useState(1);
   // const [loading,setLoading]=useState(false)
-  // const isOwner=
   
   useEffect(() => {
     const initiatePage = async () => {

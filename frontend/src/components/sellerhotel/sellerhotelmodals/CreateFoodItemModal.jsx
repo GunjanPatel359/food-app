@@ -78,6 +78,7 @@ const CreateFoodItemModal = () => {
         formdata.append('categoryId',category._id)
         const response = await axios.post(`${backend_url}/fooditem/${hotelId}/create-food-item`,formdata,{withCredentials:true})
         if(response.data.success){
+          toast.success("Food Item created successfully")
           return reloadCom()
         }
     } catch (error) {

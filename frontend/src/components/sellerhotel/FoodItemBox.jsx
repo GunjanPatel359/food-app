@@ -2,14 +2,17 @@
 import { MdEdit } from 'react-icons/md'
 import { MdDeleteForever } from 'react-icons/md'
 import { img_url } from '../../server'
+import Tooltip from '../customui/Tooltip'
+import { useModal } from '../../customhooks/zusthook'
 
 const FoodItemBox = ({ item }) => {
+  const {onOpen}=useModal()
   return (
     <div className='m-1 p-2 rounded border border-rose-500 border-dashed bg-white shadow shadow-rose-200'>
       <div className='flex'>
         <img
           src={`${img_url}/${item.imageUrl}`}
-          className='h-20 rounded shadow shadow-rose-300'
+          className='h-[90px] rounded shadow shadow-rose-300'
         />
         <div className='ml-2 w-full'>
           <div className='flex justify-between w-full'>
@@ -18,9 +21,9 @@ const FoodItemBox = ({ item }) => {
             </div>
             <div className='my-auto flex gap-2'>
               <span>
-                <span className='border border-rose-500 bg-rose-500 flex p-[3px] rounded shadow cursor-pointer'>
+                <button className='border border-rose-500 bg-rose-500 flex p-[3px] rounded shadow cursor-pointer' onClick={()=>onOpen('edit-food-item',{editFoodItem:item})}>
                   <MdEdit className='bg-rose-500 text-white inline' size={18} />
-                </span>
+                </button>
               </span>
               <span>
                 <span className='border border-rose-500 bg-rose-500 flex p-[3px] rounded shadow cursor-pointer'>
@@ -41,6 +44,14 @@ const FoodItemBox = ({ item }) => {
                 </div>
               </span>
             </div>
+          </div>
+          <div className='flex'>
+            <Tooltip position="bottom" content="veg" TooltipStyle='bg-rose-200 text-rose-600'>
+            <span className={`border-2 w-6 h-6 flex justify-evenly p-[2.3px] ${item.veg ? 'border-green-500' : 'border-red-500'}`}>
+              <span className={`m-auto mx-auto rounded-full w-full h-full ${item.veg ? 'bg-green-500' : 'bg-red-500'} `} size={17}>
+              </span>
+            </span>
+            </Tooltip>
           </div>
         </div>
       </div>
