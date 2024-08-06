@@ -118,6 +118,7 @@ router.patch('/:hotelId/:foodItemId/update-item-without-image', isSellerAuthenti
         return next(new ErrorHandler(error.message, 404))
     }
 }))
+
 router.patch('/:hotelId/:foodItemId/update-item-with-image', isSellerAuthenticated, upload.single('item-image'), catchAsyncErrors(async (req, res, next) => {
     try {
         const filename = req.file.filename;
@@ -173,6 +174,42 @@ router.patch('/:hotelId/:foodItemId/update-item-with-image', isSellerAuthenticat
     } catch (error) {
         console.log(error)
         return next(new ErrorHandler(error.message, 404))
+    }
+}))
+
+router.delete('/:hotelId/delete-food-item/:foodItemId',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId,foodItemId}=req.params
+        if(!hotelId && !foodItemId){
+            return next(new ErrorHandler("Please provide hotel id and food item id", 400))
+        }
+        const member = await Member.findOne({
+            sellerId: req.seller._id,
+            restaurantId: hotelId
+        })
+        if (!member) return next(new ErrorHandler("You are not the member of this restaurant", 401))
+        const memberRole = await Role.findOne({
+            _id: member.roleId,
+            restaurantId: hotelId
+        })
+        if (!memberRole.adminPower && !memberRole.canManageFoodItemData) {
+            return next(new ErrorHandler("You don't have permission to create food item", 401))
+        }
+        const fooditem=await FoodItem.findOneAndDelete({
+            _id:foodItemId,
+            restaurantId:hotelId
+        })
+        if(!fooditem){
+            return next(new ErrorHandler("could not delete food item", 400))
+        }
+        const foodcategory=await FoodCategory.findOneAndUpdate({
+            _id:fooditem.foodCategoryId
+        },{
+            $pull:{foodItemIds:fooditem._id}
+        })
+        res.status(200).json({success:true,message:"deleted item successfully"})
+    } catch (error) {
+        return next(new ErrorHandler(error.message))
     }
 }))
 

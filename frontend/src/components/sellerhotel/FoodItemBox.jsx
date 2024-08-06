@@ -5,11 +5,11 @@ import { img_url } from '../../server'
 import Tooltip from '../customui/Tooltip'
 import { useModal } from '../../customhooks/zusthook'
 
-const FoodItemBox = ({ item }) => {
+const FoodItemBox = ({ item,role }) => {
   const {onOpen}=useModal()
   return (
     <div className='m-1 p-2 rounded border border-rose-500 border-dashed bg-white shadow shadow-rose-200'>
-      <div className='flex'>
+      <div className='flex transition-all'>
         <img
           src={`${img_url}/${item.imageUrl}`}
           className='h-[90px] rounded shadow shadow-rose-300'
@@ -19,6 +19,7 @@ const FoodItemBox = ({ item }) => {
             <div className='text-2xl text-rose-500 font-semibold'>
               {item.name}
             </div>
+            {(role.adminPower || role.canManageFoodItemData)&&(
             <div className='my-auto flex gap-2'>
               <span>
                 <button className='border border-rose-500 bg-rose-500 flex p-[3px] rounded shadow cursor-pointer' onClick={()=>onOpen('edit-food-item',{editFoodItem:item})}>
@@ -26,14 +27,14 @@ const FoodItemBox = ({ item }) => {
                 </button>
               </span>
               <span>
-                <span className='border border-rose-500 bg-rose-500 flex p-[3px] rounded shadow cursor-pointer'>
+                <button className='border border-rose-500 bg-rose-500 flex p-[3px] rounded shadow cursor-pointer' onClick={()=>onOpen('Delete-Food-Item',{deleteFoodItem:item})}>
                   <MdDeleteForever
                     className='bg-rose-500 text-white inline'
                     size={18}
                   />
-                </span>
+                </button>
               </span>
-            </div>
+            </div>)}
           </div>
           <div className='flex justify-between w-full'>
             <div className='text-rose-500'>{item.smallDescription}</div>

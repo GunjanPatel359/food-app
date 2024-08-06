@@ -115,6 +115,24 @@ const EditFoodItemModal = () => {
             setloading(false)
         }
     }
+    const handleReset=()=>{
+        setloading(true)
+        try{
+            const item = data.editFoodItem
+            setName(item.name)
+            setSmallDescription(item?.smallDescription)
+            setDescription(item.description)
+            setVeg(item.veg)
+            setPrice(item.price)
+            setTag(item.tag)
+            setFoodTypes(item.foodTypes)
+            setPreviewImage(null)
+        }catch(error){
+            toast.error(error.message)
+        }finally{
+            setloading(false)
+        }
+    }
     return (
         <div>
             {isModelOpen ? (
@@ -126,8 +144,8 @@ const EditFoodItemModal = () => {
                         <div className='w-full h-[2px] bg-rose-400 m-auto mb-4'></div>
                         <div>
                             <form
+                            onSubmit={handleSubmit}
                                 className='flex flex-col text-red-500 gap-y-1'
-                                onSubmit={handleSubmit}
                                 encType='multipart/form-data'
                             >
                                 <div className='flex w-full'>
@@ -255,11 +273,21 @@ const EditFoodItemModal = () => {
                                 />
 
                                 <button
+                                type='submit'
                                     disabled={loading ? true : false}
-                                    className={`transition-all border border-rose-500 shadow p-2 bg-rose-500 rounded-xl text-white text-center mt-2 mb-8  ${loading ? 'opacity-70' : 'hover:opacity-90'
+                                    className={`transition-all border border-rose-500 shadow p-2 bg-rose-500 rounded-xl text-white text-center mt-2 ${loading ? 'opacity-70 cursor-none' : 'hover:opacity-90'
                                         }`}
                                 >
                                     Update Food Item
+                                </button>
+                                <button
+                                   type="button"
+                                    disabled={loading ? true : false}
+                                    className={`transition-all border border-rose-500 shadow p-2 bg-white rounded-xl text-rose-500 text-center mb-4  ${loading ? 'opacity-70 cursor-none' : 'hover:opacity-90'
+                                        }`}
+                                        onClick={handleReset}
+                                >
+                                    Reset
                                 </button>
                             </form>
                         </div>

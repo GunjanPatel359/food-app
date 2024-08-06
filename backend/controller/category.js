@@ -57,4 +57,44 @@ router.post('/:hotelId/create-category',isSellerAuthenticated,catchAsyncErrors(a
     }
 }))
 
+router.patch('/:hotelId/edit-category/:categoryId',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId,categoryId}=req.params
+        const {categoryName,description}=req.body
+        if(!hotelId && !categoryId){
+            return next(new ErrorHandler("hotel id and category id are not provided",400))
+        }
+        if(!categoryName && !description){
+            return next(new ErrorHandler("please provide all the fields",400))
+        }
+        const member=await Member.findOne({
+            sellerId:req.seller._id,
+            restaurantId:hotelId,
+        })
+        if(!member){
+            return next(new ErrorHandler("you are not the member of this hotel",401))
+        }
+        const memberRole=await Role.findOne({
+            _id:member.roleId,
+            restaurantId:hotelId,
+        })
+        if(!memberRole){
+            return next(new ErrorHandler("you are not the member of this hotel",401))
+        }
+        if(!memberRole.adminPower && !memberRole.canManageFoodItemData){
+            return next(new ErrorHandler("you are not authorized to edit category",401))
+        }
+        const category=await FoodCategory.findOneAndUpdate({
+            _id:categoryId,
+            restaurantId:hotelId
+        },{categoryName,description},{new:true})
+        if(!category){
+            return next(new ErrorHandler("could not update category",404))
+        }
+        res.status(200).json({success:true,message:"category updated successfully"})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,404))
+    }
+}))
+
 module.exports=router

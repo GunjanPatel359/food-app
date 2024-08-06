@@ -9,6 +9,8 @@ import CreateTableModal from '../components/sellerhotel/sellerhotelmodals/Create
 import DeleteRoleModal from '../components/sellerhotel/sellerhotelmodals/DeleteRoleModal'
 import ManageRoleMemberModal from '../components/sellerhotel/sellerhotelmodals/ManageRoleMemberModal'
 import EditFoodItemModal from '../components/sellerhotel/sellerhotelmodals/EditFoodItemModal'
+import DeleteFoodItemModal from '../components/sellerhotel/sellerhotelmodals/DeleteFoodItemModal'
+import EditCategoryModal from '../components/sellerhotel/sellerhotelmodals/EditCategoryModal'
 
 const SellerHotelModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false)
@@ -44,11 +46,13 @@ const SellerHotelModalProvider = () => {
           <InviteMemberModal />
           <EditRolePermissionModal />
           <CreateFoodCategoryModal />
+          <EditCategoryModal />
           <CreateFoodItemModal />
           <CreateTableModal />
           <DeleteRoleModal />
           <ManageRoleMemberModal />
           <EditFoodItemModal />
+          <DeleteFoodItemModal/>
           </div>
         )}
       </div>
