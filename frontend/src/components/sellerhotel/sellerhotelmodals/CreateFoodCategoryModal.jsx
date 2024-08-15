@@ -13,6 +13,10 @@ const CreateFoodCategoryModal = () => {
   const [categoryName, setCategoryName] = useState('')
   const [description, SetDescription] = useState('')
 
+  if(!isModelOpen){
+    return null
+  }
+
   const handleSubmit=async(e)=>{
     e.preventDefault()
     try {

@@ -32,10 +32,10 @@ const ManageRoleMemberModal = () => {
                 setLoading(false)
             }
         }
-        if (data.manageMemberRole) {
+        if (data && data.manageMemberRole) {
             roleMembers()
         }
-    }, [data.manageMemberRole, hotelId])
+    }, [hotelId,data])
 
     if (!isModelOpen) {
         return null

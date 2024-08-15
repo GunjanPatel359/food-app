@@ -1,18 +1,13 @@
 const mongoose=require("mongoose")
 
-const OrderTableSchema=new mongoose.Schema({
-    tableNumber:{
-        type:Number,
-    },
-    tableDescription:{
-        type:String
+const OrderTableLogsSchema=new mongoose.Schema({
+    orderTableId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"OrderTable"
     },
     restaurantId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"Hotel"
-    },
-    randomString:{
-        type:String,
     },
     userId:{
         type:mongoose.Schema.Types.ObjectId,
@@ -26,22 +21,9 @@ const OrderTableSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Member"
     },
-    status:{
-        type:String,
-        enum:["Available","Occupied","Billing"],
-        default:"Available"
-    },
     offline:{
         type:Boolean,
         default:false
-    },
-    seats:{
-        type:Number,
-        default:4
-    },
-    seatCount:{
-        type:Number,
-        default:0
     },
     createdAt:{
         type:Date,
@@ -53,4 +35,4 @@ const OrderTableSchema=new mongoose.Schema({
     }
 })
 
-module.exports=mongoose.model("OrderTable",OrderTableSchema)
+module.exports=mongoose.model("OrderTableLogs",OrderTableLogsSchema)

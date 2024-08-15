@@ -213,4 +213,20 @@ router.delete('/:hotelId/delete-food-item/:foodItemId',isSellerAuthenticated,cat
     }
 }))
 
+router.get('/getallfood/:hotelId',catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId}=req.params
+        if(!hotelId){
+            return next(new ErrorHandler("Please provide hotel id", 400))
+        }
+        const fooditems=await FoodCategory.find({restaurantId:hotelId}).populate("foodItemIds")
+        if(fooditems.length<=0){
+            return next(new ErrorHandler("No food items found", 404))
+        }
+        res.status(200).json({success:true,food:fooditems})
+    } catch (error) {
+        return next(new ErrorHandler(error.message))
+    }
+}))
+
 module.exports = router

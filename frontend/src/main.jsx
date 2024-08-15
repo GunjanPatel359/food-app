@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
@@ -10,12 +10,12 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId='619764962057-eauvmt3i6nnjoqhb6fh0elsk6jhal94e.apps.googleusercontent.com' onScriptLoadError={()=>console.log("hi")}>
-  <React.StrictMode>
+  {/* <React.StrictMode> */}
     <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
     <App />
     </PersistGate>
     </Provider>
-  </React.StrictMode>,
+  {/* </React.StrictMode>, */}
   </GoogleOAuthProvider>
 )

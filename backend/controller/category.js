@@ -9,6 +9,7 @@ const Role = require('../model/role')
 const Hotel = require('../model/hotel')
 const Member = require('../model/member')
 const FoodCategory = require('../model/foodCategory')
+const FoodItem = require('../model/foodItem')
 
 router.post('/:hotelId/create-category',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
     try {
@@ -93,6 +94,57 @@ router.patch('/:hotelId/edit-category/:categoryId',isSellerAuthenticated,catchAs
         }
         res.status(200).json({success:true,message:"category updated successfully"})
     } catch (error) {
+        return next(new ErrorHandler(error.message,404))
+    }
+}))
+
+router.delete('/:hotelId/:categoryId/delete-category',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try{
+        const {hotelId,categoryId}=req.params
+        if(!hotelId && !categoryId){
+            return next(new ErrorHandler("hotel id and category id are not provided",400))
+        }
+        const member=await Member.findOne({
+            sellerId:req.seller._id,
+            restaurantId:hotelId,
+        })
+        if(!member){
+            return next(new ErrorHandler("you are not the member of this hotel",401))
+        }
+        const memberRole=await Role.findOne({
+            _id:member.roleId,
+            restaurantId:hotelId,
+        })
+        if(!memberRole){
+            return next(new ErrorHandler("you are not the member of this hotel",401))
+        }
+        if(!memberRole.adminPower && !memberRole.canManageFoodItemData){
+            return next(new ErrorHandler("you are not authorized to edit category",401))
+        }
+        const category=await FoodCategory.findOneAndDelete({
+            _id:categoryId,
+            restaurantId:hotelId
+        })
+        if(!category){
+            return next(new ErrorHandler("category not found",404))
+        }
+        const updateHotel=await Hotel.findOneAndUpdate({
+            _id:hotelId
+        },{
+            $pull:{foodCategoryIds:category._id}
+        })
+        if(!updateHotel){
+            return next(new ErrorHandler("hotel not found",404))
+        }
+        let itemIds=category.foodItemIds.map(async(item)=>await FoodItem.findOneAndDelete({
+            _id:item,
+            restaurantId:hotelId
+        }))
+        const deletedItems=await Promise.all(itemIds)
+        console.log(deletedItems)
+        res.status(200).json({success:true,message:"category deleted successfully"})
+    }catch(error){
+        console.log(error)
         return next(new ErrorHandler(error.message,404))
     }
 }))

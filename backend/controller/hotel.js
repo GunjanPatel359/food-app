@@ -134,4 +134,20 @@ router.get('/:hotelId/food-items-with-categories',isSellerAuthenticated,catchAsy
     }
 }))
 
+router.get('/:hotelId',catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId}=req.params
+        if(!hotelId){
+            return next(new ErrorHandler("hotel Id not found",400))
+        }
+        const hotel=await Hotel.findById(hotelId)
+        if(!hotel){
+            return next(new ErrorHandler("hotel not found",400))
+        }
+        res.status(200).json({success:true,hotel})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
 module.exports = router

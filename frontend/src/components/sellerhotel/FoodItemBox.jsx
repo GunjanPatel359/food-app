@@ -47,7 +47,7 @@ const FoodItemBox = ({ item,role }) => {
             </div>
           </div>
           <div className='flex'>
-            <Tooltip position="bottom" content="veg" TooltipStyle='bg-rose-200 text-rose-600'>
+            <Tooltip position="bottom" content={`${item.veg ? 'veg' : 'non-veg'}`} TooltipStyle='bg-rose-200 text-rose-600'>
             <span className={`border-2 w-6 h-6 flex justify-evenly p-[2.3px] ${item.veg ? 'border-green-500' : 'border-red-500'}`}>
               <span className={`m-auto mx-auto rounded-full w-full h-full ${item.veg ? 'bg-green-500' : 'bg-red-500'} `} size={17}>
               </span>

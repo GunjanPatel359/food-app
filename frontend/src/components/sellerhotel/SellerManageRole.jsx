@@ -16,13 +16,15 @@ import {
   closestCenter,
   DndContext,
   PointerSensor,
+  KeyboardSensor,
   useSensor,
   useSensors
 } from '@dnd-kit/core'
 import {
   arrayMove,
   SortableContext,
-  verticalListSortingStrategy
+  verticalListSortingStrategy,
+  sortableKeyboardCoordinates
 } from '@dnd-kit/sortable'
 
 const SellerManageRole = () => {
@@ -106,6 +108,10 @@ const SellerManageRole = () => {
   }
 
   const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 3

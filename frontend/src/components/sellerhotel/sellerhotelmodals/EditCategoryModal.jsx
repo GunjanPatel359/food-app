@@ -22,11 +22,11 @@ const EditCategoryModal = () => {
             setCategoryName(categoryData.categoryName)
             SetDescription(categoryData.description)
         }
-        if(data?.categoryItem){
+        if(data && data?.categoryItem){
             setCategoryData(data.categoryItem)
             setValues()
         }
-    },[categoryData.categoryName, categoryData.description, data.categoryItem])
+    },[categoryData.categoryName, categoryData.description, data])
 
     if (!isModelOpen) {
         return null;

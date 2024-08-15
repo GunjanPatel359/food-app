@@ -150,6 +150,24 @@ router.get('/getallsellerhotels', isSellerAuthenticated, catchAsyncErrors(async 
     }
 }))
 
+router.get('/getallmanaginghotels',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try{
+        const member=await Member.find({
+            sellerId:req.seller._id
+        }).populate("restaurantId")
+        if(!member){
+            return next(new ErrorHandler("you are not member of any restaurant",400))
+        }
+        const hotels=member.map((item)=>{
+            return item.restaurantId
+        })
+        const hotel=hotels.filter((item)=>(item.sellerId).toString() != (req.seller._id).toString())
+        return res.status(200).json({success:true,hotel})
+    }catch(error){
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
 router.get('/getsellerhotel/:hotelId', isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
         const { _id } = req.seller._id
@@ -166,6 +184,7 @@ router.get('/getsellerhotel/:hotelId', isSellerAuthenticated, catchAsyncErrors(a
         }
         res.status(200).json({ success: true, hotel })
     } catch (err) {
+        console.log(err)
         return next(new ErrorHandler(err.message, 400))
     }
 }))

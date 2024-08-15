@@ -21,6 +21,7 @@ exports.isSellerAuthenticated=catchAsyncErrors(async(req,res,next)=>{
     }
     const decoded=jwt.verify(seller_token,process.env.JWT_SECRET_KEY)
 
+
     req.seller=await Seller.findById(decoded.id);
     next()
 })

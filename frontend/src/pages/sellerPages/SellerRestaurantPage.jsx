@@ -8,19 +8,23 @@ import {IoFastFoodOutline} from "react-icons/io5"
 // import { MdManageAccounts } from "react-icons/md";
 import { MdOutlineTableBar } from "react-icons/md";
 import SellerManageRole from "../../components/sellerhotel/SellerManageRole";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { backend_url } from "../../server";
 import SellerHotelModalProvider from "../../provider/SellerHotelModalProvider";
 import HotelFoodItems from "../../components/sellerhotel/HotelFoodItems";
 import OrderTableManage from "../../components/sellerhotel/OrderTableManage";
+import { useDispatch } from "react-redux";
+import { addSeller, sellerLogout } from "../../redux/reducers/seller";
 
 
 const SellerRestaurantPage = () => {
     const params = useParams()
     const {hotelId}=params
-
+    const dispatch=useDispatch()
+    const navigate=useNavigate()
+    const [loading,setLoading]=useState(false)
     const [select,setSelected]=useState(0)
     const menuItemList=[
         { icon:<BsFillInfoCircleFill size={22} />,text:"Hotel",alert:false },
@@ -39,6 +43,33 @@ const SellerRestaurantPage = () => {
         }
         initiatePage()
     },[hotelId])
+
+    useEffect(() => {
+        const userinfo = async () => {
+          setLoading(true)
+          try {
+            const res = await axios.get(`${backend_url}/seller/sellerinfo`, {
+              withCredentials: true
+            })
+            if(!res.data.seller){
+              dispatch(sellerLogout())
+              navigate('/seller/login')
+            }
+            dispatch(addSeller(res.data.seller))
+          } catch (err) {
+            toast.error(err)
+            if(err.response.data.success===false){
+              dispatch(sellerLogout())
+              navigate("/seller/login")
+            }
+            console.log(err)
+          }finally{
+            setLoading(false)
+          }
+        }
+        userinfo()
+      }, [dispatch,navigate])
+
   return (
     <div>
         <SellerProfileHeader />

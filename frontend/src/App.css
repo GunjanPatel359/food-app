@@ -12,7 +12,6 @@
     -ms-overflow-style: none; /* for Internet Explorer, Edge */
     scrollbar-width: none; /* for Firefox */
   }
-
 :root{
     --color-50:#fff1f2;
     --color-100:#ffe4e6;
@@ -41,3 +40,13 @@ rose700 #be123c
 rose800 #9f1239
 rose900 #881337
 rose950 #4c0519 */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* input[type="number"] {
+  -moz-appearance: textfield   
+} */

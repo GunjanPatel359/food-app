@@ -6,9 +6,8 @@ import { FaUserPlus } from "react-icons/fa";
 import { IoPeople } from "react-icons/io5";
 
 import { useSortable } from "@dnd-kit/sortable";
-// import { useDraggable } from "@dnd-kit/core";
-import {CSS} from "@dnd-kit/utilities"
 import { useModal } from "../../customhooks/zusthook";
+import {CSS} from "@dnd-kit/utilities"
 
 const RoleItem = ({item,role,ownerId}) => {
     const {onOpen}=useModal()
@@ -19,15 +18,11 @@ const RoleItem = ({item,role,ownerId}) => {
         transform,
         transition
     }=useSortable({id:item._id})
-
-    // const {
-    //     transform,
-    //     transition
-    // }=useDraggable({id:item._id})
+    console.log(transform,transition)
 
     const style={
-        transition,
-        transform:CSS.Transform.toString(transform)
+        transform:CSS.Transform.toString(transform),
+        transition
     }
 
   return (

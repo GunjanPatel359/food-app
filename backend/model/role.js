@@ -47,6 +47,10 @@ const roleSchema=new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    canManageOrder:{
+        type:Boolean,
+        default:false
+    },
     canManageOrderTableInfo:{
         type:Boolean,
         default:false

@@ -18,7 +18,7 @@ const CategoryBox = ({ item, role }) => {
           <span className="text-white bg-rose-500 rounded w-[32px] items-center flex shadow cursor-pointer hover:opacity-90" onClick={() => onOpen('edit-food-category',{categoryItem:item})}>
             <MdEdit className="m-auto" size={24} />
           </span>
-          <span className="text-white bg-rose-500 rounded w-[32px] items-center flex shadow cursor-pointer hover:opacity-90" onClick={() => onOpen()}>
+          <span className="text-white bg-rose-500 rounded w-[32px] items-center flex shadow cursor-pointer hover:opacity-90" onClick={() => onOpen('Delete-Food-Category',{categoryDelete:item})}>
             <MdDeleteForever className="m-auto" size={24} />
           </span>
           

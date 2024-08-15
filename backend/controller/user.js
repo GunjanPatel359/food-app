@@ -26,7 +26,7 @@ router.get("/getpaypalclientdetail",isAuthenticated || isSellerAuthenticated,cat
 router.get("/userinfo",isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
     try {
         const user=req.user
-        res.status(200).json({user})
+        res.status(200).json({success:true,user})
     } catch (error) {
         return next(new ErrorHandler(error.message, 400));
     }

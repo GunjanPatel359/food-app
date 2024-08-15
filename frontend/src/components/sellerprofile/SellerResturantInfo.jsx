@@ -19,7 +19,8 @@ const SellerResturantInfo = () => {
 
     const {onOpen}=useModal()
     const {seller}=useSelector((state)=>state.seller)
-    const [hotels,setHotels]=useState([])
+    const [sellerHotels,setSellerHotels]=useState([])
+    const [manageHotels,setManageHotels]=useState([])
 
     useEffect(()=>{
       const getAllSellerHotels=async()=>{
@@ -27,7 +28,9 @@ const SellerResturantInfo = () => {
             const res=await axios.get(`${backend_url}/seller/getallsellerhotels`,{
               withCredentials:true
             })
-            setHotels(res.data.hotel)
+            if(res.data.success){
+              setSellerHotels(res.data.hotel)
+            }
           } catch (error) {
             toast.error(error)
           }
@@ -36,6 +39,22 @@ const SellerResturantInfo = () => {
           getAllSellerHotels()
         }
     },[seller])
+
+    useEffect(()=>{
+      const getAllManagingHotels=async()=>{
+        try {
+          const res=await axios.get(`${backend_url}/seller/getallmanaginghotels`,{
+            withCredentials:true
+          })
+          if(res.data.success){
+            setManageHotels(res.data.hotel)
+          }
+        } catch (error) {
+          toast.error(error)
+        }
+      }
+      getAllManagingHotels()
+    },[])
 
 
   return (
@@ -51,8 +70,14 @@ const SellerResturantInfo = () => {
         </TooltipContent>
       </Tooltip>
       </div>
-      <div className='w-full h-[300px] flex flex-wrap'>
-        {hotels.length>0 && hotels.map((item,i)=>{
+      {
+        sellerHotels.length>0 &&
+        <div className='ml-3 mb-2 text-2xl text-rose-500 font-semibold'>My restaurants</div>
+      }
+      {sellerHotels.length>0 && (
+        <>
+        <div className='w-full h-[300px] flex flex-wrap'>
+         {sellerHotels.map((item,i)=>{
           return (
             <div key={i} className='transition-all duration-300 p-3 border min-w-[250px] border-rose-500 rounded-xl bg-white shadow-xl m-2'
             >
@@ -72,6 +97,38 @@ const SellerResturantInfo = () => {
           )
         })}
       </div>
+      </>
+      )}
+
+      {
+        manageHotels.length>0 &&
+        <div className='ml-3 mb-2 text-2xl text-rose-500 font-semibold'>working Restaurant</div>
+      }
+      {manageHotels.length>0 && (
+        <>
+        <div className='w-full h-[300px] flex flex-wrap'>
+         {manageHotels.map((item,i)=>{
+          return (
+            <div key={i} className='transition-all duration-300 p-3 border min-w-[250px] border-rose-500 rounded-xl bg-white shadow-xl m-2'
+            >
+              <img src={`${img_url}/${item.imgUrl}`} className='h-[170px] rounded-xl m-auto' />
+              <div className='flex flex-col p-1'>
+              <div className='text-2xl text-rose-500 font-bold flex flex-wrap'>{item.name}</div>
+              <div className='text-rose-600 font-semibold flex flex-wrap'>Country: <span className='ml-1 text-rose-500 font-normal'>{item.addresses.country}</span></div>
+              <div className='text-rose-600 font-semibold flex flex-wrap'>State: <span className='ml-1 text-rose-500 font-normal'>{item.addresses.state}</span></div>
+              <div className='text-rose-600 font-semibold flex flex-wrap'>City: <span className='ml-1 text-rose-500 font-normal'>{item.addresses.city}</span></div>
+              <div className='text-rose-600 font-semibold mb-2 flex flex-wrap'>zipcode: <span className='ml-1 text-rose-500 font-normal'>{item.addresses.zipCode}</span></div>
+              <button className='mb-1 transition-all bg-rose-500 text-white p-1 rounded-xl px-3 hover:opacity-90 shadow'
+              onClick={()=>navigate(`/seller/${item._id}`)}
+              >View</button>
+              <button className='bg-white text-red-500 p-1 rounded-xl px-3 border border-red-500 shadow hover:text-red-600 hover:border-red-600' onClick={()=>onOpen("delete-restaurant",item)}>Delete</button>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+      </>
+      )}
     </div>  
     </TooltipProvider>
   )

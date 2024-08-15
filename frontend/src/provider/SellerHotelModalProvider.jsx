@@ -11,6 +11,7 @@ import ManageRoleMemberModal from '../components/sellerhotel/sellerhotelmodals/M
 import EditFoodItemModal from '../components/sellerhotel/sellerhotelmodals/EditFoodItemModal'
 import DeleteFoodItemModal from '../components/sellerhotel/sellerhotelmodals/DeleteFoodItemModal'
 import EditCategoryModal from '../components/sellerhotel/sellerhotelmodals/EditCategoryModal'
+import DeleteFoodCategory from '../components/sellerhotel/sellerhotelmodals/DeleteFoodCategory'
 
 const SellerHotelModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false)
@@ -53,6 +54,7 @@ const SellerHotelModalProvider = () => {
           <ManageRoleMemberModal />
           <EditFoodItemModal />
           <DeleteFoodItemModal/>
+          <DeleteFoodCategory />
           </div>
         )}
       </div>

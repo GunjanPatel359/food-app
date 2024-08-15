@@ -219,4 +219,52 @@ router.post('/remove-member/:hotelId',isSellerAuthenticated,catchAsyncErrors(asy
     }
 }))
 
+router.get('/:hotelId/ismember',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId}=req.params
+        if(!hotelId){
+            return next(new ErrorHandler("hotel id is not provided",400))
+        }
+        const member = await Member.findOne({
+            sellerId:req.seller._id,
+            restaurantId:hotelId
+        })
+        if(!member){
+            return next(new ErrorHandler("you are not the member of the hotel",400))
+        }
+        res.status(200).json({success:true,data:true})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
+router.get('/:hotelId/member-of-hotel',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId}=req.params
+        if(!hotelId){
+            return next(new ErrorHandler("hotel id is not provided",400))
+        }
+        const member = await Member.findOne({
+            sellerId:req.seller._id,
+            restaurantId:hotelId
+        })
+        if(!member){
+            return next(new ErrorHandler("you are not the member of the hotel",400))
+        }
+        const memberRole=await Role.findOne({
+            _id:member.roleId,
+            restaurantId:hotelId
+        })
+        if(!memberRole){
+            return next(new ErrorHandler("member role is not found",400))
+        }
+        if(!memberRole.adminPower && !memberRole.canManageOrder){
+            return next(new ErrorHandler("you are not authorized to access this route",400))
+        }
+        res.status(200).json({success:true,data:member._id})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
 module.exports = router

@@ -84,7 +84,7 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
         group transition-all duration-1000 h-[47px] shadow
         ${
           active
-            ? ' bg-rose-500 text-white' //bg-gradient-to-tr from-rose-400 to-rose-300
+            ? ' bg-rose-500 opacity-90 text-white' //bg-gradient-to-tr from-rose-400 to-rose-300
             : 'hover:bg-red-100 bg-white text-rose-500'
         }
     `}
@@ -114,7 +114,7 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
           text-sm
           invisible opacity-20 -translate-x-3 transition-all duration-200
           group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
-          ${active?"bg-gradient-to-tr from-rose-500 to-rose-300 text-white":"bg-rose-50"}
+          ${active?"bg-gradient-to-tr from-rose-500 to-rose-400 text-white":"bg-rose-50"}
       `}
         >
           {text}
