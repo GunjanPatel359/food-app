@@ -1,10 +1,8 @@
-import ConfirmBackToAvailableModal from "../components/restaurantManage/restaurantManageModals/ConfirmBackToAvailableModal"
-import QrCodeModal from "../components/restaurantManage/restaurantManageModals/QrCodeModal"
+import ConfirmTableOrder from "../components/restaurantManage/restaurantTableManageModals/ConfirmTableOrder"
 import { useModal } from "../customhooks/zusthook"
 import { useEffect, useRef, useState } from "react"
 
-
-const RestaurantManageProvider = () => {
+const SellerOrderTableManageProvider = () => {
     const [isMounted, setIsMounted] = useState(false)
     const { isOpen,onClose } = useModal()
     const divRef=useRef()
@@ -12,19 +10,6 @@ const RestaurantManageProvider = () => {
     useEffect(() => {
       setIsMounted(true)
     }, [])
-
-    useEffect(() => {
-      if (isOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = 'auto';   
-  
-      }
-  
-      return () => {
-        document.body.style.overflow = 'auto';
-      };
-    }, [isOpen]);
     
     if (!isMounted) {
       return null
@@ -35,7 +20,6 @@ const RestaurantManageProvider = () => {
         onClose()
       }
     }
-
     return (
       <>
         <div
@@ -48,8 +32,7 @@ const RestaurantManageProvider = () => {
         >
           {isOpen && (
             <div className='transition-all duration-500 ease-ease-in w-auto max-h-[600px] overflow-y-scroll flex flex-col bg-white border-2 border-white shadow-2xl rounded-xl text-rose-500'>  
-            <QrCodeModal />
-            <ConfirmBackToAvailableModal />
+            <ConfirmTableOrder />
             </div>
           )}
         </div>
@@ -57,4 +40,4 @@ const RestaurantManageProvider = () => {
     )
   }
 
-export default RestaurantManageProvider
+export default SellerOrderTableManageProvider

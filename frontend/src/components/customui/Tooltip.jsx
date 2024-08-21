@@ -2,9 +2,10 @@
 const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
 const Tooltip = ({ position, content, children,TooltipStyle }) => {
+  console.log(content)
     return (
         <>
-        <div className="relative cursor-pointer group z-10">
+        <div className="relative cursor-pointer group">
             <div className="">{children}</div>
             <span
             className={classNames(

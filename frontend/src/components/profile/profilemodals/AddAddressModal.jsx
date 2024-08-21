@@ -111,7 +111,7 @@ const AddAddressModal = () => {
   return (
     <Transition show={isModalOpen}>
            <div className='flex justify-end text-right pr-3 pt-3'>
-             <MdCancel onClick={() => closeModal()} size={25} />
+             <MdCancel className='cursor-pointer' onClick={() => closeModal()} size={25} />
            </div>
            <div className='p-6 pt-0 gap-y-1 flex flex-col'>
              <div className='text-center text-white text-xl mb-3'>Add Address</div>

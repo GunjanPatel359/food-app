@@ -9,7 +9,7 @@ const EditCategoryModal = () => {
     const params = useParams()
     const { hotelId } = params
 
-    const { type, data, isOpen, reloadCom } = useModal();
+    const { type, data, isOpen, reloadCom,onClose } = useModal();
     const isModelOpen = isOpen && type === "edit-food-category";
     const [categoryData,setCategoryData]=useState('')
     const [categoryName, setCategoryName] = useState('')
@@ -55,7 +55,7 @@ const EditCategoryModal = () => {
         <>
           <div className='w-[550px] p-4 px-10 pt-7'>
             <div>
-              <div className='font-semibold text-2xl text-rose-600 mb-3'>
+              <div className='font-semibold text-2xl text-rose-500 mb-3'>
                 Edit Food Category
               </div>
               <div className='w-full h-[2px] bg-rose-500 mb-3'></div>
@@ -80,7 +80,8 @@ const EditCategoryModal = () => {
                   value={description}
                   onChange={e => SetDescription(e.target.value)}
                 />
-                <button className='w-full bg-rose-500 text-white p-2 rounded border border-rose-200 hover:opacity-90' disabled={loading}>Edit Food Category</button>
+                <button type="submit" className='w-full bg-rose-500 text-white p-2 rounded border border-rose-500 hover:opacity-90' disabled={loading}>Edit Food Category</button>
+                <button type="button" className='w-full bg-white text-rose-500 p-2 rounded border border-rose-300 hover:opacity-90' disabled={loading} onClick={()=>onClose()}>Cancel</button>
                 </form>
               </div>
             </div>

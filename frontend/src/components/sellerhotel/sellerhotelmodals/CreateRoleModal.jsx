@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 const CreateRoleModal = () => {
     const params=useParams()
     const {hotelId}=params
-  const { isOpen, type,data ,reloadCom} = useModal()
+  const { isOpen, type,data ,reloadCom,onClose} = useModal()
 
   const isModelOpen = isOpen && type === 'create-roles'
 
@@ -23,6 +23,10 @@ const CreateRoleModal = () => {
   const [canManageFoodItemData,setCanManageFoodItemData]=useState(false)
   const [adminPower,setAdminPower]=useState(false)
   const [canAddMember,setCanAddMember]=useState(false)
+
+  if(!isModelOpen){
+    return null
+  }
 
   const handleSubmit=async(e)=>{
     e.preventDefault()
@@ -124,10 +128,14 @@ const CreateRoleModal = () => {
                         </div>
 
                         {/* will be adding other stuff later */}
-                        <button className='bg-rose-400 hover:bg-rose-500 text-white font-bold
-                        py-2 px-4 rounded'>Create Role</button>
+                        <div className="flex gap-2">
+                        <button type='submit' className='bg-rose-400 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded w-full'>Create Role</button>
+                        <button type='button' className='bg-white hover:text-rose-400 border border-rose-500 text-rose-500 py-2 px-4 rounded w-full' onClick={()=>onClose()}>Cancel</button>
+                        </div>
+                        
                     </form>
                 </div>
+                <div className='h-[25px]'></div>
             </div>
         </div>
         </>

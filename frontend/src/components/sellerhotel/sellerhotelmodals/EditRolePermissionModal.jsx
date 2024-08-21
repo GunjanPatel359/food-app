@@ -153,8 +153,11 @@ const EditRolePermissionModal = () => {
                         </div>
 
                         {/* will be adding other stuff later */}
-                        <button className={`bg-rose-500 text-white font-bold
-                        py-2 px-4 rounded "}`} >Update Role</button>
+                        <div className="flex w-full gap-1">
+                        <button type='submit' className={`bg-rose-500 text-white font-bold py-2 px-4 rounded w-full "}`} >Update Role</button>
+                        <button type='button' className={`bg-white text-rose-500 border border-rose-500 py-2 px-4 w-full rounded "}`}
+                        onClick={()=>onClose()} >Cancel</button>
+                        </div>
                     </form>
                 </div>
             </div>

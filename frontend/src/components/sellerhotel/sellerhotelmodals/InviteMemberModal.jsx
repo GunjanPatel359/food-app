@@ -3,7 +3,7 @@ import { useModal } from '../../../customhooks/zusthook'
 
 import { CiWarning } from 'react-icons/ci'
 import { IoSearch } from 'react-icons/io5'
-import { MdOutlineWhatsapp } from 'react-icons/md'
+import { MdCancel, MdOutlineWhatsapp } from 'react-icons/md'
 import { RiFacebookCircleLine } from 'react-icons/ri'
 import { HiChevronRight } from 'react-icons/hi'
 import { FaRegCircleUser } from 'react-icons/fa6'
@@ -19,10 +19,10 @@ import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 const InviteMemberModal = () => {
-  const {seller}=useSelector((state)=>state.seller)
+  const { seller } = useSelector((state) => state.seller)
   const params = useParams()
   const { hotelId } = params
-  const { isOpen, type, data,onlyReloadCom } = useModal()
+  const { isOpen, type, data, onlyReloadCom, onClose } = useModal()
   const isModelOpen = isOpen && type === 'invite-member'
 
   const [openArrow, setOpenArrow] = useState(false)
@@ -117,15 +117,15 @@ const InviteMemberModal = () => {
 
   const addMember = async (id) => {
     try {
-      const response=await axios.post(`${backend_url}/member/${hotelId}/add-members`,{roleId:data.inviteRole._id,sellerId:id},{withCredentials:true})
-      if(response.data.success){
+      const response = await axios.post(`${backend_url}/member/${hotelId}/add-members`, { roleId: data.inviteRole._id, sellerId: id }, { withCredentials: true })
+      if (response.data.success) {
         setRoleMembers((rest) => [...rest, id]);
         toast.success(response.data.message)
         onlyReloadCom()
       }
-      if(!response.data.success){
+      if (!response.data.success) {
         toast.error(response.data.message)
-        }
+      }
     } catch (error) {
       toast.error(error.response.data.message)
     }
@@ -133,28 +133,31 @@ const InviteMemberModal = () => {
 
   const removeMember = async (id) => {
     try {
-      const response = await axios.post(`${backend_url}/member/remove-member/${hotelId}`,{roleId:data.inviteRole._id,sellerId:id},{withCredentials:true})
-      if(response.data.success){
+      const response = await axios.post(`${backend_url}/member/remove-member/${hotelId}`, { roleId: data.inviteRole._id, sellerId: id }, { withCredentials: true })
+      if (response.data.success) {
         setRoleMembers((rest) => rest.filter(memberId => memberId != id));
         toast.success(response.data.message)
         onlyReloadCom()
       }
-      if(!response.data.success){
+      if (!response.data.success) {
         toast.error(response.data.message)
-        }
+      }
     } catch (error) {
       toast.error(error.response.data.message)
     }
   }
-  
+
   return (
     <div>
       {isModelOpen && (
         <>
           {item && (
-            <div className='w-[550px] p-4 px-10 pt-7'>
-              <div>
-                <div className='font-semibold text-2xl text-rose-600 mb-3'>
+            <div className='w-[550px] p-4 px-10 pt-7  '>
+              <div className=''>
+                <div className='relative'>
+                    <MdCancel className='cursor-pointer absolute -right-6 -top-2 text-white bg-rose-500 rounded-full' onClick={() => onClose()} size={25} />
+                </div>
+                <div className='font-semibold text-2xl text-rose-500 mb-3'>
                   Invite Member
                 </div>
                 <div className='w-full h-[2px] bg-rose-500 mb-3'></div>
@@ -180,60 +183,60 @@ const InviteMemberModal = () => {
                           className='text-rose-500 placeholder:text-rose-400 focus:outline-none inline w-full'
                           value={query}
                           onChange={handleMemberIdSearch}
-                          // onClick={() => setResultBoxOpen(true)}
+                        // onClick={() => setResultBoxOpen(true)}
                         />
                         {resultBoxOpen && (
                           <div className='absolute bg-white border border-rose-500 p-4 px-6 rounded shadow shadow-rose-300 translate-x-7 translate-y-9 w-[400px]'>
                             <div className='font-semibold'>Search Result</div>
                             <div className='w-full h-[1px] bg-rose-500 mt-1 mb-2'></div>
                             {searchResult ? (
-                              (data?.ownerId != searchResult._id)?
-                              <>
-                              <div className='flex border border-rose-500 p-2 justify-between rounded shadow'>
-                                <div className='flex'>
-                                  <div className='my-auto cursor-pointer'>
-                                    {searchResult.avatar ? (
-                                      <img
-                                        src={`${img_url}/${searchResult.avatar}`}
-                                        className='rounded-full w-[40px]'
-                                      />
-                                    ) : (
-                                      <FaRegCircleUser size={40} />
-                                    )}
-                                  </div>
-                                  <div className='flex flex-col ml-2'>
-                                    <div className='font-semibold'>
-                                      {searchResult._id}
+                              (data?.ownerId != searchResult._id) ?
+                                <>
+                                  <div className='flex border border-rose-500 p-2 justify-between rounded shadow'>
+                                    <div className='flex'>
+                                      <div className='my-auto cursor-pointer'>
+                                        {searchResult.avatar ? (
+                                          <img
+                                            src={`${img_url}/${searchResult.avatar}`}
+                                            className='rounded-full w-[40px]'
+                                          />
+                                        ) : (
+                                          <FaRegCircleUser size={40} />
+                                        )}
+                                      </div>
+                                      <div className='flex flex-col ml-2'>
+                                        <div className='font-semibold'>
+                                          {searchResult._id}
+                                        </div>
+                                        <div className='text-sm'>{searchResult.email}</div>
+                                      </div>
                                     </div>
-                                    <div className='text-sm'>{searchResult.email}</div>
+                                    <div className='flex mr-1'>
+                                      {roleMembers.length >= 0 && roleMembers.includes(item._id) ? (
+                                        <>
+                                          <AiOutlineCheckCircle
+                                            className='m-auto cursor-pointer'
+                                            size={30}
+                                            onClick={() => removeMember(item._id)}
+                                          />
+                                        </>
+                                      ) : (
+                                        <>
+                                          <PlusCircle
+                                            className='m-auto cursor-pointer'
+                                            size={30}
+                                            onClick={() => addMember(item._id)}
+                                          />
+                                        </>
+                                      )}
+                                    </div>
                                   </div>
-                                </div>
-                                <div className='flex mr-1'>
-                                {roleMembers.length>=0 && roleMembers.includes(item._id) ? (
-                                            <>
-                                              <AiOutlineCheckCircle
-                                                className='m-auto cursor-pointer'
-                                                size={30}
-                                                onClick={()=>removeMember(item._id)}
-                                              />
-                                            </>
-                                          ) : (
-                                            <>
-                                              <PlusCircle
-                                                className='m-auto cursor-pointer'
-                                                size={30}
-                                                onClick={()=>addMember(item._id)}
-                                              />
-                                            </>
-                                          )}
-                                </div>
-                              </div>
-                              </>
-                              :<>
-                              <div className='mt-3 text-rose-600 text-justify'>
+                                </>
+                                : <>
+                                  <div className='mt-3 text-rose-600 text-justify'>
                                     * cannot perform any task on owner of this restaurant
                                   </div>
-                              </>
+                                </>
                             ) : (
                               <>
                                 {searchError && (
@@ -254,7 +257,7 @@ const InviteMemberModal = () => {
                           className='text-rose-500 placeholder:text-rose-400 focus:outline-none inline w-full'
                           value={query}
                           onChange={handleMemberNameSearch}
-                          // onClick={() => setResultBoxOpen(true)}
+                        // onClick={() => setResultBoxOpen(true)}
                         />
                         {resultBoxOpen && (
                           <div className='absolute bg-white border border-rose-500 p-4 px-6 rounded shadow shadow-rose-300  translate-y-9 w-[420px] max-h-[250px] overflow-scroll'>
@@ -264,7 +267,7 @@ const InviteMemberModal = () => {
                               <>
                                 <div className='mt-2 flex flex-col gap-y-2'>
                                   {searchResult.map((item, i) => {
-                                    if(data?.ownerId == item._id || seller._id == item._id ){
+                                    if (data?.ownerId == item._id || seller._id == item._id) {
                                       return null
                                     }
                                     return (
@@ -293,12 +296,12 @@ const InviteMemberModal = () => {
                                           </div>
                                         </div>
                                         <div className='flex mr-1'>
-                                          {roleMembers.length>=0 && roleMembers.includes(item._id) ? (
+                                          {roleMembers.length >= 0 && roleMembers.includes(item._id) ? (
                                             <>
                                               <AiOutlineCheckCircle
                                                 className='m-auto cursor-pointer'
                                                 size={30}
-                                                onClick={()=>removeMember(item._id)}
+                                                onClick={() => removeMember(item._id)}
                                               />
                                             </>
                                           ) : (
@@ -306,7 +309,7 @@ const InviteMemberModal = () => {
                                               <PlusCircle
                                                 className='m-auto cursor-pointer'
                                                 size={30}
-                                                onClick={()=>addMember(item._id)}
+                                                onClick={() => addMember(item._id)}
                                               />
                                             </>
                                           )}
@@ -333,15 +336,13 @@ const InviteMemberModal = () => {
                   <div className='border border-rose-500 rounded-tr-full rounded-br-full'>
                     <HiChevronRight
                       size={22}
-                      className={`transition-all inline m-2 translate-y-[1px] ${
-                        openArrow ? 'rotate-90' : ''
-                      } cursor-pointer`}
+                      className={`transition-all inline m-2 translate-y-[1px] ${openArrow ? 'rotate-90' : ''
+                        } cursor-pointer`}
                       onClick={() => setOpenArrow(!openArrow)}
                     />
                     <div
-                      className={`transition-all absolute flex flex-col bg-white p-2 rounded-2xl border border-rose-300 shadow ${
-                        openArrow ? 'visible' : 'invisible -translate-y-2'
-                      }`}
+                      className={`transition-all absolute flex flex-col bg-white p-2 rounded-2xl border border-rose-300 shadow ${openArrow ? 'visible' : 'invisible -translate-y-2'
+                        }`}
                     >
                       <div
                         className='p-2 cursor-pointer'

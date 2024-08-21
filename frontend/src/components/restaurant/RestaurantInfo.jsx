@@ -8,7 +8,7 @@ const RestaurantInfo = ({hotel}) => {
     }
   return (
     <>
-    <div className="sm:flex m-2 border border-rose-500 rounded">
+    <div className="sm:flex m-2 border border-rose-500 rounded lg:w-[70%] mx-auto">
         <div className="sm:w-[40%] w-[100%] p-2">
             <img src={`${img_url}/${hotel.imgUrl}`} className="rounded shadow shadow-rose-400 w-full" />
         </div>

@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 const CreateFoodItemModal = () => {
   const params=useParams()
   const {hotelId}=params
-  const { isOpen, type, data, reloadCom } = useModal()
+  const { isOpen, type, data, reloadCom,onClose } = useModal()
   const isModelOpen = isOpen && type === 'create-food-item'
 
   const fileInputRef = useRef(null)
@@ -223,12 +223,23 @@ const CreateFoodItemModal = () => {
                 />
 
                 <button
+                type="submit"
                   disabled={loading ? true : false}
-                  className={`transition-all border border-rose-500 shadow p-2 bg-rose-500 rounded-xl text-white text-center mt-2 mb-8  ${
+                  className={`transition-all border border-rose-500 shadow p-2 bg-rose-500 rounded-xl text-white text-center mt-2 ${
                     loading ? 'opacity-70' : 'hover:opacity-90'
                   }`}
                 >
                   Create Food Item
+                </button>
+                <button
+                type="button"
+                  disabled={loading ? true : false}
+                  className={`transition-all border border-rose-500 shadow p-2 bg-white text-rose-500 rounded-xl text-center mb-5  ${
+                    loading ? 'opacity-70' : 'hover:opacity-90'
+                  }`}
+                  onClick={()=>onClose()}
+                >
+                  Cancel
                 </button>
               </form>
             </div>

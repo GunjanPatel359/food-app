@@ -10,7 +10,7 @@ const ProfileHeader = ({ user }) => {
   return (
     <div>
       <div className='w-full shadow-md shadow-rose-200'>
-        <div className='bg-gradient-to-tr from-rose-400 to-red-400  w-full'>
+        <div className='bg-gradient-to-tr from-rose-500 to-rose-400  w-full'>
           <div className='w-[80%] m-auto flex py-5 px-2 text-white h-[80px] justify-between'>
             <span className='flex text-4xl gap-x-4 cursor-pointer'>
               <IoFastFoodOutline size={40} color='white' />

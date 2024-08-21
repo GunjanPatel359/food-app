@@ -9,7 +9,7 @@ import { backend_url } from '../../../server'
 const CreateTableModal = () => {
   const params = useParams()
   const { hotelId } = params
-  const { isOpen, type, reloadCom } = useModal()
+  const { isOpen, type, reloadCom,onClose } = useModal()
   const [tableNumber, setTableNumber] = useState()
   const [tableDescription,setTableDescription]=useState("")
   const [seats,setSeats]=useState()
@@ -70,7 +70,7 @@ const CreateTableModal = () => {
                              </p>
                         </div>
                         <button type='submit' className='transition-all hover:opacity-90 bg-rose-500 p-2 text-white rounded'>Create Table</button>
-                        
+                        <button type='button' className='transition-all hover:opacity-90 bg-white p-2 text-rose-500 rounded border border-rose-500' onClick={()=>onClose()}>Cancel</button>
                     </form>
             </div>
           </div>

@@ -35,6 +35,7 @@ const SellerManageRole = () => {
   const [ownerId,setOwnerId]=useState('')
   const [role, setRole] = useState('')
   const [roles, setRoles] = useState('')
+  const [roleId,setRolesId]=useState('')
   const [oldRole, setOldRole] = useState('')
   const [reloadcomponent,setReloadComponent]=useState(1);
   // const [loading,setLoading]=useState(false)
@@ -53,6 +54,7 @@ const SellerManageRole = () => {
           let sortingRoles = hoteldata.data.hotel.roleIds
           sortingRoles.sort((a, b) => a.order - b.order)
           setRoles(sortingRoles)
+          setRolesId(sortingRoles.map((item)=> item._id))
           setOldRole(sortingRoles)
         }
       } catch (error) {
@@ -88,6 +90,7 @@ const SellerManageRole = () => {
         const newIndex = findObjectIndexById(roles, over.id)
         return arrayMove(roles, oldIndex, newIndex)
       })
+      setRolesId(roles.map((item)=> item._id))
     }
   }
 
@@ -142,7 +145,7 @@ const SellerManageRole = () => {
               sensors={sensors}
             >
               <SortableContext
-                items={roles}
+                items={roleId}
                 strategy={verticalListSortingStrategy}
               >
                 {roles.map((item, i) => {

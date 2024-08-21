@@ -6,12 +6,13 @@ import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Switch } from '../../ui/switch'
 import { IoWarning } from 'react-icons/io5'
-import { Plus, X } from 'lucide-react'
+import { X } from 'lucide-react'
+import { GrPowerReset } from "react-icons/gr";
 
 const EditFoodItemModal = () => {
     const param = useParams()
     const { hotelId } = param
-    const { type, data, isOpen,reloadCom } = useModal()
+    const { type, data, isOpen,reloadCom,onClose } = useModal()
     const isModelOpen = isOpen && type === 'edit-food-item'
 
     const fileInputRef = useRef(null)
@@ -224,8 +225,7 @@ const EditFoodItemModal = () => {
                                             size={22}
                                             className='text-rose-500 inline mr-1'
                                         />
-                                        sdhverevhjeruictnhuernt ernndb getryctrhertgyvtdfijeut
-                                        ewtvgwueghc wet tuweuhcgew c
+                                        provide this data for better user experience
                                     </p>
                                 </div>
 
@@ -272,22 +272,27 @@ const EditFoodItemModal = () => {
                                     onChange={e => setPrice(e.target.value)}
                                 />
 
+                                <div className="flex mt-2 gap-2">
                                 <button
                                 type='submit'
                                     disabled={loading ? true : false}
-                                    className={`transition-all border border-rose-500 shadow p-2 bg-rose-500 rounded-xl text-white text-center mt-2 ${loading ? 'opacity-70 cursor-none' : 'hover:opacity-90'
+                                    className={`w-full transition-all border border-rose-500 shadow p-2 bg-rose-500 rounded text-white text-center  ${loading ? 'opacity-70 cursor-none' : 'hover:opacity-90'
                                         }`}
                                 >
                                     Update Food Item
                                 </button>
+                                <div className='border border-rose-500 flex rounded px-2 m-[1px] shadow shadow-rose-200 cursor-pointer hover:opacity-90' onClick={handleReset}>
+                                <GrPowerReset className='m-auto' size={22} />
+                                </div>
+                                </div>
                                 <button
                                    type="button"
                                     disabled={loading ? true : false}
-                                    className={`transition-all border border-rose-500 shadow p-2 bg-white rounded-xl text-rose-500 text-center mb-4  ${loading ? 'opacity-70 cursor-none' : 'hover:opacity-90'
+                                    className={`transition-all border border-rose-500 shadow p-2 bg-white rounded text-rose-500 text-center mb-4  ${loading ? 'opacity-70 cursor-none' : 'hover:opacity-90'
                                         }`}
-                                        onClick={handleReset}
+                                        onClick={()=>onClose()}
                                 >
-                                    Reset
+                                    Cancel
                                 </button>
                             </form>
                         </div>

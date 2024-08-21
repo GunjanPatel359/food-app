@@ -4,6 +4,7 @@ import { io } from "socket.io-client"
 import SlideMenu from "../components/slidemenu/SlideMenu"
 
 import { MdOutlineTableBar } from "react-icons/md";
+import { ImSpoonKnife } from "react-icons/im";
 import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import axios from "axios";
@@ -12,6 +13,7 @@ import { addSeller, sellerLogout } from "../redux/reducers/seller";
 import { toast } from "react-toastify";
 import OrderTables from "../components/restaurantManage/OrderTables";
 import RestaurantManageProvider from "../provider/RestaurantManageProvider";
+import ManageOrders from "../components/restaurantManage/ManageOrders";
 
 const SellerRestaurantManagePage = () => {
     const params=useParams()
@@ -24,7 +26,7 @@ const SellerRestaurantManagePage = () => {
 
     
     useEffect(() => {
-        const socket = io("http://localhost:4000", { query: { orderID: '123' } })
+        // const socket = io("http://localhost:4000", { query: { orderID: '123' } })
         // socket.on(`/order`)
         // socket.emit('order', 123)
         // socket.on('do')
@@ -78,6 +80,7 @@ const SellerRestaurantManagePage = () => {
 
     const menuItemList = [
         { icon: <MdOutlineTableBar size={22} />, text: "Table", alert: false },
+        { icon: <ImSpoonKnife size={22} />, text: "Order", alert: false },
     ]
 
     return (
@@ -89,6 +92,7 @@ const SellerRestaurantManagePage = () => {
 
                 <div className='w-full'>
                     {select === 0 && <OrderTables/>} 
+                    {select === 1 && <ManageOrders/>} 
                 </div>
             </div>
             <RestaurantManageProvider />

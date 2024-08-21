@@ -10,7 +10,7 @@ import { MdCancel } from 'react-icons/md'
 const ManageRoleMemberModal = () => {
     const params = useParams()
     const { hotelId } = params
-    const { isOpen, data, type,onlyReloadCom } = useModal()
+    const { isOpen, data, type,onlyReloadCom,onClose } = useModal()
 
     const [roleMembers, setRoleMembers] = useState([])
     const [roleId, setRoleId] = useState([])
@@ -64,6 +64,9 @@ const ManageRoleMemberModal = () => {
         <div>
             {isModelOpen && (
                 <div className="lg:w-[600px] w-[480px] max-h-[500px] p-3 px-10 pt-7">
+                    <div className='relative'>
+                    <MdCancel className='cursor-pointer absolute -right-6 -top-2 text-white bg-rose-500 rounded-full' onClick={() => onClose()} size={25} />
+                </div>
                     <div>
                         <div className="text-2xl font-semibold pb-3">Members</div>
                         <div className="w-full border border-rose-400 shadow-2xl shadow-rose-200"></div>

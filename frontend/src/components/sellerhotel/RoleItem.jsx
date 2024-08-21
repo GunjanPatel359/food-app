@@ -18,7 +18,6 @@ const RoleItem = ({item,role,ownerId}) => {
         transform,
         transition
     }=useSortable({id:item._id})
-    console.log(transform,transition)
 
     const style={
         transform:CSS.Transform.toString(transform),
@@ -26,7 +25,7 @@ const RoleItem = ({item,role,ownerId}) => {
     }
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="bg-rose-500 p-3 pl-4 rounded text-white shadow-lg shadow-rose-200">
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="bg-rose-500 p-3 pl-4 rounded text-white shadow shadow-rose-200">
         <div className=" flex justify-between">
             <div className="flex">{item.roleName}{item.roleName=="Owner"?<FaUserShield className=" ml-2 cursor-pointer m-auto" size={22}/>:<><IoPeople className="ml-2 inline m-auto" size={26} onClick={()=>onOpen("manage-role-member",{manageMemberRole:item})} /><sup className="m-auto">{item.memberList.length}</sup></>}</div>
                 <div className="flex gap-x-3 pr-4">

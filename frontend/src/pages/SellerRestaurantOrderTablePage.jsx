@@ -11,20 +11,25 @@ import axios from "axios"
 import { IoIosArrowForward } from "react-icons/io";
 import { Checkbox } from "../components/ui/checkbox"
 import { Minus, Plus } from "lucide-react"
+import { useModal } from "../customhooks/zusthook"
+import SellerOrderTableManageProvider from "../provider/SellerOrderTableManageProvider"
 
 
 const SellerRestaurantOrderTablePage = () => {
     const params = useParams()
     const { hotelId } = params
     const { orderTableId } = params
+    const { onOpen } = useModal()
 
     const [orderTableDetails, setOrderTableDetails] = useState('')
+    console.log(orderTableDetails)
     const [orderFood, setOrderFood] = useState(false)
 
     const [food, setFood] = useState([]);
 
     const [order, setOrder] = useState([])
-    console.log(order)
+    
+    const [onGoing,setOnGoing]=useState([])
 
     useEffect(() => {
         const initiatePage = async () => {
@@ -33,6 +38,7 @@ const SellerRestaurantOrderTablePage = () => {
                 console.log(response)
                 if (response.data.success) {
                     setOrderTableDetails(response.data.orderTableDetails)
+                    setOnGoing(response.data.orderTableDetails.orders)
                 }
             } catch (error) {
                 toast.error(error)
@@ -62,7 +68,7 @@ const SellerRestaurantOrderTablePage = () => {
     return (
         <div>
             <SellerProfileHeader />
-            <div className="w-[70%] m-auto mt-8">
+            <div className="w-[70%] m-auto mt-8 mb-36">
                 {
                     orderTableDetails && (
                         <>
@@ -75,10 +81,21 @@ const SellerRestaurantOrderTablePage = () => {
                             </div>
 
                             <div className="">
-                                <div className="m-2">
-                                    <div className="text-rose-500 font-semibold text-2xl">Orders</div>
-                                    {orderTableDetails.orders.length > 0 ? (
+                                <div className="">
+                                    <div className="text-white font-semibold text-2xl bg-rose-500 p-2 pl-5">Orders</div>
+                                    {onGoing.length > 0 ? (
                                         <>
+                                        {onGoing.map((item)=>
+                                        <OrderItems item={item} key={item}/>
+                                        )}
+                                        <div className="flex justify-between p-2">
+                                            <span className="text-xl text-rose-500 font-semibold">
+                                                Total Amount
+                                                </span>
+                                            <span className="text-xl text-rose-500 font-semibold pr-1">
+                                            {onGoing.reduce((total, item) => total + item.foodItemId.price * item.quantity, 0)}/-
+                                                </span>
+                                        </div>
                                         </>
                                     ) : <div className="text-rose-500">{`Haven't ordered anything yet`}</div>}
                                 </div>
@@ -93,15 +110,95 @@ const SellerRestaurantOrderTablePage = () => {
                                 </div>
                             </div>
 
-                            <div className={`transition-all duration-500 overflow-clip ${orderFood ? "max-h-screen" : "max-h-0"}`}>
-                                {food && food.map((item, index) =>
-                                    <CategoryOpen item={item} key={index} order={order} setOrder={setOrder} />
-                                )
-                                }
+                            <div className={`transition-all duration-500 grid ${!orderFood ? "grid-rows-[0fr]" : "grid-rows-[1fr]"}`}>
+                                <div className="overflow-hidden">
+
+                                    {food && food.map((item, index) =>
+                                        <CategoryOpen item={item} key={index} order={order} setOrder={setOrder} />
+                                    )
+                                    }
+                                    <div className="flex">
+                                        <button className="text-xl bg-white text-rose-500 border border-rose-500 shadow shadow-rose-500 p-2 w-full rounded mr-1">reset</button>
+                                        <button className="text-xl bg-rose-500 text-white p-2 w-full rounded shadow hover:opacity-90"
+                                            onClick={() => onOpen('Ordertable-make-Order',
+                                                {
+                                                    orderTableOrderFood: {
+                                                        orderTabelId: orderTableDetails._id,
+                                                        order
+                                                    }
+                                                }
+                                            )}
+                                        >Order</button>
+                                    </div>
+                                </div>
                             </div>
                         </>
                     )
                 }
+            </div>
+            <SellerOrderTableManageProvider />
+        </div>
+    )
+}
+
+const OrderItems=({item})=>{
+    console.log(item)
+    const food=item.foodItemId
+    var color="red"
+    switch(item.status){
+        case 'Waiting':{ color="red"
+            break
+        }
+        case 'Preparing':{ color="blue"
+            break
+        }
+        case 'Prepared':{ color="rose"
+            break
+        }
+        case 'Completed':{ color="green"
+            break
+        }
+        default:{
+            color="red"
+        }
+    }
+    // "Waiting","Preparing","prepared","Completed"
+    return(
+        <div className='p-2 bg-white border-b border-rose-200'>
+            <div className='flex transition-all'>
+            <img
+                    src={`${img_url}/${food.imageUrl}`}
+                    className='h-[90px] rounded shadow shadow-rose-300'
+                />
+                <div className='ml-2 w-full flex-col flex gap-1'>
+                    <div className='flex justify-between w-full'>
+                        <div className='text-xl text-rose-500 font-semibold'>
+                            {food.name}
+                        </div>
+                        <div>
+                            <span>
+                                <div className="p-1 rounded-full px-3 text-white" style={{"backgroundColor":color}}>{item.status}</div>
+                            </span>
+                        </div>
+
+                    </div>
+                    <div className='flex justify-between w-full '>
+                        <div className='text-rose-500'>{food.smallDescription}</div>
+                        <div>
+                            <span>
+                                <div className="text-rose-500 font-semibold text-xl">{item.quantity} X {food.price}/-</div>
+                            </span>
+                        </div>
+                    </div>
+                    <div className='flex'>
+                        <Tooltip position="right" content={`${food.veg ? 'veg' : 'non-veg'}`} TooltipStyle='bg-rose-200 text-rose-600'>
+                            <span className={`border-2 w-6 h-6 flex justify-evenly p-[2.3px] ${food.veg ? 'border-green-500' : 'border-red-500'}`}>
+                                <span className={`m-auto mx-auto rounded-full w-full h-full ${food.veg ? 'bg-green-500' : 'bg-red-500'} `} size={17}>
+                                </span>
+                            </span>
+                        </Tooltip>
+                    </div>
+                </div>
             </div>
         </div>
     )
@@ -129,23 +226,11 @@ const CategoryOpen = ({ item, order, setOrder }) => {
                 </div>
             </div>
             <div className={`ease-linear duration-300 transition-all ${open ? "max-h-screen overflow-clip" : "max-h-0 overflow-hidden"}`}>
-                {item?.foodItemIds && (
-                    <>
-                        {item.foodItemIds.length > 0 && (
-                            <>
-                                {
-                                    item.foodItemIds.map((item, i) => {
-                                        return (
-                                            <>
-                                                <FoodItemOpen item={item} key={i} order={order} setOrder={setOrder} />
-                                            </>
-                                        )
-                                    }, [])
-                                }
-                            </>
-                        )}
-                    </>
-                )}
+                {item?.foodItemIds && item.foodItemIds.length > 0 &&
+                    item.foodItemIds.map((item, i) =>
+                                <FoodItemOpen item={item} key={i} order={order} setOrder={setOrder} />
+                        )
+                }
             </div>
         </div>
     )
@@ -153,22 +238,22 @@ const CategoryOpen = ({ item, order, setOrder }) => {
 
 const FoodItemOpen = ({ item, order, setOrder }) => {
     const [count, setCount] = useState(1)
-    useEffect(()=>{
+    useEffect(() => {
         const check = order.find((food) => {
             if ((food._id).toString() == (item._id).toString())
                 return item
         })
-        if(check){
+        if (check) {
             setCount(check.quantity)
         }
-    },[item, order])
+    }, [item, order])
     const handleCheckClick = () => {
         const check = order.find((food) => {
             if ((food._id).toString() == (item._id).toString())
                 return item
         })
         if (!check) {
-            setOrder([...order, { _id: item._id, quantity: count }])
+            setOrder([...order, { _id: item._id, quantity: count, item }])
         }
         if (check) {
             const newOrder = order.filter((food) => {
@@ -217,10 +302,10 @@ const FoodItemOpen = ({ item, order, setOrder }) => {
             setCount(count - 1)
             return
         }
-        if(count>1){
+        if (count > 1) {
             setCount(count - 1)
         }
-        
+
     }
     return (
         <div className='p-2 bg-white border-b border-rose-200'>
@@ -251,9 +336,9 @@ const FoodItemOpen = ({ item, order, setOrder }) => {
                             <span>
                                 <div className='text-rose-500 font-semibold flex gap-2'>
                                     <span className="border border-rose-500 rounded text-center bg-rose-500 shadow">
-                                        <Minus className="inline text-white cursor-pointer" onClick={onValuedown}/>
+                                        <Minus className="inline text-white cursor-pointer" onClick={onValuedown} />
                                     </span>
-                                    <input type="number" value={count} className="inline w-6 text-center outline-none border border-rose-500  rounded" inputMode="numeric" />
+                                    <input type="number" value={count} onChange={()=>{}} className="inline w-6 text-center outline-none border border-rose-500  rounded" inputMode="numeric" />
                                     <span className="border border-rose-500 rounded text-center bg-rose-500 shadow">
                                         <Plus className="inline text-white cursor-pointer" onClick={onValueup} />
                                     </span>

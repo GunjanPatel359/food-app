@@ -3,6 +3,7 @@ import { backend_url, img_url } from '../../server'
 import axios from 'axios'
 import { X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { GrPowerReset } from 'react-icons/gr'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
@@ -10,8 +11,8 @@ const SellerRestaurant = () => {
   const { hotelId } = useParams()
   const [isUserVerified, setIsUserVerified] = useState(false)
   const [hotel, setHotel] = useState('')
-  const [previewImage,setPreviewImage]=useState('')
-  const fileInputRef=useRef()
+  const [previewImage, setPreviewImage] = useState('')
+  const fileInputRef = useRef()
   useEffect(() => {
     const getUserHotel = async hotelId => {
       try {
@@ -32,20 +33,20 @@ const SellerRestaurant = () => {
     }
     getUserHotel(hotelId)
   }, [isUserVerified, hotelId])
-  const handleImageChange = async(e) => {
+  const handleImageChange = async (e) => {
     if (e.target.files && e.target.files[0]) {
       try {
-        const formData=new FormData()
-        formData.append('updateHotelImage',e.target.files[0])
-        const res=await axios.post(`${backend_url}/restaurant/updateImage/${hotelId}`,formData,{
-            headers:{
-                'Content-Type':'multipart/form-data'
-            },
-            withCredentials:true,
-        }) 
+        const formData = new FormData()
+        formData.append('updateHotelImage', e.target.files[0])
+        const res = await axios.post(`${backend_url}/restaurant/updateImage/${hotelId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          withCredentials: true,
+        })
         console.log(res)
-        if(res.data.success){
-            setPreviewImage(res.data.filename)
+        if (res.data.success) {
+          setPreviewImage(res.data.filename)
         }
       } catch (error) {
         toast.error(error)
@@ -56,28 +57,28 @@ const SellerRestaurant = () => {
     <div className='flex justify-center '>
       {isUserVerified && hotel && (
         <>
-          <div className='flex flex-col m-14 lg:mx-20 mb-3 max-w-[900px]'>
+          <div className='flex flex-col m-14 lg:mx-20 mb-3 '>
             <div className='text-rose-500 text-3xl font-semibold mb-4'>Restaurant Info</div>
-            <div className='border border-rose-400 w-full rounded-xl shadow-xl shadow-rose-50 p-2 flex flex-col align-center'>
+            <div className='border border-rose-400 rounded-xl shadow-xl shadow-rose-50 p-2 flex flex-col align-center max-w-[600px] w-[600px]'>
               <div className='flex items-center p-3'>
-                <div className='w-full flex border rounded-xl border-rose-100 shadow-md shadow-rose-200'>
-                  <form className='m-auto w-full'>
+                <form className='m-auto'>
+                  <div className='w-full flex border rounded-xl border-rose-100 shadow-md shadow-rose-200'>
                     <img
-                      className='m-auto w-auto transition-all rounded-xl'
+                      className='m-auto max-w-[600px] transition-all rounded-xl'
                       src={`${img_url}/${previewImage}`}
                       onClick={() => fileInputRef.current.click()}
                     />
-                    <input
+                  </div>
+                  <input
                     className='hidden'
                     type='file'
                     ref={fileInputRef}
                     onChange={handleImageChange}
                     accept='.jpg,.jpeg,.png'
                   />
-                  </form>
-                </div>
+                </form>
               </div>
-              <div className=''>
+              <div>
                 <HotelInfo
                   hotel={{
                     name: hotel.name,
@@ -96,32 +97,32 @@ const SellerRestaurant = () => {
   )
 }
 
-const HotelInfo = ({ hotel ,setHotel,hotelId }) => {
+const HotelInfo = ({ hotel, setHotel, hotelId }) => {
 
-    function deepEqual(obj1, obj2) {
-        if (typeof obj1 !== 'object' || obj1 === null ||
-            typeof obj2 !== 'object' || obj2 === null) {
-          return obj1 === obj2;
-        }
-        if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+  function deepEqual(obj1, obj2) {
+    if (typeof obj1 !== 'object' || obj1 === null ||
+      typeof obj2 !== 'object' || obj2 === null) {
+      return obj1 === obj2;
+    }
+    if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+      return false;
+    }
+    for (const [key, value] of Object.entries(obj1)) {
+      if (!Object.prototype.hasOwnProperty.call(obj2, key)) {
+        return false;
+      }
+      if (typeof value === 'object' && value !== null) {
+        if (!deepEqual(value, obj2[key])) {
           return false;
         }
-        for (const [key, value] of Object.entries(obj1)) {
-          if (!Object.prototype.hasOwnProperty.call(obj2, key)) {
-            return false;
-          }
-          if (typeof value === 'object' && value !== null) {
-            if (!deepEqual(value, obj2[key])) {
-              return false;
-            }
-          } else {
-            if (value !== obj2[key]) {
-              return false;
-            }
-          }
+      } else {
+        if (value !== obj2[key]) {
+          return false;
         }
-        return true;
       }
+    }
+    return true;
+  }
 
   const [name, setName] = useState(hotel.name)
   const [country, setCountry] = useState(hotel.addresses.country)
@@ -132,16 +133,27 @@ const HotelInfo = ({ hotel ,setHotel,hotelId }) => {
   const [tag, setTag] = useState("")
   const [cusineTypes, setCusionTypes] = useState(hotel.cusineTypes)
 
+  const handleReset = () => {
+    setName(hotel.name)
+    setCountry(hotel.addresses.country)
+    setState(hotel.addresses.state)
+    setCity(hotel.addresses.city)
+    setAddress(hotel.addresses.address)
+    setZipcode(hotel.addresses.zipCode)
+    setTag("")
+    setCusionTypes(hotel.cusineTypes)
+  }
+
   const formdata = {
-    name,
+    name: hotel.name,
     addresses: {
-      country,
-      state,
-      city,
-      address,
-      zipCode
+      country: hotel.country,
+      state: hotel.state,
+      city: hotel.city,
+      address: hotel.address,
+      zipCode: hotel.zipCode
     },
-    cusineTypes
+    cusineTypes: hotel.cusineTypes
   }
 
   const handlezipkeychange = e => {
@@ -171,39 +183,40 @@ const HotelInfo = ({ hotel ,setHotel,hotelId }) => {
   }
 
   const handletagchange = e => {
-    setTag(e.target.value)
+    if (e.target.value != " ") {
+      setTag(e.target.value)
+    }
   }
-
   const handletagcancelbtn = ind => {
     setCusionTypes(cusineTypes.filter((item, i) => i !== ind))
   }
 
-  const handleSubmit=async(e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if(deepEqual(formdata,hotel)){
-        return 
+    if (deepEqual(formdata, hotel)) {
+      return
     }
     try {
-        const res=await axios.patch(`${backend_url}/seller/updaterestaurantinfo/${hotelId}`,{
-            name,
-            country,
-            state,
-            city,
-            address,
-            zipCode,
-            cusineTypes
-        },{
-            headers:{
-                'Content-Type':'application/json'
-            },
-            withCredentials:true
-        })
-        if(res.data.success){
-            toast.success('Restaurant Info Updated Successfully')
-            setHotel(res.data.hotel)
-        }
+      const res = await axios.patch(`${backend_url}/seller/updaterestaurantinfo/${hotelId}`, {
+        name,
+        country,
+        state,
+        city,
+        address,
+        zipCode,
+        cusineTypes
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      })
+      if (res.data.success) {
+        toast.success('Restaurant Info Updated Successfully')
+        setHotel(res.data.hotel)
+      }
     } catch (error) {
-        toast.error(error)
+      toast.error(error)
     }
   }
 
@@ -211,130 +224,162 @@ const HotelInfo = ({ hotel ,setHotel,hotelId }) => {
     <>
       <form
         className='p-4'
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'max-content 1fr',
-          columnGap: '10px',
-          rowGap: '2px'
-        }}
         onSubmit={handleSubmit}
       >
-        <div className='flex'>
-          <div className='m-auto mx-0 text-rose-500 font-bold w-[200px]'>
-            Restaurant name:{' '}
+        <div className='flex flex-col gap-1' >
+          <div className='text-rose-500 font-bold w-[200px]'>
+            Restaurant name:
           </div>
-        </div>
-        <input
-          type='text'
-          required
-          placeholder='Enter your restaurant name'
-          value={name}
-          onChange={e => setName(e.target.value)}
-          className='p-2 text-rose-500  rounded-xl outline-none focus:shadow-md  placeholder:text-rose-300 ml-2'
-        />
-        <div className='flex'>
-          <div className='m-auto mx-0 text-rose-500 font-bold'>Country: </div>
-        </div>
-        <input
-          type='text'
-          required
-          placeholder='Enter Country'
-          value={country}
-          onChange={e => setCountry(e.target.value)}
-          className='p-2 text-rose-500  rounded-xl outline-none focus:shadow-md  placeholder:text-rose-300 ml-2'
-        />
-        <div className='flex'>
-          <div className='m-auto mx-0 text-rose-500 font-bold'>State: </div>
-        </div>
-        <input
-          type='text'
-          required
-          placeholder='Enter State'
-          value={state}
-          onChange={e => setState(e.target.value)}
-          className='p-2 text-rose-500  rounded-xl outline-none focus:shadow-md  placeholder:text-rose-300 ml-2'
-        />
-        <div className='flex'>
-          <div className='m-auto mx-0 text-rose-500 font-bold'>City: </div>
-        </div>
-        <input
-          type='text'
-          required
-          placeholder='Enter City'
-          value={city}
-          onChange={e => setCity(e.target.value)}
-          className='p-2 text-rose-500  rounded-xl outline-none focus:shadow-md  placeholder:text-rose-300 ml-2'
-        />
-        <div className='flex'>
-          <div className='m-auto mx-0 text-rose-500 font-bold'>Address: </div>
-        </div>
-        <input
-          type='text'
-          placeholder='Enter your Restuarant address'
-          required
-          className='p-2 text-rose-500  rounded-xl outline-none focus:shadow-md  placeholder:text-rose-300 ml-2'
-          value={address}
-          onChange={e => setAddress(e.target.value)}
-        />
-        <div className='flex'>
-          <div className='m-auto mx-0 text-rose-500 font-bold'>zipcode: </div>
-        </div>
-        <input
-          placeholder='Enter zipCode'
-          type='text'
-          required
-          value={zipCode}
-          onKeyDown={handlezipkeychange}
-          onChange={e => setZipcode(e.target.value)}
-          inputMode='numeric'
-          pattern='[0-9]*'
-          className='p-2 text-rose-500  rounded-xl outline-none focus:shadow-md  placeholder:text-rose-300 ml-2'
-        />
-        <div className='flex'>
-          <div className='m-auto mx-0 text-rose-500 font-bold'>
-            cusineTypes:{' '}
+          <input
+            type='text'
+            placeholder='Enter your restaurant name'
+            className='p-2 w-full text-rose-500 border border-rose-300 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 mb-1'
+            required
+            value={name}
+            onChange={e => setName(e.target.value)}
+          />
+
+          <div className=' text-rose-500 font-bold'>Country: </div>
+          <input
+            type='text'
+            className='p-2 w-full text-rose-500 border border-rose-300 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 mb-1'
+            required
+            placeholder='Enter Country'
+            value={country}
+            onChange={e => setCountry(e.target.value)}
+          />
+
+          <div className=' text-rose-500 font-bold'>State: </div>
+          <input
+            type='text'
+            className='p-2 w-full text-rose-500 border border-rose-300 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 mb-1'
+            required
+            placeholder='Enter State'
+            value={state}
+            onChange={e => setState(e.target.value)}
+          />
+
+          <div className=' text-rose-500 font-bold'>City: </div>
+          <input
+            type='text'
+            className='p-2 w-full text-rose-500 border border-rose-300 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 mb-1'
+            required
+            placeholder='Enter City'
+            value={city}
+            onChange={e => setCity(e.target.value)}
+          />
+
+          <div className=' text-rose-500 font-bold'>Address: </div>
+          <input
+            type='text'
+            className='p-2 w-full text-rose-500 border border-rose-300 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 mb-1'
+            required
+            placeholder='Enter your Restuarant address'
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+          />
+
+          <div className=' text-rose-500 font-bold'>zipcode: </div>
+          <input
+            placeholder='Enter zipCode'
+            type='text'
+            required
+            value={zipCode}
+            onKeyDown={handlezipkeychange}
+            onChange={e => setZipcode(e.target.value)}
+            inputMode='numeric'
+            pattern='[0-9]*'
+            className='p-2 w-full text-rose-500 border border-rose-300 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 mb-1'
+          />
+
+
+
+          {/* <div className=' text-rose-500 font-bold'>
+            cusineTypes:
           </div>
-        </div>
-        <div className='p-2 text-rose-500  rounded-xl outline-none focus:shadow-md  placeholder:text-rose-300'>
-          <span className='flex w-full p-2 bg-transparent flex-wrap shadow rounded-xl'>
-            {cusineTypes &&
-              cusineTypes.map((item, i) => {
-                if (item === '') {
-                  return null
-                }
-                return (
-                  <span
-                    key={i}
-                    className='flex border rounded-xl border-rose-400 p-1 bg-rose-50 m-[1px] hover:bg-rose-100 shadow'
-                  >
-                    <span className=''>{item}</span>
-                    <span className='flex justify-center align-middle items-center'>
-                      <X
-                        className='inline text-rose-500 h-full mt-[3px] ml-1 hover:text-rose-600 cursor-pointer'
-                        size={14}
-                        onClick={() => handletagcancelbtn(i)}
-                      />
+          <div className='text-rose-500  rounded outline-none focus:shadow-md  placeholder:text-rose-300 mb-1'>
+            <span className='flex w-full p-2 bg-transparent flex-wrap shadow rounded border border-rose-300 focus:border-rose-500 hover:border-rose-500'>
+              {cusineTypes &&
+                cusineTypes.map((item, i) => {
+                  if (item === '') {
+                    return null
+                  }
+                  return (
+                    <span
+                      key={i}
+                      className='flex border rounded-xl border-rose-400 p-1 bg-rose-50 m-[1px] hover:bg-rose-100 shadow'
+                    >
+                      <span className=''>{item}</span>
+                      <span className='flex justify-center align-middle items-center'>
+                        <X
+                          className='inline text-rose-500 h-full mt-[3px] ml-1 hover:text-rose-600 cursor-pointer'
+                          size={14}
+                          onClick={() => handletagcancelbtn(i)}
+                        />
+                      </span>
                     </span>
-                  </span>
-                )
-              })}
+                  )
+                })}
+              <input
+                className='inline outline-0 border-0 p-1 focus-within:border-0 text-rose-500 rounded-xl outline-none  placeholder:text-rose-300'
+                type='text'
+                placeholder='Enter your cusineTypes'
+                onKeyDown={handletagkeydown}
+                onChange={handletagchange}
+                value={tag}
+              />
+            </span>
+          </div> */}
+
+
+          <div className=' font-semibold mt-1 text-rose-500'>Food Tags:</div>
+          <div className='border border-rose-500 focus:border-rose-500 outline-none rounded shadow overflow-y-scroll h-auto'>
+            <span className='flex w-full p-2 bg-transparent flex-wrap'>
+              {cusineTypes &&
+                cusineTypes.map((item, i) => {
+                  return (
+                    <span
+                      key={i}
+                      className='flex border rounded-xl border-rose-400 p-1 bg-rose-50 m-[1px] hover:bg-rose-100 shadow'
+                    >
+                      <span className='text-rose-500'>{item}</span>
+                      <span className='flex justify-center align-middle items-center'>
+                        <X
+                          className='inline text-rose-500 h-full mt-[3px] ml-1 hover:text-rose-600 cursor-pointer'
+                          size={14}
+                          onClick={() => handletagcancelbtn(i)}
+                        />
+                      </span>
+                    </span>
+                  )
+                })}
+              <input
+                className='outline-0 border-0 p-1 focus-within:border-0 text-rose-500 rounded-xl outline-none  placeholder:text-rose-400'
+                type='text'
+                placeholder='Enter your foodtypes'
+                onKeyDown={handletagkeydown}
+                onChange={handletagchange}
+                value={tag}
+              />
+            </span>
+          </div>
+
+
+
+          <div className='flex flex-1 gap-1'>
             <input
-              className='inline outline-0 border-0 p-1 focus-within:border-0 text-rose-500 rounded-xl outline-none  placeholder:text-rose-300'
-              type='text'
-              placeholder='Enter your cusineTypes'
-              onKeyDown={handletagkeydown}
-              onChange={handletagchange}
-              value={tag}
+              className={`transition-all w-full text-white bg-rose-500 ${deepEqual(formdata, hotel) ? '' : 'text-rose-500 hover:shadow-md cursor-pointer'
+                }  p-2 rounded font-semibold `}
+              type='submit'
+              value='Update'
             />
-          </span>
+            <div className='border border-rose-500 flex rounded px-2  shadow shadow-rose-200 cursor-pointer hover:opacity-90'
+              onClick={handleReset}
+            >
+              <GrPowerReset className='m-auto text-rose-500' size={22} />
+            </div>
+          </div>
         </div>
-        <input
-          className={`transition-all text-rose-400 border border-rose-400 ${
-            deepEqual(formdata,hotel) ? '' : 'text-rose-500 hover:shadow-md cursor-pointer'
-          }  p-2 rounded-xl font-semibold `}
-          type='submit'
-          value='Update'
-        />
       </form>
     </>
   )
