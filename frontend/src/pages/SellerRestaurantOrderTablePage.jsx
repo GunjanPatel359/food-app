@@ -2,8 +2,8 @@
 import { IoIosArrowDown } from "react-icons/io"
 import Tooltip from "../components/customui/Tooltip"
 import SellerProfileHeader from "../components/sellerprofile/SellerProfileHeader"
-import { backend_url, img_url } from "../server"
-import { useEffect, useState } from "react"
+import { backend_url, img_url, theme_colors } from "../server"
+import { useEffect, useMemo, useState } from "react"
 import { useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import axios from "axios"
@@ -16,13 +16,15 @@ import SellerOrderTableManageProvider from "../provider/SellerOrderTableManagePr
 
 
 const SellerRestaurantOrderTablePage = () => {
+    const Themes=useMemo(()=>theme_colors,[])
+    const [theme,setTheme]=useState(Themes[0]);
+
     const params = useParams()
     const { hotelId } = params
     const { orderTableId } = params
-    const { onOpen } = useModal()
+    const { onOpen,reloadCmd } = useModal()
 
     const [orderTableDetails, setOrderTableDetails] = useState('')
-    console.log(orderTableDetails)
     const [orderFood, setOrderFood] = useState(false)
 
     const [food, setFood] = useState([]);
@@ -31,14 +33,30 @@ const SellerRestaurantOrderTablePage = () => {
     
     const [onGoing,setOnGoing]=useState([])
 
+    useEffect(()=>{
+        const initiatePage=async()=>{
+            try {
+                const res=await axios.get(`${backend_url}/seller/gethoteldata/${hotelId}`,{withCredentials:true})
+                if(res.data.hotel.colors){
+                  if(Themes.includes(res.data.hotel.colors)){
+                    setTheme(res.data.hotel.colors)
+                  }
+                }
+            } catch (error) {
+                toast.error("Somthing went wrong")
+            }
+        }
+        initiatePage()
+    },[Themes, hotelId])
+
     useEffect(() => {
         const initiatePage = async () => {
             try {
                 const response = await axios.get(`${backend_url}/order-table/${hotelId}/${orderTableId}/get-order-table-details`, { withCredentials: true })
-                console.log(response)
                 if (response.data.success) {
                     setOrderTableDetails(response.data.orderTableDetails)
                     setOnGoing(response.data.orderTableDetails.orders)
+                    setOrder([])
                 }
             } catch (error) {
                 toast.error(error)
@@ -47,14 +65,13 @@ const SellerRestaurantOrderTablePage = () => {
         if (hotelId && orderTableId) {
             initiatePage()
         }
-    }, [hotelId, orderTableId])
+    }, [hotelId, orderTableId,reloadCmd])
 
 
     useEffect(() => {
         const initialCom = async () => {
             try {
                 const response = await axios.get(`${backend_url}/fooditem/getallfood/${hotelId}`)
-                console.log(response)
                 if (response.data.success) {
                     setFood(response.data.food)
                 }
@@ -66,46 +83,46 @@ const SellerRestaurantOrderTablePage = () => {
     }, [hotelId])
 
     return (
-        <div>
+        <div className={`theme-${theme}`}>
             <SellerProfileHeader />
             <div className="w-[70%] m-auto mt-8 mb-36">
                 {
                     orderTableDetails && (
                         <>
                             <div className="m-2">
-                                <div className="text-rose-500 text-2xl"><span className="text-rose-500 font-semibold">Restaurant Name:</span> {orderTableDetails.restaurantId.name}</div>
-                                <div className="text-rose-500 text-xl"><span className="text-rose-500 font-semibold">Table Number:</span> {orderTableDetails.tableNumber}</div>
-                                <div className="text-rose-500 text-xl"><span className="text-rose-500 font-semibold">Table Description:</span> {orderTableDetails.tableDescription}</div>
-                                <div className="text-rose-500"><span className="text-rose-500 font-semibold">Status:</span> {orderTableDetails.status}</div>
-                                <div className="text-rose-500"><span className="text-rose-500 font-semibold">Seats:</span> {orderTableDetails.seats}</div>
+                                <div className="text-color5 text-2xl"><span className="text-color5 font-semibold">Restaurant Name:</span> {orderTableDetails.restaurantId.name}</div>
+                                <div className="text-color5 text-xl"><span className="text-color5 font-semibold">Table Number:</span> {orderTableDetails.tableNumber}</div>
+                                <div className="text-color5 text-xl"><span className="text-color5 font-semibold">Table Description:</span> {orderTableDetails.tableDescription}</div>
+                                <div className="text-color5"><span className="text-color5 font-semibold">Status:</span> {orderTableDetails.status}</div>
+                                <div className="text-color5"><span className="text-color5 font-semibold">Seats:</span> {orderTableDetails.seats}</div>
                             </div>
 
                             <div className="">
                                 <div className="">
-                                    <div className="text-white font-semibold text-2xl bg-rose-500 p-2 pl-5">Orders</div>
+                                    <div className="text-white font-semibold text-2xl bg-color5 p-2 pl-5">Orders</div>
                                     {onGoing.length > 0 ? (
                                         <>
-                                        {onGoing.map((item)=>
-                                        <OrderItems item={item} key={item}/>
+                                        {onGoing.map((item,i)=>
+                                        <OrderItems item={item} key={i}/>
                                         )}
                                         <div className="flex justify-between p-2">
-                                            <span className="text-xl text-rose-500 font-semibold">
+                                            <span className="text-xl text-color5 font-semibold">
                                                 Total Amount
                                                 </span>
-                                            <span className="text-xl text-rose-500 font-semibold pr-1">
+                                            <span className="text-xl text-color5 font-semibold pr-1">
                                             {onGoing.reduce((total, item) => total + item.foodItemId.price * item.quantity, 0)}/-
                                                 </span>
                                         </div>
                                         </>
-                                    ) : <div className="text-rose-500">{`Haven't ordered anything yet`}</div>}
+                                    ) : <div className="text-color5">{`Haven't ordered anything yet`}</div>}
                                 </div>
                             </div>
 
-                            <div className="bg-rose-500 text-rose-200 p-3 text-xl flex justify-between mb-2">
+                            <div className="bg-color5 text-color2 p-3 text-xl flex justify-between mb-2">
                                 <div className="font-semibold text-2xl ml-2 text-white">Add Order</div>
                                 <div className="text-center items-center my-auto">
                                     <div className="p-1 bg-white mr-2 rounded cursor-pointer">
-                                        <IoIosArrowForward className={`transition-all text-rose-500 ${orderFood ? "rotate-90" : ""}`} onClick={() => setOrderFood(!orderFood)} />
+                                        <IoIosArrowForward className={`transition-all text-color5 ${orderFood ? "rotate-90" : ""}`} onClick={() => setOrderFood(!orderFood)} />
                                     </div>
                                 </div>
                             </div>
@@ -113,13 +130,13 @@ const SellerRestaurantOrderTablePage = () => {
                             <div className={`transition-all duration-500 grid ${!orderFood ? "grid-rows-[0fr]" : "grid-rows-[1fr]"}`}>
                                 <div className="overflow-hidden">
 
-                                    {food && food.map((item, index) =>
-                                        <CategoryOpen item={item} key={index} order={order} setOrder={setOrder} />
+                                    {food && food.map((item, i) =>
+                                        <CategoryOpen item={item} key={i} order={order} setOrder={setOrder} />
                                     )
                                     }
                                     <div className="flex">
-                                        <button className="text-xl bg-white text-rose-500 border border-rose-500 shadow shadow-rose-500 p-2 w-full rounded mr-1">reset</button>
-                                        <button className="text-xl bg-rose-500 text-white p-2 w-full rounded shadow hover:opacity-90"
+                                        <button className="text-xl bg-white text-color5 border border-color5 shadow shadow-color5 p-2 w-full rounded mr-1">reset</button>
+                                        <button className="text-xl bg-color5 text-white p-2 w-full rounded shadow hover:opacity-90"
                                             onClick={() => onOpen('Ordertable-make-Order',
                                                 {
                                                     orderTableOrderFood: {
@@ -142,56 +159,52 @@ const SellerRestaurantOrderTablePage = () => {
 }
 
 const OrderItems=({item})=>{
-    console.log(item)
     const food=item.foodItemId
-    var color="red"
+    var color="text-rose-500"
     switch(item.status){
-        case 'Waiting':{ color="red"
+        case 'Waiting':{ color="bg-rose-500"
             break
         }
-        case 'Preparing':{ color="blue"
+        case 'Preparing':{ color="bg-blue-500"
             break
         }
-        case 'Prepared':{ color="rose"
+        case 'Prepared':{ color="bg-purple-500"
             break
         }
-        case 'Completed':{ color="green"
+        case 'Completed':{ color="bg-green-500"
             break
-        }
-        default:{
-            color="red"
         }
     }
     // "Waiting","Preparing","prepared","Completed"
     return(
-        <div className='p-2 bg-white border-b border-rose-200'>
+        <div className='p-2 bg-white border-b border-color2'>
             <div className='flex transition-all'>
             <img
                     src={`${img_url}/${food.imageUrl}`}
-                    className='h-[90px] rounded shadow shadow-rose-300'
+                    className='h-[90px] rounded shadow shadow-color3'
                 />
                 <div className='ml-2 w-full flex-col flex gap-1'>
                     <div className='flex justify-between w-full'>
-                        <div className='text-xl text-rose-500 font-semibold'>
+                        <div className='text-xl text-color5 font-semibold'>
                             {food.name}
                         </div>
                         <div>
                             <span>
-                                <div className="p-1 rounded-full px-3 text-white" style={{"backgroundColor":color}}>{item.status}</div>
+                                <div className={`p-1 rounded-full px-3 text-white ${color}`}>{item.status}</div>
                             </span>
                         </div>
 
                     </div>
                     <div className='flex justify-between w-full '>
-                        <div className='text-rose-500'>{food.smallDescription}</div>
+                        <div className='text-color5'>{food.smallDescription}</div>
                         <div>
                             <span>
-                                <div className="text-rose-500 font-semibold text-xl">{item.quantity} X {food.price}/-</div>
+                                <div className="text-color5 font-semibold text-xl">{item.quantity} X {food.price}/-</div>
                             </span>
                         </div>
                     </div>
                     <div className='flex'>
-                        <Tooltip position="right" content={`${food.veg ? 'veg' : 'non-veg'}`} TooltipStyle='bg-rose-200 text-rose-600'>
+                        <Tooltip position="right" content={`${food.veg ? 'veg' : 'non-veg'}`} TooltipStyle='bg-color2 text-rose-600'>
                             <span className={`border-2 w-6 h-6 flex justify-evenly p-[2.3px] ${food.veg ? 'border-green-500' : 'border-red-500'}`}>
                                 <span className={`m-auto mx-auto rounded-full w-full h-full ${food.veg ? 'bg-green-500' : 'bg-red-500'} `} size={17}>
                                 </span>
@@ -208,7 +221,7 @@ const CategoryOpen = ({ item, order, setOrder }) => {
     const [open, setOpen] = useState(true)
     return (
         <div className="mb-1">
-            <div className="flex bg-rose-200 text-rose-500 p-2 pl-4 w-full justify-between z-10">
+            <div className="flex bg-color0 text-color5 p-2 pl-4 w-full justify-between z-10">
                 <div className="flex flex-col">
                     <div className="font-semibold text-2xl">
                         {item.categoryName}
@@ -219,8 +232,8 @@ const CategoryOpen = ({ item, order, setOrder }) => {
                 </div>
                 <div className="flex">
                     <div className="m-auto mr-3">
-                        <div className="border-1 bg-rose-100 p-1 cursor-pointer" onClick={() => setOpen(!open)}>
-                            <IoIosArrowDown className={`${open ? "" : "-rotate-90"} transition-all duration-500`} size={20} />
+                        <div className="border-1 bg-color1 p-1 cursor-pointer" onClick={() => setOpen(!open)}>
+                            <IoIosArrowDown className={`${open ? "" : "-rotate-90"} transition-all duration-500 text-color5`} size={20} />
                         </div>
                     </div>
                 </div>
@@ -308,38 +321,38 @@ const FoodItemOpen = ({ item, order, setOrder }) => {
 
     }
     return (
-        <div className='p-2 bg-white border-b border-rose-200'>
+        <div className='p-2 bg-white border-b border-color2'>
             <div className='flex transition-all'>
                 <Checkbox
                     checked={handlecheck()}
                     onCheckedChange={() => handleCheckClick()}
-                    className="m-auto mr-3 border-rose-400 text-rose-500 data-[state=checked]:bg-rose-50 rounded shadow shadow-rose-100 data-[state=checked]:text-rose-500" />
+                    className="m-auto mr-3 border-color4 text-color5 data-[state=checked]:bg-color0 rounded shadow shadow-color1 data-[state=checked]:text-color5" />
                 <img
                     src={`${img_url}/${item.imageUrl}`}
-                    className='h-[90px] rounded shadow shadow-rose-300'
+                    className='h-[90px] rounded shadow shadow-color3'
                 />
                 <div className='ml-2 w-full flex-col flex gap-1'>
                     <div className='flex justify-between w-full'>
-                        <div className='text-xl text-rose-500 font-semibold'>
+                        <div className='text-xl text-color5 font-semibold'>
                             {item.name}
                         </div>
                         <div>
                             <span>
-                                <div className="text-rose-500 font-semibold text-xl">{item.price}/-</div>
+                                <div className="text-color5 font-semibold text-xl">{item.price}/-</div>
                             </span>
                         </div>
 
                     </div>
                     <div className='flex justify-between w-full '>
-                        <div className='text-rose-500'>{item.smallDescription}</div>
+                        <div className='text-color5'>{item.smallDescription}</div>
                         <div>
                             <span>
-                                <div className='text-rose-500 font-semibold flex gap-2'>
-                                    <span className="border border-rose-500 rounded text-center bg-rose-500 shadow">
+                                <div className='text-color5 font-semibold flex gap-2'>
+                                    <span className="border border-color5 rounded text-center bg-color5 shadow">
                                         <Minus className="inline text-white cursor-pointer" onClick={onValuedown} />
                                     </span>
-                                    <input type="number" value={count} onChange={()=>{}} className="inline w-6 text-center outline-none border border-rose-500  rounded" inputMode="numeric" />
-                                    <span className="border border-rose-500 rounded text-center bg-rose-500 shadow">
+                                    <input type="number" value={count} onChange={()=>{}} className="inline w-6 text-center outline-none border border-color5  rounded" inputMode="numeric" />
+                                    <span className="border border-color5 rounded text-center bg-color5 shadow">
                                         <Plus className="inline text-white cursor-pointer" onClick={onValueup} />
                                     </span>
                                 </div>
@@ -347,7 +360,7 @@ const FoodItemOpen = ({ item, order, setOrder }) => {
                         </div>
                     </div>
                     <div className='flex'>
-                        <Tooltip position="right" content={`${item.veg ? 'veg' : 'non-veg'}`} TooltipStyle='bg-rose-200 text-rose-600'>
+                        <Tooltip position="right" content={`${item.veg ? 'veg' : 'non-veg'}`} TooltipStyle='bg-color2 text-rose-600'>
                             <span className={`border-2 w-6 h-6 flex justify-evenly p-[2.3px] ${item.veg ? 'border-green-500' : 'border-red-500'}`}>
                                 <span className={`m-auto mx-auto rounded-full w-full h-full ${item.veg ? 'bg-green-500' : 'bg-red-500'} `} size={17}>
                                 </span>

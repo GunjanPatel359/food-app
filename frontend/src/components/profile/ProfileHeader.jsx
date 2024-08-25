@@ -6,25 +6,25 @@ import { Link, useNavigate } from 'react-router-dom'
 
 const ProfileHeader = ({ user }) => {
   const navigate=useNavigate()
-  console.log(user)
+
   return (
     <div>
-      <div className='w-full shadow-md shadow-rose-200'>
-        <div className='bg-gradient-to-tr from-rose-500 to-rose-400  w-full'>
+      <div className='w-full shadow-md shadow-color1'>
+        <div className='bg-gradient-to-tr from-color5 to-color4  w-full'>
           <div className='w-[80%] m-auto flex py-5 px-2 text-white h-[80px] justify-between'>
             <span className='flex text-4xl gap-x-4 cursor-pointer'>
               <IoFastFoodOutline size={40} color='white' />
-              <span>Taste</span>
+              <span onClick={()=>navigate('/')}>Taste</span>
             </span>
             <span className='text-center items-center flex'>
               <Link to="/profile">
                 {
                   user && user?.avatar ? (
-                    <div className='border-2 border-rose-400 rounded-full' onClick={()=>navigate('/profile')}>
+                    <div className='border-2 border-color4 rounded-full' onClick={()=>navigate('/profile')}>
                       <img className='rounded-full w-[40px]' src={`${img_url}/${user.avatar}`} />
                     </div>) : (
                     <div className='border-2 border-white rounded-full p-1'>
-                      <User size={30} color="white" className='text-rose-500' />
+                      <User size={30} color="white" className='text-color5' />
                     </div>
                   )
                 }

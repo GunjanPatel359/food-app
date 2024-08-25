@@ -38,6 +38,7 @@ const SellerManageRole = () => {
   const [roleId,setRolesId]=useState('')
   const [oldRole, setOldRole] = useState('')
   const [reloadcomponent,setReloadComponent]=useState(1);
+  console.log(roleId)
   // const [loading,setLoading]=useState(false)
   
   useEffect(() => {
@@ -54,7 +55,7 @@ const SellerManageRole = () => {
           let sortingRoles = hoteldata.data.hotel.roleIds
           sortingRoles.sort((a, b) => a.order - b.order)
           setRoles(sortingRoles)
-          setRolesId(sortingRoles.map((item)=> item._id))
+          setRolesId(sortingRoles.map((item,i)=> i))
           setOldRole(sortingRoles)
         }
       } catch (error) {
@@ -125,20 +126,20 @@ const SellerManageRole = () => {
     <div className='m-5'>
       {member && (
         <div className='m-5 mt-8'>
-          <div className='text-rose-500 font-semibold text-2xl mb-4'>Roles</div>
+          <div className='text-color5 font-semibold text-2xl mb-4'>Roles</div>
 
           {(role.adminPower || role.canManageRoles) &&
           <span
-            className='bg-rose-50 p-2 py-2 transition-all text-rose-500 hover:opacity-80 cursor-pointer border border-rose-500 border-dashed rounded-full flex flex-row max-w-fit pr-5'
+            className='bg-color0 p-2 py-2 transition-all text-color5 hover:opacity-80 cursor-pointer border border-color5 border-dashed rounded-full flex flex-row max-w-fit pr-5 shadow'
             onClick={() => onOpen('create-roles', { role })}
           >
-            <span className='flex flex-row border border-rose-500 rounded-full mr-2 ml-1 border-dashed'>
+            <span className='flex flex-row border border-color5 rounded-full mr-2 ml-1 border-dashed'>
               <Plus className='inline' />
             </span>{' '}
             Create Role
           </span>}
 
-          <div className='bg-rose-50 border border-rose-500 p-4 rounded mt-4 border-dashed text-lg flex flex-col gap-y-2'>
+          <div className='bg-color0 border border-color5 p-4 rounded mt-4 border-dashed text-lg flex flex-col gap-y-2 shadow-md'>
             <DndContext
               collisionDetection={closestCenter}
               onDragEnd={handleDragEnd}
@@ -163,8 +164,8 @@ const SellerManageRole = () => {
             </DndContext>
           </div>
           <button
-            className={`transition-all bg-rose-500 text-white mt-2 p-3 rounded font-semibold ${
-              roles == oldRole ? 'opacity-80' : 'hover:opacity-95'
+            className={`transition-all bg-color5 text-white mt-2 p-3 rounded font-semibold ${
+              roles == oldRole ? 'opacity-90' : 'hover:'
             }`}
             disabled={roles == oldRole ? true : false}
             onClick={() => changeRoleOrder()}

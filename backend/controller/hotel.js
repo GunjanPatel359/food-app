@@ -16,6 +16,7 @@ const Subscription = require('../model/subscription')
 const FoodCategory = require('../model/foodCategory')
 
 const {checkForSellerSubscription}=require("../utils/repeatQuery")
+const {static_colors}=require("../utils/colorUtil")
 
 router.post('/create-restaurant', isSellerAuthenticated, upload.single('restaurantimage'), catchAsyncErrors(async (req, res, next) => {
     try {
@@ -145,6 +146,56 @@ router.get('/:hotelId',catchAsyncErrors(async(req,res,next)=>{
             return next(new ErrorHandler("hotel not found",400))
         }
         res.status(200).json({success:true,hotel})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
+router.get('/hotel/colors',catchAsyncErrors(async(req,res,next)=>{
+    try {
+        res.status(200).json({success:true,colors:static_colors})
+    } catch (error) {
+        console.log(error)
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
+router.patch('/:hotelId/change-color',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId}=req.params
+        const {color}=req.body
+        if(!static_colors.includes(color)){
+            return next(new ErrorHandler("Invalid color",400))
+        }
+        if(!hotelId && color.length!=6){
+            return next(new ErrorHandler("hotel Id and color not found",400))
+        }
+        const member=await Member.findOne({
+            sellerId:req.seller._id,
+            restaurantId:hotelId
+        })
+        if(!member){
+            return next(new ErrorHandler("seller not found",400))
+        }
+        const memberRole=await Role.findOne({
+            _id:member.roleId,
+            restaurantId:hotelId
+        })
+        if(!memberRole){
+            return next(new ErrorHandler("you are not member of this hotel",400))
+        }
+        if(!memberRole.adminPower){
+            return next(new ErrorHandler("you do not have permission to do changes",400))
+        }
+        const hotel=await Hotel.findOneAndUpdate({
+            _id:hotelId
+        },{
+            colors:color
+        },{new:true})
+        if(!hotel){
+            return next(new ErrorHandler("hotel not found",400))
+        }
+        res.status(200).json({success:true,message:"color updated successfully"})
     } catch (error) {
         return next(new ErrorHandler(error.message,400))
     }

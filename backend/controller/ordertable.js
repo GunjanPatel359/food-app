@@ -166,7 +166,7 @@ router.get('/:hotelId/:orderTableId/get-order-table-details', isSellerAuthentica
         if (!member) {
             return next(new ErrorHandler("seller is not associated with this hotel", 400))
         }
-        const orderTable = await OrderTable.findById(orderTableId).populate('restaurantId').populate({path:"orders",populate:{path:"foodItemId"}})
+        const orderTable = await OrderTable.findById(orderTableId).populate('restaurantId').populate({ path: "orders", populate: { path: "foodItemId" } })
         if (!orderTable) {
             return next(new ErrorHandler("orderTable is not found", 400))
         }
@@ -403,31 +403,109 @@ router.post('/:hotelId/food-item-order/:orderTableId', isSellerAuthenticated, ca
             .catch(error => {
                 return next(new ErrorHandler("An error occurred during food item retrieval", 400))
             });
-        const orderfood=orders.map((item)=>{
+        const orderfood = orders.map((item) => {
             return FoodOrder.create({
-                foodItemId:item.item._id,
-                restaurantId:hotelId,
-                price:result.find((temp)=>{ if(item.item._id == temp._id) return temp  }).price,
-                quantity:item.quantity
+                foodItemId: item.item._id,
+                restaurantId: hotelId,
+                price: result.find((temp) => { if (item.item._id == temp._id) return temp }).price,
+                quantity: item.quantity
             })
         })
         var createdItems
-        await Promise.all(orderfood).then(values=>{
-            createdItems=values.map(item=>item._id)
-        }).catch(error =>{
+        await Promise.all(orderfood).then(values => {
+            createdItems = values.map(item => item._id)
+        }).catch(error => {
             return next(new ErrorHandler("An error occurred during order food creation", 400))
         })
-        const table=await OrderTable.findOneAndUpdate({
-            _id:orderTableId
-        },{
-           $push:{"orders":createdItems}
+        const table = await OrderTable.findOneAndUpdate({
+            _id: orderTableId
+        }, {
+            $push: { "orders": createdItems }
         })
-        if(table==null){
+        if (table == null) {
             return next(new ErrorHandler("table not found", 400))
         }
-        return res.status(200).json({success:true,message:"order created successfully"})
+        return res.status(200).json({ success: true, message: "order created successfully" })
     } catch (error) {
         return next(new ErrorHandler(error.message, 400))
+    }
+}))
+
+router.patch('/:hotelId/update-order-table/:orderTableId', isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { hotelId, orderTableId } = req.params
+        if (!hotelId && !orderTableId) {
+            return next(new ErrorHandler("hotel id and order table id are required", 400))
+        }
+        const { tableNumber, tableDescription, seats } = req.body
+        if (!tableNumber && !tableDescription && !seats) {
+            return next(new ErrorHandler("table number, table description and seats are required", 400))
+        }
+        const member = await Member.findOne({
+            sellerId: req.seller._id,
+            restaurantId: hotelId
+        })
+        if (!member) {
+            return next(new ErrorHandler("seller is not a member of this restaurant", 400))
+        }
+        const memberRole = await Role.findOne({
+            _id: member.roleId
+        })
+        if (!memberRole) {
+            return next(new ErrorHandler("seller role not found", 400))
+        }
+        if (!memberRole.adminPower && !memberRole.canManageOrderTableInfo) {
+            return next(new ErrorHandler("seller does not have permission to update order table info", 400))
+        }
+        const orderTable = await OrderTable.findOneAndUpdate({
+            _id: orderTableId,
+            restaurantId: hotelId
+        }, {
+            tableNumber: tableNumber,
+            tableDescription: tableDescription,
+            seats: seats
+        })
+        if (!orderTable) {
+            return next(new ErrorHandler("order table not found", 400))
+        }
+        return res.status(200).json({ success: true, message: "order table updated successfully" })
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 400))
+    }
+}))
+
+router.delete('/:hotelId/delete-order-table/:orderTableId',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try{
+        const { hotelId, orderTableId } = req.params
+        if (!hotelId && !orderTableId) {
+            return next(new ErrorHandler("hotel id and order table id are required", 400))
+        }
+        const member = await Member.findOne({
+            sellerId: req.seller._id,
+            restaurantId: hotelId
+        })
+        if (!member) {
+            return next(new ErrorHandler("seller is not a member of this restaurant", 400))
+        }
+        const memberRole = await Role.findOne({
+            _id: member.roleId
+        })
+        if (!memberRole) {
+            return next(new ErrorHandler("seller role not found", 400))
+        }
+        if (!memberRole.adminPower && !memberRole.canManageOrderTableInfo) {
+            return next(new ErrorHandler("seller does not have permission to update order table info", 400))
+        }
+        const orderTable = await OrderTable.findOneAndDelete({
+            _id: orderTableId,
+            restaurantId: hotelId
+        })
+        if (!orderTable) {
+            return next(new ErrorHandler("order table not found", 400))
+        }
+        return res.status(200).json({ success: true, message: "order table deleted successfully" })
+    }catch(error){
+        return next(new ErrorHandler(error.message,400))
     }
 }))
 

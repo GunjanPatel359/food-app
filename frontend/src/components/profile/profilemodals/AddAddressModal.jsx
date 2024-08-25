@@ -33,7 +33,7 @@ const Transition = ({ children, show, duration = 500, easing = 'ease-in' }) => {
 
   return (
     <div className={className}>
-      <div className={`transition-all ease-${easing} duration-${duration} w-[450px] flex flex-col bg-gradient-to-tr from-rose-500 to-rose-400 border-2 border-rose-200 text-white shadow-2xl rounded-xl ${show?"scale-100 opacity-100":"scale-125 opacity-0"}`}>
+      <div className={`transition-all ease-${easing} duration-${duration} w-[450px] flex flex-col bg-gradient-to-tr from-color5 to-color4 border-2 border-color2 text-white shadow-2xl rounded-xl ${show?"scale-100 opacity-100":"scale-125 opacity-0"}`}>
         {children}  
       </div>
     </div>
@@ -123,8 +123,8 @@ const AddAddressModal = () => {
               <SelectTrigger className='w-full mb-2 border-2 rounded-3xl shadow-lg'>
                 <SelectValue placeholder='* Select Your Country' />
               </SelectTrigger>
-              <SelectContent className='bg-gradient-to-tr from-rose-500 to-rose-400 text-white rounded-2xl'>
-                <SelectGroup className=' bg-gradient-to-tr from-rose-500 to-rose-400 gap-y-3 border-transparent rounded-2xl'>
+              <SelectContent className='bg-gradient-to-tr from-color5 to-color4 text-white rounded-2xl'>
+                <SelectGroup className=' bg-gradient-to-tr from-color5 to-color4 gap-y-3 border-transparent rounded-2xl'>
                   <SelectLabel className='text-rose-950'>
                     ----Country----
                   </SelectLabel>
@@ -152,8 +152,8 @@ const AddAddressModal = () => {
               <SelectTrigger className='w-full mb-2 border-2 rounded-3xl shadow-lg'>
                 <SelectValue placeholder='* Select a State' />
               </SelectTrigger>
-              <SelectContent className='bg-gradient-to-tr from-rose-500 to-rose-400 text-white rounded-2xl'>
-                <SelectGroup className=' bg-gradient-to-tr from-rose-500 to-rose-400 gap-y-3 border-transparent rounded-2xl'>
+              <SelectContent className='bg-gradient-to-tr from-color5 to-color4 text-white rounded-2xl'>
+                <SelectGroup className=' bg-gradient-to-tr from-color5 to-color4 gap-y-3 border-transparent rounded-2xl'>
                   <SelectLabel className='text-rose-950'>
                     ----State----
                   </SelectLabel>
@@ -181,8 +181,8 @@ const AddAddressModal = () => {
               <SelectTrigger className='w-full mb-2 border-2 rounded-3xl shadow-lg'>
                 <SelectValue placeholder='* Select a city' />
               </SelectTrigger>
-              <SelectContent className='bg-gradient-to-tr from-rose-500 to-rose-400 text-white rounded-2xl'>
-                <SelectGroup className=' bg-gradient-to-tr from-rose-500 to-rose-400 gap-y-3 border-transparent rounded-2xl'>
+              <SelectContent className='bg-gradient-to-tr from-color5 to-color4 text-white rounded-2xl'>
+                <SelectGroup className=' bg-gradient-to-tr from-color5 to-color4 gap-y-3 border-transparent rounded-2xl'>
                   <SelectLabel className='text-rose-950'>
                     ----City----
                   </SelectLabel>
@@ -220,7 +220,7 @@ const AddAddressModal = () => {
             />
 
             <Button
-              className='bg-white text-rose-500 border border-rose-500 rounded-3xl py-1 shadow-lg hover:bg-rose-50 hover:shadow-xl w-full'
+              className='bg-white text-color5 border border-color5 rounded-3xl py-1 shadow-lg hover:bg-color0 hover:shadow-xl w-full'
               onClick={handleSubmit}
             >
               Submit

@@ -55,17 +55,17 @@ const EditCategoryModal = () => {
         <>
           <div className='w-[550px] p-4 px-10 pt-7'>
             <div>
-              <div className='font-semibold text-2xl text-rose-500 mb-3'>
+              <div className='font-semibold text-2xl text-color5 mb-3'>
                 Edit Food Category
               </div>
-              <div className='w-full h-[2px] bg-rose-500 mb-3'></div>
+              <div className='w-full h-[2px] bg-color5 mb-3'></div>
               <div>
                 <form className='flex flex-col gap-1' onSubmit={handleSubmit}>
                 <div className=' font-semibold'>Category Name:</div>
                 <input
                   type='text'
                   placeholder='Enter the category name'
-                  className='p-2 w-full text-rose-500 border border-rose-100 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 mb-1'
+                  className='p-2 w-full text-color5 border border-color1 outline-color3 rounded  hover:border-color4 placeholder:text-color3 mb-1'
                   required
                   value={categoryName}
                   onChange={e => setCategoryName(e.target.value)}
@@ -75,13 +75,13 @@ const EditCategoryModal = () => {
                 <input
                   type='text'
                   placeholder='Enter the category description'
-                  className='p-2 w-full text-rose-500 border border-rose-100 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300 mb-1'
+                  className='p-2 w-full text-color5 border border-color1 outline-color3 rounded  hover:border-color4 placeholder:text-color3 mb-1'
                   required
                   value={description}
                   onChange={e => SetDescription(e.target.value)}
                 />
-                <button type="submit" className='w-full bg-rose-500 text-white p-2 rounded border border-rose-500 hover:opacity-90' disabled={loading}>Edit Food Category</button>
-                <button type="button" className='w-full bg-white text-rose-500 p-2 rounded border border-rose-300 hover:opacity-90' disabled={loading} onClick={()=>onClose()}>Cancel</button>
+                <button type="submit" className='w-full bg-color5 text-white p-2 rounded border border-color5 hover:opacity-90' disabled={loading}>Edit Food Category</button>
+                <button type="button" className='w-full bg-white text-color5 p-2 rounded border border-color3 hover:opacity-90' disabled={loading} onClick={()=>onClose()}>Cancel</button>
                 </form>
               </div>
             </div>

@@ -12,6 +12,8 @@ import EditFoodItemModal from '../components/sellerhotel/sellerhotelmodals/EditF
 import DeleteFoodItemModal from '../components/sellerhotel/sellerhotelmodals/DeleteFoodItemModal'
 import EditCategoryModal from '../components/sellerhotel/sellerhotelmodals/EditCategoryModal'
 import DeleteFoodCategory from '../components/sellerhotel/sellerhotelmodals/DeleteFoodCategory'
+import EditOrderTableInfoModal from '../components/sellerhotel/sellerhotelmodals/EditOrderTableInfoModal'
+import DeleteOrderTableModal from '../components/sellerhotel/sellerhotelmodals/DeleteOrderTableModal'
 
 const SellerHotelModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false)
@@ -26,8 +28,7 @@ const SellerHotelModalProvider = () => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'auto';   
-
+      document.body.style.overflow = 'auto';  
     }
 
     return () => {
@@ -55,19 +56,21 @@ const SellerHotelModalProvider = () => {
         ref={divRef}
       >
         {isOpen && (
-          <div className='transition-all duration-500 ease-ease-in max-h-[600px] overflow-y-scroll flex flex-col bg-white border-2 border-white shadow-2xl rounded-xl text-rose-500'>  
+          <div className='transition-all duration-500 max-h-[600px] overflow-y-scroll flex flex-col bg-white border-2 border-white shadow-2xl rounded-xl text-color5'>  
           <CreateRoleModal />
           <InviteMemberModal />
           <EditRolePermissionModal />
           <CreateFoodCategoryModal />
           <EditCategoryModal />
           <CreateFoodItemModal />
-          <CreateTableModal />
           <DeleteRoleModal />
           <ManageRoleMemberModal />
           <EditFoodItemModal />
           <DeleteFoodItemModal/>
           <DeleteFoodCategory />
+          <CreateTableModal />
+          <EditOrderTableInfoModal />
+          <DeleteOrderTableModal />
           </div>
         )}
       </div>

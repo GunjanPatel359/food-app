@@ -51,18 +51,18 @@ const CreateRoleModal = () => {
                 <div className='text-2xl font-semibold pb-3'>
                     Create Role
                 </div>
-                <div className='w-full border border-rose-400 shadow-2xl shadow-rose-200'></div>
-                <div className='bg-rose-100 w-full mt-4'>
+                <div className='w-full border border-color4 shadow-2xl shadow-color2'></div>
+                <div className='bg-color0 w-full mt-4 border border-color3'>
                     <form onSubmit={handleSubmit} className='p-4 flex flex-col gap-2'>
 
                         <div className=' font-semibold'>Role Name:</div>
-                        <input type='text' placeholder='Enter the Role name' className='p-2 w-full text-rose-500 border border-rose-100 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300' required value={roleName} onChange={(e)=>setRoleName(e.target.value)} />
+                        <input type='text' placeholder='Enter the Role name' className='p-2 w-full text-color5 border border-color1 outline-color3 rounded  hover:border-color4 placeholder:text-color3 bg-white' required value={roleName} onChange={(e)=>setRoleName(e.target.value)} />
 
                         <div className=' font-semibold'>Role Description:</div>
-                        <input type='text' placeholder='Enter the role description' className='p-2 w-full text-rose-500 border border-rose-100 outline-rose-300 rounded  hover:border-rose-400 placeholder:text-rose-300' required value={roleDescription} onChange={(e)=>setRoleDescription(e.target.value)}/>
+                        <input type='text' placeholder='Enter the role description' className='p-2 w-full text-color5 border border-color1 outline-color3 rounded  hover:border-color4 placeholder:text-color3' required value={roleDescription} onChange={(e)=>setRoleDescription(e.target.value)}/>
                         
 
-                        <div className='p-2 bg-white rounded'>
+                        <div className='p-2 bg-white rounded border border-color3'>
                             <div className='flex justify-between'>
                             <span className='pl-1 font-semibold'>member can update Restaurant image</span>
                             <Switch checked={canUpdateRestaurantImg} onCheckedChange={()=>setCanUpdateRestaurantImg(!canUpdateRestaurantImg)} className="my-auto mr-1" />
@@ -71,7 +71,7 @@ const CreateRoleModal = () => {
                              </p>
                         </div>
 
-                        <div className='p-2 bg-white rounded'>
+                        <div className='p-2 bg-white rounded border border-color3'>
                             <div className='flex justify-between'>
                             <span className='pl-1 font-semibold'>member can update Restaurant info</span>
                             <Switch checked={canUpdateRestaurantDetails} onCheckedChange={()=>setCanUpdateRestaurantDetails(!canUpdateRestaurantDetails)} className="my-auto mr-1" />
@@ -80,7 +80,7 @@ const CreateRoleModal = () => {
                              </p>
                         </div>
 
-                        <div className='p-2 bg-white rounded'>
+                        <div className='p-2 bg-white rounded border border-color3'>
                             <div className='flex justify-between'>
                             <span className='pl-1 font-semibold'>Manage roles</span>
                         <Switch checked={canManageRoles} onCheckedChange={()=>setCanManageRoles(!canManageRoles)} className="my-auto mr-1" 
@@ -92,7 +92,7 @@ const CreateRoleModal = () => {
                              </p>
                         </div>
 
-                        <div className='p-2 bg-white rounded'>
+                        <div className='p-2 bg-white rounded border border-color3'>
                             <div className='flex justify-between'>
                             <span className='pl-1 font-semibold'>Manage food items</span>
                         <Switch checked={canManageFoodItemData} onCheckedChange={()=>setCanManageFoodItemData(!canManageFoodItemData)} className="my-auto mr-1" 
@@ -104,7 +104,7 @@ const CreateRoleModal = () => {
                              </p>
                         </div>
 
-                        <div className='p-2 bg-white rounded'>
+                        <div className='p-2 bg-white rounded border border-color3'>
                             <div className='flex justify-between'>
                             <span className='pl-1 font-semibold'>Admin Power</span>
                         <Switch checked={adminPower} onCheckedChange={()=>setAdminPower(!adminPower)} className="my-auto mr-1" 
@@ -112,13 +112,13 @@ const CreateRoleModal = () => {
                              />
                              </div>
                              <p className='pl-1 h-auto text-justify mt-1'>
-                                <IoWarning size={22} className='text-rose-500 inline mr-1'/>
-                                sdhverevhjeruictnhuernt erncyndb getryctrhertgyvtdfijeut ewtvgwueghc wet tuweuhcgew c 
+                                <IoWarning size={22} className='text-color5 inline mr-1'/>
+                                This permission give full power to the member. They can do whatever they want, so it is suggested to use it wisely.
                              </p>
                         </div>
 
 
-                        <div className='p-2 bg-white rounded'>
+                        <div className='p-2 bg-white rounded border border-color3'>
                             <div className='flex justify-between'>
                             <span className='pl-1 font-semibold'>invite member</span>
                             <Switch checked={canAddMember} onCheckedChange={()=>setCanAddMember(!canAddMember)} className="my-auto mr-1" />
@@ -129,8 +129,8 @@ const CreateRoleModal = () => {
 
                         {/* will be adding other stuff later */}
                         <div className="flex gap-2">
-                        <button type='submit' className='bg-rose-400 hover:bg-rose-500 text-white font-bold py-2 px-4 rounded w-full'>Create Role</button>
-                        <button type='button' className='bg-white hover:text-rose-400 border border-rose-500 text-rose-500 py-2 px-4 rounded w-full' onClick={()=>onClose()}>Cancel</button>
+                        <button type='submit' className='bg-color5 hover:opacity-90 text-white font-bold py-2 px-4 rounded w-full'>Create Role</button>
+                        <button type='button' className='bg-white hover:text-color4 border border-color5 text-color5 py-2 px-4 rounded w-full' onClick={()=>onClose()}>Cancel</button>
                         </div>
                         
                     </form>

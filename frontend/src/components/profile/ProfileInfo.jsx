@@ -46,18 +46,18 @@ const ProfileInfo = () => {
   return (
     <div className='flex flex-col w-full items-center justify-center mt-8'>
       <div
-        className='w-40 h-40 rounded-full border-4 border-rose-400 flex items-center justify-center cursor-pointer'
+        className='w-40 h-40 rounded-full border-4 border-color4 flex items-center justify-center cursor-pointer'
         onClick={() => fileInputRef.current.click()}
       >
         <div className='w-full h-full border border-white rounded-full flex justify-center items-center'>
         {previewImage ? (
           <img
-            className='text-rose-300 rounded-full hover:opacity-85 transition-all duration-300'
+            className='text-color3 rounded-full hover:opacity-85 transition-all duration-300'
             alt=''
             src={`${img_url}/${previewImage}`}
           />
         ) : (
-          <FaRegUser className='text-rose-300 hover:text-rose-400' size={85} />
+          <FaRegUser className='text-color3 hover:text-color4' size={85} />
         )}
         <input
           className='hidden'
@@ -75,13 +75,13 @@ const ProfileInfo = () => {
           <form>
           <input
             placeholder='Your name'
-            className='p-2 pl-5 rounded-full border-2 border-rose-500 text-rose-500 placeholder-rose-500 focus:border-rose-500 outline-none hover:border-rose-400 hover:text-rose-400 hover:focus:border-rose-400'
+            className='p-2 pl-5 rounded-full border-2 border-color5 text-color5 placeholder-color5 focus:border-color5 outline-none hover:border-color4 hover:text-color4 hover:focus:border-color4'
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
-          {/* <input placeholder='Your name' className='p-2 pl-5 rounded-full border-2 border-rose-500 text-rose-500 placeholder-rose-500 focus:border-rose-500 outline-none' /> */}
-          <button className={`transition-all duration-300 ml-3 text-white py-2 px-4 rounded-xl hover:bg-rose-400 ${name===form?"bg-rose-400 opacity-85":" bg-rose-500 opacity-100"}`}>
+          {/* <input placeholder='Your name' className='p-2 pl-5 rounded-full border-2 border-color5 text-color5 placeholder-color5 focus:border-color5 outline-none' /> */}
+          <button className={`transition-all duration-300 ml-3 text-white py-2 px-4 rounded-xl hover:bg-color4 ${name===form?"bg-color4 opacity-85":" bg-color5 opacity-100"}`}>
             Change name
           </button>
             </form>

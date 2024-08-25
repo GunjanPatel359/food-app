@@ -21,6 +21,7 @@ const Seller = require("../model/seller");
 const { createSellerSubscription, captureSellerSubscriptionOrder } = require("../utils/paypal-api");
 const { SubscriptionPlans } = require("../utils/SubscriptionPlans");
 const { checkForSellerSubscription } = require("../utils/repeatQuery");
+const { static_colors } = require("../utils/colorUtil");
 
 router.get("/sellerinfo", isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
@@ -433,6 +434,34 @@ router.get('/search/invitesellerwithid',isSellerAuthenticated,catchAsyncErrors(a
          res.status(200).json({success:true,data:parsingData})
     } catch (error) {
         console.log(error)
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
+router.get('/colors/all-the-colors',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        res.status(200).json({success:true,colors:static_colors})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
+router.patch('/colors/change-color',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {color}=req.body
+        if(!static_colors.includes(color)){
+            return next(new ErrorHandler("Invalid color",400))
+        }
+        const seller=await Seller.findOneAndUpdate({
+            _id:req.seller._id
+        },{
+            colors:color
+        },{new:true})
+        if(!seller){
+            return next(new ErrorHandler("hotel not found",400))
+        }
+        res.status(200).json({success:true,message:"color updated successfully"})
+    } catch (error) {
         return next(new ErrorHandler(error.message,400))
     }
 }))

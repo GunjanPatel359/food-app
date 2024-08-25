@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
 const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
-const Tooltip = ({ position, content, children,TooltipStyle }) => {
-  console.log(content)
+const Tooltip = ({ position, content, children,TooltipStyle,style }) => {
     return (
         <>
-        <div className="relative cursor-pointer group">
-            <div className="">{children}</div>
+        <div className="relative cursor-pointer group">{children}
             <span
+            style={style}
             className={classNames(
                         `absolute rounded-full px-3 py-1 text-sm font-semibold`,
                         TooltipStyle

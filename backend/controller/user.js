@@ -13,6 +13,7 @@ const transporter = require("../utils/sendmailer");
 const sendToken = require("../utils/jwtToken");
 const {isAuthenticated, isSellerAuthenticated} = require("../middleware/auth");
 const {upload}=require("../multer");
+const { static_colors } = require("../utils/colorUtil");
 
 router.get("/getpaypalclientdetail",isAuthenticated || isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
     try{
@@ -158,6 +159,34 @@ router.patch('/add-address',isAuthenticated,catchAsyncErrors(async(req,res,next)
         })
     } catch (err) {
         return next (new ErrorHandler(err.message,400))
+    }
+}))
+
+router.get('/colors/all-the-colors',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        res.status(200).json({success:true,colors:static_colors})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
+router.patch('/colors/change-color',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {color}=req.body
+        if(!static_colors.includes(color)){
+            return next(new ErrorHandler("Invalid color",400))
+        }
+        const user=await User.findOneAndUpdate({
+            _id:req.user._id
+        },{
+            colors:color
+        },{new:true})
+        if(!user){
+            return next(new ErrorHandler("hotel not found",400))
+        }
+        res.status(200).json({success:true,message:"color updated successfully"})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
     }
 }))
 

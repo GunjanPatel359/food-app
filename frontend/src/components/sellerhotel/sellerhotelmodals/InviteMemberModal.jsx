@@ -155,22 +155,22 @@ const InviteMemberModal = () => {
             <div className='w-[550px] p-4 px-10 pt-7  '>
               <div className=''>
                 <div className='relative'>
-                    <MdCancel className='cursor-pointer absolute -right-6 -top-2 text-white bg-rose-500 rounded-full' onClick={() => onClose()} size={25} />
+                    <MdCancel className='cursor-pointer absolute -right-6 -top-2 text-white bg-color5 rounded-full' onClick={() => onClose()} size={25} />
                 </div>
-                <div className='font-semibold text-2xl text-rose-500 mb-3'>
+                <div className='font-semibold text-2xl text-color5 mb-3'>
                   Invite Member
                 </div>
-                <div className='w-full h-[2px] bg-rose-500 mb-3'></div>
+                <div className='w-full h-[2px] bg-color5 mb-3'></div>
                 <div className='mb-2'>
                   <CiWarning className='mr-1 inline' size={22} />{' '}
-                  <span className='underline font-semibold text-rose-500'>
+                  <span className='underline font-semibold text-color5'>
                     {item.roleName}
                   </span>{' '}
                   role will be assigned to invited member
                 </div>
 
                 <div className='flex'>
-                  <div className='w-full border border-rose-400 outline-rose-400 rounded-full flex hover:border-rose-400 p-2 rounded-tr-none rounded-br-none'>
+                  <div className='w-full border border-color4 outline-color4 rounded-full flex hover:border-color4 p-2 rounded-tr-none rounded-br-none'>
                     <IoSearch
                       className='inline mr-[7px] ml-[6px] m-auto translate-y-[1px]'
                       size={18}
@@ -180,19 +180,19 @@ const InviteMemberModal = () => {
                         <input
                           type='text'
                           placeholder='Enter member unique Id'
-                          className='text-rose-500 placeholder:text-rose-400 focus:outline-none inline w-full'
+                          className='text-color5 placeholder:text-color4 focus:outline-none inline w-full'
                           value={query}
                           onChange={handleMemberIdSearch}
                         // onClick={() => setResultBoxOpen(true)}
                         />
                         {resultBoxOpen && (
-                          <div className='absolute bg-white border border-rose-500 p-4 px-6 rounded shadow shadow-rose-300 translate-x-7 translate-y-9 w-[400px]'>
+                          <div className='absolute bg-white border border-color5 p-4 px-6 rounded shadow shadow-color3 translate-x-7 translate-y-9 w-[400px]'>
                             <div className='font-semibold'>Search Result</div>
-                            <div className='w-full h-[1px] bg-rose-500 mt-1 mb-2'></div>
+                            <div className='w-full h-[1px] bg-color5 mt-1 mb-2'></div>
                             {searchResult ? (
                               (data?.ownerId != searchResult._id) ?
                                 <>
-                                  <div className='flex border border-rose-500 p-2 justify-between rounded shadow'>
+                                  <div className='flex border border-color5 p-2 justify-between rounded shadow'>
                                     <div className='flex'>
                                       <div className='my-auto cursor-pointer'>
                                         {searchResult.avatar ? (
@@ -233,14 +233,14 @@ const InviteMemberModal = () => {
                                   </div>
                                 </>
                                 : <>
-                                  <div className='mt-3 text-rose-600 text-justify'>
+                                  <div className='mt-3 text-color5 text-justify'>
                                     * cannot perform any task on owner of this restaurant
                                   </div>
                                 </>
                             ) : (
                               <>
                                 {searchError && (
-                                  <div className='mt-3 text-rose-600'>
+                                  <div className='mt-3 text-color5'>
                                     * {searchError}
                                   </div>
                                 )}
@@ -254,15 +254,15 @@ const InviteMemberModal = () => {
                         <input
                           type='text'
                           placeholder='Enter member email address or name'
-                          className='text-rose-500 placeholder:text-rose-400 focus:outline-none inline w-full'
+                          className='text-color5 placeholder:text-color4 focus:outline-none inline w-full'
                           value={query}
                           onChange={handleMemberNameSearch}
                         // onClick={() => setResultBoxOpen(true)}
                         />
                         {resultBoxOpen && (
-                          <div className='absolute bg-white border border-rose-500 p-4 px-6 rounded shadow shadow-rose-300  translate-y-9 w-[420px] max-h-[250px] overflow-scroll'>
+                          <div className='absolute bg-white border border-color5 p-4 px-6 rounded shadow shadow-color3  translate-y-9 w-[420px] max-h-[250px] overflow-scroll'>
                             <div className='font-semibold'>Search Result</div>
-                            <div className='w-full h-[1px] bg-rose-500 mt-1'></div>
+                            <div className='w-full h-[1px] bg-color5 mt-1'></div>
                             {searchResult ? (
                               <>
                                 <div className='mt-2 flex flex-col gap-y-2'>
@@ -273,7 +273,7 @@ const InviteMemberModal = () => {
                                     return (
                                       <div
                                         key={i}
-                                        className='flex border border-rose-500 p-2 justify-between rounded shadow'
+                                        className='flex border border-color5 p-2 justify-between rounded shadow'
                                       >
                                         <div className='flex'>
                                           <div className='my-auto cursor-pointer'>
@@ -322,7 +322,7 @@ const InviteMemberModal = () => {
                             ) : (
                               <>
                                 {searchError && (
-                                  <div className='mt-3 text-rose-600'>
+                                  <div className='mt-3 text-color5'>
                                     * {searchError}
                                   </div>
                                 )}
@@ -333,7 +333,7 @@ const InviteMemberModal = () => {
                       </>
                     )}
                   </div>
-                  <div className='border border-rose-500 rounded-tr-full rounded-br-full'>
+                  <div className='border border-color5 rounded-tr-full rounded-br-full'>
                     <HiChevronRight
                       size={22}
                       className={`transition-all inline m-2 translate-y-[1px] ${openArrow ? 'rotate-90' : ''
@@ -341,7 +341,7 @@ const InviteMemberModal = () => {
                       onClick={() => setOpenArrow(!openArrow)}
                     />
                     <div
-                      className={`transition-all absolute flex flex-col bg-white p-2 rounded-2xl border border-rose-300 shadow ${openArrow ? 'visible' : 'invisible -translate-y-2'
+                      className={`transition-all absolute flex flex-col bg-white p-2 rounded-2xl border border-color3 shadow ${openArrow ? 'visible' : 'invisible -translate-y-2'
                         }`}
                     >
                       <div
@@ -362,7 +362,7 @@ const InviteMemberModal = () => {
                         )}
                         find with unique ID
                       </div>
-                      <div className='w-[90%] m-auto h-[1px] bg-rose-50'></div>
+                      <div className='w-[90%] m-auto h-[1px] bg-color0'></div>
                       <div
                         className='p-2 cursor-pointer'
                         onClick={() => {
@@ -384,7 +384,7 @@ const InviteMemberModal = () => {
                     </div>
                   </div>
                 </div>
-                <div className='w-full h-[0.1px] border border-rose-300 mt-5'></div>
+                <div className='w-full h-[0.1px] border border-color3 mt-5'></div>
 
                 <div className='flex justify-between mt-2'>
                   Share Invite link

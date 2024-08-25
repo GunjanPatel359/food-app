@@ -40,7 +40,7 @@ const AvailableTables = ({ hotelId }) => {
     return (
         <>
             <div>
-                <h1 className="text-2xl font-bold text-rose-500 ml-3">Available Tables</h1>
+                <h1 className="text-2xl font-bold text-color5 ml-3">Available Tables</h1>
                 <div className="w-full flex flex-wrap">
                     {availableTables.length > 0 ? availableTables.map((item, index) => {
                         return (
@@ -48,7 +48,7 @@ const AvailableTables = ({ hotelId }) => {
                         )
                     }):(
                         <>
-                        <div className="w-full text-center text-2xl text-rose-500 p-4" >No Available Tables</div>
+                        <div className="w-full text-center text-2xl text-color5 p-4" >No Available Tables</div>
                         </>
                     )}
                 </div>
@@ -75,7 +75,7 @@ const OccupiedTables = ({ hotelId }) => {
     return (
         <>
             <div>
-                <h1 className="text-2xl font-bold text-rose-500 ml-3">Occupied Tables</h1>
+                <h1 className="text-2xl font-bold text-color5 ml-3">Occupied Tables</h1>
                 <div className="w-full flex flex-wrap">
                     {occupiedTables.length>0 && occupiedTables.map((item, index) => {
                         return (
@@ -103,14 +103,14 @@ const AvailableTableBox = ({ table }) => {
     }
     return (
         <>
-            <div className="m-2 p-4 bg-rose-50 rounded border border-rose-500 flex flex-col gap-1">
-                <div className="text-rose-500"><span className="text-rose-500 font-semibold">Table Number:</span> {table.tableNumber}</div>
-                <div className="text-rose-500"><span className="text-rose-500 font-semibold">Table Description:</span> {table.tableDescription}</div>
-                <div className="text-rose-500"><span className="text-rose-500 font-semibold">Status:</span> {table.status}</div>
-                <div className="text-rose-500"><span className="text-rose-500 font-semibold">Seats:</span> {table.seats}</div>
-                <button className="bg-rose-500 w-full rounded p-1 text-white mt-2 shadow hover:opacity-90 transition-all"
+            <div className="m-2 p-4 bg-color0 rounded border border-color5 flex flex-col gap-1 shadow-md">
+                <div className="text-color5"><span className="text-color5 font-semibold">Table Number:</span> {table.tableNumber}</div>
+                <div className="text-color5"><span className="text-color5 font-semibold">Table Description:</span> {table.tableDescription}</div>
+                <div className="text-color5"><span className="text-color5 font-semibold">Status:</span> {table.status}</div>
+                <div className="text-color5"><span className="text-color5 font-semibold">Seats:</span> {table.seats}</div>
+                <button className="bg-color5 w-full rounded p-1 text-white mt-2 shadow hover:opacity-90 transition-all"
                 onClick={()=>onOpen('table-qr-code',{QrCodeSetUserTable:table})} >Scan QR Code</button>
-                <button className="bg-white text-rose-500 p-1 mt-1 border border-rose-500 rounded shadow" onClick={handleOfflineTable}>offline occupied</button>
+                <button className="bg-white text-color5 p-1 mt-1 border border-color5 rounded shadow" onClick={handleOfflineTable}>offline occupied</button>
             </div>
         </>
     )
@@ -121,13 +121,13 @@ const OccupiedTableBox = ({ table,hotelId }) => {
     const {onOpen}=useModal()
     return (
         <>
-            <div className="m-2 p-4 bg-rose-50 rounded border border-rose-500 flex flex-col gap-1">
-                <div className="text-rose-500"><span className="text-rose-500 font-semibold">Table Number:</span> {table.tableNumber}</div>
-                <div className="text-rose-500"><span className="text-rose-500 font-semibold">Table Description:</span> {table.tableDescription}</div>
-                <div className="text-rose-500"><span className="text-rose-500 font-semibold">Status:</span> {table.status}</div>
-                <div className="text-rose-500"><span className="text-rose-500 font-semibold">Seats:</span> {table.seats}</div>
-                <button className="bg-rose-500 w-full rounded p-1 text-white mt-2 shadow hover:opacity-90 transition-all" onClick={()=>navigate(`/seller/restaurant/${hotelId}/ordertable/${table._id}`)}>View Orders</button>
-                <button className="bg-white text-rose-500 p-1 mt-1 border border-rose-500 rounded shadow" onClick={()=>onOpen("back-to-available",{backToAvailable:table})}>Back to Available</button>
+            <div className="m-2 p-4 bg-color0 rounded border border-color5 flex flex-col gap-1 shadow-md">
+                <div className="text-color5"><span className="text-color5 font-semibold">Table Number:</span> {table.tableNumber}</div>
+                <div className="text-color5"><span className="text-color5 font-semibold">Table Description:</span> {table.tableDescription}</div>
+                <div className="text-color5"><span className="text-color5 font-semibold">Status:</span> {table.status}</div>
+                <div className="text-color5"><span className="text-color5 font-semibold">Seats:</span> {table.seats}</div>
+                <button className="bg-color5 w-full rounded p-1 text-white mt-2 shadow hover:opacity-90 transition-all" onClick={()=>navigate(`/seller/restaurant/${hotelId}/ordertable/${table._id}`)}>View Orders</button>
+                <button className="bg-white text-color5 p-1 mt-1 border border-color5 rounded shadow" onClick={()=>onOpen("back-to-available",{backToAvailable:table})}>Back to Available</button>
             </div>
         </>
     )

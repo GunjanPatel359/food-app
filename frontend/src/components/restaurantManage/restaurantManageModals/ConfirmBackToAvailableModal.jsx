@@ -34,17 +34,17 @@ const ConfirmBackToAvailableModal = () => {
       {isModelOpen && (
         <>
          <div className="w-[500px] p-6">
-        <div className="text-rose-500 font-semibold text-2xl mb-2">
+        <div className="text-color5 font-semibold text-2xl mb-2">
             Back To Available
         </div>
-        <div className="w-full h-[2px] bg-rose-500 mb-2"></div>
-        <div className='text-justify'>
-            <IoWarning className='inline mr-1' size={22} />
-            Are you sure you want to transfer table number <span className='text-rose-500 font-semibold underline'>{data.backToAvailable.tableNumber}</span> to available?
+        <div className="w-full h-[2px] bg-color5 mb-2"></div>
+        <div className='text-justify text-color5'>
+            <IoWarning className='inline mr-1 text-color5' size={22} />
+            Are you sure you want to transfer table number <span className='text-color5 font-semibold underline'>{data.backToAvailable.tableNumber}</span> to available?
         </div>
         <div className='flex w-full gap-1 mt-4'>
-        <button className='text-white bg-rose-500 w-full p-2 rounded' onClick={handleBackToAvailable} disabled={loading}>Confirm</button>
-        <button className='text-rose-500 bg-white w-full p-2 border border-rose-500 rounded' disabled={loading} onClick={()=>onClose()}>cancel</button>
+        <button className='text-white bg-color5 w-full p-2 rounded' onClick={handleBackToAvailable} disabled={loading}>Confirm</button>
+        <button className='text-color5 bg-white w-full p-2 border border-color5 rounded' disabled={loading} onClick={()=>onClose()}>cancel</button>
         </div>
         </div>
         </>

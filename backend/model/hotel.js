@@ -60,6 +60,9 @@ const hotelSchema = new mongoose.Schema({
     ref:"Seller",
     required:true
   },
+  colors:{
+    type:String,
+  },
   // orderLimit:{
   //   type:Number,
   //   default:500,

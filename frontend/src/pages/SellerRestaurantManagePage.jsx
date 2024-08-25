@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import SellerProfileHeader from "../components/sellerprofile/SellerProfileHeader"
 import { io } from "socket.io-client"
 import SlideMenu from "../components/slidemenu/SlideMenu"
@@ -8,7 +8,7 @@ import { ImSpoonKnife } from "react-icons/im";
 import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import axios from "axios";
-import { backend_url } from "../server";
+import { backend_url, theme_colors } from "../server";
 import { addSeller, sellerLogout } from "../redux/reducers/seller";
 import { toast } from "react-toastify";
 import OrderTables from "../components/restaurantManage/OrderTables";
@@ -16,6 +16,9 @@ import RestaurantManageProvider from "../provider/RestaurantManageProvider";
 import ManageOrders from "../components/restaurantManage/ManageOrders";
 
 const SellerRestaurantManagePage = () => {
+    const Themes=useMemo(()=>theme_colors,[])
+    const [theme,setTheme]=useState(Themes[0]);
+
     const params=useParams()
     const {hotelId}=params
     const dispatch = useDispatch()
@@ -35,6 +38,21 @@ const SellerRestaurantManagePage = () => {
         // })
     }, [])
 
+    useEffect(()=>{
+        const initiatePage=async()=>{
+            try {
+                const res=await axios.get(`${backend_url}/seller/gethoteldata/${hotelId}`,{withCredentials:true})
+                if(res.data.hotel.colors){
+                  if(Themes.includes(res.data.hotel.colors)){
+                    setTheme(res.data.hotel.colors)
+                  }
+                }
+            } catch (error) {
+                toast.error("Somthing went wrong")
+            }
+        }
+        initiatePage()
+    },[Themes, hotelId])
 
     useEffect(() => {
         const userinfo = async () => {
@@ -84,7 +102,7 @@ const SellerRestaurantManagePage = () => {
     ]
 
     return (
-        <div>
+        <div className={`theme-${theme}`}>
             <SellerProfileHeader />
             <div className='flex w-full transition-all duration-1000'>
 
@@ -95,7 +113,7 @@ const SellerRestaurantManagePage = () => {
                     {select === 1 && <ManageOrders/>} 
                 </div>
             </div>
-            <RestaurantManageProvider />
+            <RestaurantManageProvider theme={theme} />
         </div>
     )
 }

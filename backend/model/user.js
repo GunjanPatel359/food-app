@@ -39,10 +39,9 @@ const userSchema = new mongoose.Schema({
       },
     }
   ],
-  //   role:{
-  //     type: String,
-  //     default: "user",
-  //   },
+  colors:{
+    type:String,
+  },
   avatar: {
     // public_id:{
     type: String,

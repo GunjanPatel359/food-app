@@ -44,7 +44,7 @@ const ProfileAddresses = () => {
     <div className='p-10 pt-1'>
       <div className='flex justify-end p-2'>
         <span
-          className='text-rose-500 transition-all duration-200 bg-rose-100 p-1 rounded cursor-pointer hover:bg-rose-200 font-extrabold'
+          className='text-color5 transition-all duration-200 bg-color1 p-1 rounded cursor-pointer hover:bg-color2 font-extrabold'
           onClick={() => onOpen('add-address')}
         >
           <Plus size={25} />
@@ -62,11 +62,11 @@ const AddressHolder = ({ columns, rows }) => {
   return (
     <>
       <div className='w-full flex flex-col'>
-        <div className='w-full flex p-3 pl-4 border rounded-xl border-rose-400  shadow-sm'>
+        <div className='w-full flex p-3 pl-4 border rounded-xl border-color4  shadow-sm'>
           {columns.map((item,i) => {
             return (
               <>
-                <span className={`font-semibold text-rose-600`}
+                <span className={`font-semibold text-color5`}
                 style={{'width':item.width + 'px'}}
                 key={i}
                 >
@@ -81,7 +81,7 @@ const AddressHolder = ({ columns, rows }) => {
         const index = 0
         return (
           <div
-            className='w-full bg-transparent border rounded-xl border-rose-600 border-t-transparent shadow-sm flex p-3 pl-4'
+            className='w-full bg-transparent border rounded-xl border-color5 border-t-transparent shadow-sm flex p-3 pl-4'
             key={i}
           >
             {columns.map((product, i) => {
@@ -90,7 +90,7 @@ const AddressHolder = ({ columns, rows }) => {
                 <>
                   <span
                   style={{'width':w}}
-                    className={`text-rose-500`}
+                    className={`text-color5`}
                   >{item[product.field]}</span>
                 </>
               )

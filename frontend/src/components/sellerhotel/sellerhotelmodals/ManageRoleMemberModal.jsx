@@ -65,18 +65,18 @@ const ManageRoleMemberModal = () => {
             {isModelOpen && (
                 <div className="lg:w-[600px] w-[480px] max-h-[500px] p-3 px-10 pt-7">
                     <div className='relative'>
-                    <MdCancel className='cursor-pointer absolute -right-6 -top-2 text-white bg-rose-500 rounded-full' onClick={() => onClose()} size={25} />
+                    <MdCancel className='cursor-pointer absolute -right-6 -top-2 text-white bg-color5 rounded-full' onClick={() => onClose()} size={25} />
                 </div>
                     <div>
                         <div className="text-2xl font-semibold pb-3">Members</div>
-                        <div className="w-full border border-rose-400 shadow-2xl shadow-rose-200"></div>
+                        <div className="w-full border border-color4 shadow-2xl shadow-color2"></div>
                     </div>
                     <div className='mt-2 flex flex-col gap-2'>
                         {roleMembers.length>0?roleMembers.map((item, i) => {
                             return (
                                 <div
                                     key={i}
-                                    className='flex border border-rose-500 p-2 justify-between rounded shadow shadow-rose-500'
+                                    className='flex border border-color5 p-2 justify-between rounded shadow shadow-color5'
                                 >
                                     <div className='flex'>
                                         <div className='my-auto cursor-pointer'>

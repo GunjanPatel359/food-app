@@ -9,18 +9,18 @@ const SellerProfileHeader = () => {
   const {seller}=useSelector((state)=>state.seller)
   return (
     <div>
-      <div className='w-full shadow-md border-b border-rose-50'>
+      <div className='w-full shadow-md border-b border-color0'>
       <div className='w-full bg-white'>
-        <div className='w-[80%] m-auto flex  text-rose-500 h-[80px] justify-between'>
+        <div className='w-[80%] m-auto flex  text-color5 h-[80px] justify-between'>
         <span className='flex text-4xl gap-x-4 cursor-pointer m-4' onClick={()=>navigate('/seller/profile')}>
-          <IoFastFoodOutline size={40} className='text-rose-500'/>
+          <IoFastFoodOutline size={40} className='text-color5'/>
           <span>Taste</span>
         </span>
         <span className='text-center items-center flex '>
             <Link to="/seller/profile">
-            <div className='border-2 border-rose-500 hover:bg-rose-50 rounded-full'>
+            <div className='border-2 border-color5 hover:bg-color0 rounded-full'>
               {seller.avatar?(<><img src={`${img_url}/${seller.avatar}`} className='md:w-[55px] w-[40px] rounded-full border border-white' /></>):
-              (<><User size={30} className='text-rose-500 m-1'/></>)
+              (<><User size={30} className='text-color5 m-1'/></>)
               }
             </div>
             </Link>

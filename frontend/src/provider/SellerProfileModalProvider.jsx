@@ -30,7 +30,7 @@ const SellerProfileModalProvider = () => {
         ref={divRef}
       >
         {isOpen && (
-          <div className='transition-all duration-500 ease-ease-in w-auto max-h-[600px] overflow-y-scroll flex flex-col bg-white border-2 border-rose-500 shadow-2xl rounded-xl text-rose-500'>  
+          <div className='transition-all duration-500 ease-ease-in w-auto max-h-[600px] overflow-y-scroll flex flex-col bg-white border-2 border-color5 shadow-2xl rounded-xl text-color5'>  
           <SellerAddResturantModal/>
           <SellerDeleteRestaurantModal/>
           <SellerBuyingSubscriptionModal />

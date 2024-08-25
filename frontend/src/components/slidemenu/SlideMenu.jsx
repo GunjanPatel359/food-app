@@ -4,12 +4,12 @@ import { ChevronLast, ChevronFirst } from 'lucide-react'
 import { useState } from 'react'
 import { IoFastFoodOutline } from 'react-icons/io5'
 
-const SlideMenu = ({menuItemList, select, setSelected }) => {
+const SlideMenu = ({menuItemList, select, setSelected}) => {
   const [expanded, setExpanded] = useState(true)
 
   return (
     <aside className='h-screen mt-1'>
-      <nav className='h-full flex flex-col bg-white border-r shadow rounded border-rose-200 transition-all duration-1000'>
+      <nav className='h-full flex flex-col bg-white border-r shadow rounded border-color2 transition-all duration-1000'>
         <div className='p-4 pb-2 flex justify-between items-center transition-all duration-1000 bg-transparent'>
           {/* <img
             src="https://img.logoipsum.com/243.svg"
@@ -20,13 +20,13 @@ const SlideMenu = ({menuItemList, select, setSelected }) => {
           /> */}
           <span
             className={`overflow-hidden transition-all duration-1000 ${
-              expanded ? 'w-10 text-rose-500' : 'w-0 text-white '
+              expanded ? 'w-10 text-color5' : 'w-0 text-white '
             }`}
           >
             <IoFastFoodOutline className='inline bg-transparent' size={40} />
           </span>
           <span
-            className={`overflow-hidden bg-transparent text-[30px] text-rose-500 transition-all duration-1000 ${
+            className={`overflow-hidden bg-transparent text-[30px] text-color5 transition-all duration-1000 ${
               expanded ? 'w-32' : 'w-0 text-white'
             }`}
           >
@@ -34,7 +34,7 @@ const SlideMenu = ({menuItemList, select, setSelected }) => {
           </span>
           <button
             onClick={() => setExpanded(curr => !curr)}
-            className='p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-500'
+            className='p-1.5 rounded bg-color0 hover:bg-color1 text-color5'
           >
             {expanded ? <ChevronFirst /> : <ChevronLast />}
           </button>
@@ -84,8 +84,8 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
         group transition-all duration-1000 h-[47px] shadow
         ${
           active
-            ? ' bg-rose-500 opacity-90 text-white' //bg-gradient-to-tr from-rose-400 to-rose-300
-            : 'hover:bg-red-100 bg-white text-rose-500'
+            ? ' bg-color5 opacity-90 text-white' //bg-gradient-to-tr from-color4 to-color3
+            : 'hover:bg-color0 bg-white text-color5'
         }
     `}
     onClick={()=>setSelected(index)}
@@ -94,7 +94,7 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
       <span
         className={`overflow-hidden transition-all duration-1000  ${
           expanded ? 'w-52 ml-3' : 'w-0'
-        } ${active?"text-white":"text-rose-500"}`}
+        } ${active?"text-white":"text-color5"}`}
       >
         {text}
       </span>
@@ -103,7 +103,7 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
         <div
           className={`absolute right-2 w-2 h-2 rounded ${
             expanded ? '' : 'top-2'
-          } ${active?"bg-white":"bg-rose-500"} `}
+          } ${active?"bg-white":"bg-color5"} `}
         />
       )}
 
@@ -114,7 +114,8 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
           text-sm
           invisible opacity-20 -translate-x-3 transition-all duration-200
           group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
-          ${active?"bg-gradient-to-tr from-rose-500 to-rose-400 text-white":"bg-rose-50"}
+          z-10
+          ${active?"bg-color5 text-white":"bg-color0"}
       `}
         >
           {text}

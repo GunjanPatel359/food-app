@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --color-0:#D1F0FF;
+        --color-1:#76D8FF;
+        --color-2:#079CFF;
+        --color-3:#0076FF;
+        --color-4:#005DFF;
+        --color-5:#004DD7;
+    }
+    /* *{
+        @apply transition-colors duration-500 ease-in-out
+    } */
+}
+
+.theme-blue{
+    --color-0:#D1F0FF;
+    --color-1:#76D8FF;
+    --color-2:#079CFF;
+    --color-3:#0076FF;
+    --color-4:#005DFF;
+    --color-5:#004DD7;
+}
+
+.theme-rose {
+    --color-0:#fff1f2;
+    --color-1:#ffe4e6;
+    --color-2:#fecdd3;
+    --color-3:#fda4af;
+    --color-4:#fb7185;
+    --color-5:#f43f5e;
+}

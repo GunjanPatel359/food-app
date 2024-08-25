@@ -130,20 +130,20 @@ const SellerAddResturantModal = () => {
     <div>
       {isModelOpen ? (
         <>
-          <div className='text-center text-rose-500 text-2xl font-semibold mb-2 m-8'>
+          <div className='text-center text-color5 text-2xl font-semibold mb-2 m-8'>
             Create Restaurants
           </div>
           <div className='flex flex-col w-[550px] p-12 pt-2 pb-2'>
             <div>
               <form
-                className='flex flex-col text-red-500 gap-y-1'
+                className='flex flex-col text-color5 gap-y-1'
                 onSubmit={handleSubmit}
                 encType="multipart/form-data" 
                 method="post"
               >
                 <div
                   onClick={() => fileInputRef.current.click()}
-                  className='w-full shadow-md h-[250px] flex justify-between  border-2 border-rose-500 cursor-pointer rounded-xl bg-rose-50'
+                  className='w-full shadow-md h-[250px] flex justify-between  border-2 border-color5 cursor-pointer rounded-xl bg-color0'
                 >
                   {previewImage ? (
                     <img
@@ -152,9 +152,9 @@ const SellerAddResturantModal = () => {
                     />
                   ) : (
                     <>
-                      <div className='w-full m-7 flex justify-normal border-2 border-dashed border-rose-500 rounded-xl'>
-                        <div className='transition-all m-auto p-6 flex justify-between items-center align-middle bg-rose-100  hover:opacity-95 shadow-sm rounded-full border-dashed border-2 border-rose-500'>
-                          <Plus className='text-rose-500' size={40} />
+                      <div className='w-full m-7 flex justify-normal border-2 border-dashed border-color5 rounded-xl'>
+                        <div className='transition-all m-auto p-6 flex justify-between items-center align-middle bg-color1  hover:opacity-85 shadow-lg rounded-full border-dashed border-2 border-color5'>
+                          <Plus className='text-color5' size={40} />
                         </div>
                       </div>
                     </>
@@ -173,7 +173,7 @@ const SellerAddResturantModal = () => {
                   placeholder='Enter your restaurant name'
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className='p-2 shadow-md text-rose-500 border-2 border-rose-400 rounded-xl outline-none focus:border-red-500 hover:border-rose-500 placeholder:text-rose-400'
+                  className='p-2 shadow-md text-color5 border-2 border-color3 rounded-xl outline-none focus:border-color5 hover:border-color5 placeholder:text-color4'
                 />
                 <input
                   type='text'
@@ -181,7 +181,7 @@ const SellerAddResturantModal = () => {
                   placeholder='Enter Country'
                   value={country}
                   onChange={e => setCountry(e.target.value)}
-                  className='p-2 shadow-md text-rose-500 border-2 border-rose-400 rounded-xl outline-none focus:border-red-500 hover:border-rose-500 placeholder:text-rose-400'
+                  className='p-2 shadow-md text-color5 border-2 border-color3 rounded-xl outline-none focus:border-color5 hover:border-color5 placeholder:text-color4'
                 />
                 <input
                   type='text'
@@ -189,7 +189,7 @@ const SellerAddResturantModal = () => {
                   placeholder='Enter State'
                   value={state}
                   onChange={e => setState(e.target.value)}
-                  className='p-2 shadow-md text-rose-500 border-2 border-rose-400 rounded-xl outline-none focus:border-red-500 hover:border-rose-500 placeholder:text-rose-400'
+                  className='p-2 shadow-md text-color5 border-2 border-color3 rounded-xl outline-none focus:border-color5 hover:border-color5 placeholder:text-color4'
                 />
                 <input
                   type='text'
@@ -197,7 +197,7 @@ const SellerAddResturantModal = () => {
                   placeholder='Enter City'
                   value={city}
                   onChange={e => setCity(e.target.value)}
-                  className='p-2 shadow-md text-rose-500 border-2 border-rose-400 rounded-xl outline-none focus:border-red-500 hover:border-rose-500 placeholder:text-rose-400'
+                  className='p-2 shadow-md text-color5 border-2 border-color3 rounded-xl outline-none focus:border-color5 hover:border-color5 placeholder:text-color4'
                 />
                 {/* <select onChange={e => setCountry(e.target.value)}>
                   <option>--Select Country--</option>
@@ -248,7 +248,7 @@ const SellerAddResturantModal = () => {
                   type='text'
                   placeholder='Enter your Restuarant address'
                   required
-                  className='p-2 shadow-md text-rose-500 border-2 border-rose-400 rounded-xl outline-none focus:border-red-500 hover:border-rose-500 placeholder:text-rose-400'
+                  className='p-2 shadow-md text-color5 border-2 border-color3 rounded-xl outline-none focus:border-color5 hover:border-color5 placeholder:text-color4'
                   value={address}
                   onChange={e => setAddress(e.target.value)}
                 />
@@ -261,21 +261,21 @@ const SellerAddResturantModal = () => {
                   onChange={e => setZipcode(e.target.value)}
                   inputMode='numeric'
                   pattern='[0-9]*'
-                  className='p-2 shadow-md text-rose-500 border-2 border-rose-400 rounded-xl outline-none focus:border-red-500 hover:border-rose-500 placeholder:text-rose-400'
+                  className='p-2 shadow-md text-color5 border-2 border-color3 rounded-xl outline-none focus:border-color5 hover:border-color5 placeholder:text-color4'
                 />
-                <div className='border-2 border-rose-400 focus:border-rose-500 outline-none rounded-xl shadow-md'>
+                <div className='border-2 border-color4 focus:border-color5 outline-none rounded-xl shadow-md'>
                   <span className='flex w-full p-2 bg-transparent flex-wrap'>
                     {cusineTypes &&
                       cusineTypes.map((item, i) => {
                         return (
                           <span
                             key={i}
-                            className='flex border rounded-xl border-rose-400 p-1 bg-rose-50 m-[1px] hover:bg-rose-100 shadow'
+                            className='flex border rounded-xl border-color3 p-1 bg-color0 m-[1px] hover:bg-color1 shadow'
                           >
                             <span className=''>{item}</span>
                             <span className='flex justify-center align-middle items-center'>
                               <X
-                                className='inline text-rose-500 h-full mt-[3px] ml-1 hover:text-rose-600 cursor-pointer'
+                                className='inline text-color5 h-full mt-[3px] ml-1 hover:text-color5 cursor-pointer'
                                 size={14}
                                 onClick={() => handletagcancelbtn(i)}
                               />
@@ -284,7 +284,7 @@ const SellerAddResturantModal = () => {
                         )
                       })}
                     <input
-                      className='inline outline-0 border-0 p-1 focus-within:border-0 text-rose-500 rounded-xl outline-none  placeholder:text-rose-400'
+                      className='inline outline-0 border-0 p-1 focus-within:border-0 text-color5 rounded-xl outline-none  placeholder:text-color4'
                       type='text'
                       placeholder='Enter your cusineTypes'
                       onKeyDown={handletagkeydown}
@@ -294,7 +294,7 @@ const SellerAddResturantModal = () => {
                   </span>
                 </div>
                 <button disabled={loading?true:false} 
-                className={`transition-all border border-rose-500 shadow p-2 bg-rose-500 rounded-xl text-white text-center  ${loading ? "opacity-70":"hover:opacity-90"}`}
+                className={`transition-all border border-color5 shadow p-2 bg-color5 rounded-xl text-white text-center  ${loading ? "opacity-70":"hover:opacity-90"}`}
                 >
                   Create Restaurant
                 </button>

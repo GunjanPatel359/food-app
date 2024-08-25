@@ -1,10 +1,11 @@
+/* eslint-disable react/prop-types */
 import ConfirmBackToAvailableModal from "../components/restaurantManage/restaurantManageModals/ConfirmBackToAvailableModal"
 import QrCodeModal from "../components/restaurantManage/restaurantManageModals/QrCodeModal"
 import { useModal } from "../customhooks/zusthook"
 import { useEffect, useRef, useState } from "react"
 
 
-const RestaurantManageProvider = () => {
+const RestaurantManageProvider = ({theme}) => {
     const [isMounted, setIsMounted] = useState(false)
     const { isOpen,onClose } = useModal()
     const divRef=useRef()
@@ -17,7 +18,7 @@ const RestaurantManageProvider = () => {
       if (isOpen) {
         document.body.style.overflow = 'hidden';
       } else {
-        document.body.style.overflow = 'auto';   
+        document.body.style.overflow = 'auto';  
   
       }
   
@@ -47,8 +48,8 @@ const RestaurantManageProvider = () => {
           ref={divRef}
         >
           {isOpen && (
-            <div className='transition-all duration-500 ease-ease-in w-auto max-h-[600px] overflow-y-scroll flex flex-col bg-white border-2 border-white shadow-2xl rounded-xl text-rose-500'>  
-            <QrCodeModal />
+            <div className='transition-all duration-500 ease-ease-in w-auto max-h-[600px] overflow-y-scroll flex flex-col bg-white border-2 border-white shadow-2xl rounded-xl text-color5'>  
+            <QrCodeModal theme={theme} />
             <ConfirmBackToAvailableModal />
             </div>
           )}
