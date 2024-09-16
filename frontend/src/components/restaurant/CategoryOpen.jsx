@@ -7,7 +7,7 @@ const CategoryOpen = ({ item }) => {
     const [open, setOpen] = useState(true)
     return (
         <div className="mb-1">
-            <div className="flex bg-rose-200 text-rose-500 p-2 pl-4 w-full justify-between z-10">
+            <div className="flex bg-color1 text-color5 p-2 pl-4 w-full justify-between z-10">
                 <div className="flex flex-col">
                     <div className="font-semibold text-2xl">
                         {item.categoryName}
@@ -18,7 +18,7 @@ const CategoryOpen = ({ item }) => {
                 </div>
                 <div className="flex">
                     <div className="m-auto mr-3">
-                        <div className="border-1 bg-rose-100 p-1" onClick={()=>setOpen(!open)}>
+                        <div className="border-1 bg-color0 p-1" onClick={()=>setOpen(!open)}>
                             <IoIosArrowDown className={`${open?"":"-rotate-90"} transition-all duration-500`} size={20} />
                         </div>
                     </div>

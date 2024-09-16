@@ -31,20 +31,14 @@ import {
 } from "./routes/sellerResturantManageRoute.js"
 
 import {
-  UserOccupedTablePage
+  UserOccupingTablePage,
+  UserBookedTablePage
 } from "./routes/userTableRoute"
 
-// import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 function App() {
-  // const initialOptions = {
-  //   clientId: "AfFPQyFjoighEawdekfr2QzGVeVSuMwbZoldGgZ-6GQ8T04sCkit6SPfw0zMeOJQ-LZ_Ma8S_S9Mxplq",
-  //   currency: "USD",
-  //   intent: "capture",
-  // };
   return(
     <>
-    {/* <PayPalScriptProvider options={initialOptions}> */}
       <BrowserRouter>
       {/* router settings */}
 
@@ -76,7 +70,8 @@ function App() {
         </Routes>
 
         <Routes>
-          <Route path='/user/restaurant/:hotelId/qrcode/:orderTabelId/:randomString/:memberId' element={<UserOccupedTablePage />} />
+          <Route path='/user/:hotelId/:orderTableId/user-table' element={<UserBookedTablePage />} />
+          <Route path='/user/restaurant/:hotelId/qrcode/:orderTabelId/:randomString/:memberId' element={<UserOccupingTablePage />} />
         </Routes>
 
         {/* react toastify configuration */}
@@ -94,7 +89,6 @@ function App() {
           />
 
       </BrowserRouter>
-    {/* </PayPalScriptProvider> */}
     </>
   )
 }

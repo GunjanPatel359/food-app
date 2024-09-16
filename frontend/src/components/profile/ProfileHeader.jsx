@@ -2,11 +2,12 @@
 import { img_url } from '../../server'
 import { User } from 'lucide-react'
 import { IoFastFoodOutline } from 'react-icons/io5'
+import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 
-const ProfileHeader = ({ user }) => {
+const ProfileHeader = () => {
   const navigate=useNavigate()
-
+  const user=useSelector((state)=>state.user).user
   return (
     <div>
       <div className='w-full shadow-md shadow-color1'>

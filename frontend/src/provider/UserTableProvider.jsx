@@ -1,8 +1,9 @@
-import ConfirmTableOrder from "../components/restaurantManage/restaurantTableManageModals/ConfirmTableOrder"
+import UserFoodDescription from "../components/usertable/usertablemodals/UserFoodDescription"
+import UserConfirmTableOrder from "../components/usertable/usertablemodals/UserConfirmTableOrder"
 import { useModal } from "../customhooks/zusthook"
 import { useEffect, useRef, useState } from "react"
 
-const SellerOrderTableManageProvider = () => {
+const UserTableProvider = () => {
     const [isMounted, setIsMounted] = useState(false)
     const { isOpen,onClose } = useModal()
     const divRef=useRef()
@@ -32,7 +33,8 @@ const SellerOrderTableManageProvider = () => {
         >
           {isOpen && (
             <div className='transition-all duration-500 ease-ease-in w-auto max-h-[600px] overflow-y-scroll flex flex-col bg-white border-2 border-white shadow-2xl rounded-xl text-color5'>  
-            <ConfirmTableOrder />
+            <UserConfirmTableOrder />
+            <UserFoodDescription />
             </div>
           )}
         </div>
@@ -40,4 +42,4 @@ const SellerOrderTableManageProvider = () => {
     )
   }
 
-export default SellerOrderTableManageProvider
+export default UserTableProvider

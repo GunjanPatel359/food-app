@@ -5,16 +5,18 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import { IoIosArrowForward } from "react-icons/io";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
+import "./hello.css"
 
 import {
     Select,
     SelectContent,
     SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "../ui/select"
+import RatingShow from "../customui/RatingShow"
 
 const ManageOrders = () => {
     const { hotelId } = useParams()
@@ -35,16 +37,25 @@ const ManageOrders = () => {
         }
         initiatePage()
     }, [hotelId])
-    return (
-        <div className="m-2">
-            {
-                table.length > 0 && table.map((item, i) => {
-                    return (
-                        <TableItems key={i} item={item} />
 
-                    )
-                })
-            }
+    return (
+        <div className="m-6">
+            {/* <div className="flex flex-wrap"> */}
+            <ResponsiveMasonry
+                columnsCountBreakPoints={{ 350: 1, 750: 1, 900: 2 }}
+            >
+                <Masonry gutter='15px'>
+                    {
+                        table.length > 0 && table.map((item, i) => {
+                            return (
+                                <TableItems key={i} item={item} />
+
+                            )
+                        })
+                    }
+                </Masonry>
+            </ResponsiveMasonry>
+            {/* </div> */}
         </div>
     )
 }
@@ -53,24 +64,28 @@ const TableItems = ({ item }) => {
     const [open, setOpen] = useState(true)
     return (
         <>
-            <div className="p-3 border border-color5 rounded w-[500px] shadow">
-                <div className="text-color5 text-2xl">Table Number: {item.tableNumber}</div>
-                <div className="w-full h-[1px] bg-color5 mt-1"></div>
-                <div className="p-2 my-2 bg-color4 text-white text-xl flex justify-between">
-                    <div>
-                        Orders
+            <div className="">
+                {/* <div className="m-1 md:w-[48%]"> */}
+                {/* w-[500px] */}
+                <div className="p-3 border border-color5 rounded shadow">
+                    <div className="text-color5 text-2xl">Table Number: {item.tableNumber}</div>
+                    <div className="w-full h-[1px] bg-color5 mt-1"></div>
+                    <div className="p-2 my-2 bg-color4 text-white text-xl flex justify-between">
+                        <div>
+                            Orders
+                        </div>
+                        <div className="flex">
+                            <IoIosArrowForward className={`m-auto transition-all ${open ? "rotate-90" : ""}`} onClick={() => setOpen(!open)} size={23} />
+                        </div>
                     </div>
-                    <div className="flex">
-                        <IoIosArrowForward className={`m-auto transition-all ${open ? "rotate-90" : ""}`} onClick={() => setOpen(!open)} size={23} />
-                    </div>
-                </div>
-                <div className={`transition-all grid ${!open ? "grid-rows-[0fr]" : "grid-rows-[1fr]"}`}>
-                    <div className="overflow-hidden">
-                        {item.orders.map((item, i) => {
-                            return (
-                                <FoodItemContainer item={item} key={i} />
-                            )
-                        })}
+                    <div className={`transition-all grid ${!open ? "grid-rows-[0fr]" : "grid-rows-[1fr]"}`}>
+                        <div className="overflow-hidden">
+                            {item.orders.map((item, i) => {
+                                return (
+                                    <FoodItemContainer item={item} key={i} />
+                                )
+                            })}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -80,20 +95,24 @@ const TableItems = ({ item }) => {
 
 const FoodItemContainer = ({ item }) => {
     const [selectedOption, setSelectedOption] = useState(item.status);
-    const [color,setColor]=useState("")
-    useEffect(()=>{
+    const [color, setColor] = useState("")
+    useEffect(() => {
         var color
-        switch(selectedOption){
-            case 'Waiting':{ color="bg-rose-500"
+        switch (selectedOption) {
+            case 'Waiting': {
+                color = "bg-rose-500"
                 break
             }
-            case 'Preparing':{ color="bg-blue-500"
+            case 'Preparing': {
+                color = "bg-blue-500"
                 break
             }
-            case 'Prepared':{ color="bg-purple-500"
+            case 'Prepared': {
+                color = "bg-purple-500"
                 break
             }
-            case 'Completed':{ color="bg-green-500"
+            case 'Completed': {
+                color = "bg-green-500"
                 break
             }
             // default:{
@@ -102,14 +121,14 @@ const FoodItemContainer = ({ item }) => {
         }
         console.log(color)
         setColor(color)
-    },[item.status, selectedOption])
+    }, [item.status, selectedOption])
 
-    const handleStatusChange=async()=>{
+    const handleStatusChange = async () => {
         try {
-           const res=await axios.patch(`${backend_url}/food-order/${item._id}/change-status`,{status:selectedOption},{withCredentials:true}) 
-           if(res.data.success){
-            toast.success(res.data.message)
-           }
+            const res = await axios.patch(`${backend_url}/food-order/${item._id}/change-status`, { status: selectedOption }, { withCredentials: true })
+            if (res.data.success) {
+                toast.success(res.data.message)
+            }
         } catch (error) {
             toast.error(error.message)
         }
@@ -131,22 +150,22 @@ const FoodItemContainer = ({ item }) => {
                     </div>
                 </div>
                 <div className="flex flex-col gap-2">
-                    <div className="text-color5 min-w-fit">
+                    <div className="text-color5">
                         <div className="flex justify-center">
-                        <span className="m-auto mr-1">status: </span>
-                        <Select value={selectedOption} onValueChange={(value) => setSelectedOption(value)} >
-                            <SelectTrigger className={`w-[130px] text-white ${color} rounded`} >
-                                <SelectValue  />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white rounded shadow shadow-color1">
-                                <SelectGroup className="flex flex-col gap-1" >
-                                    <SelectItem value="Waiting" className="bg-rose-500 text-white rounded">Waiting</SelectItem>
-                                    <SelectItem value="Preparing" className="bg-blue-500 text-white rounded" >Preparing</SelectItem>
-                                    <SelectItem value="Prepared" className="bg-purple-500 text-white rounded" >Prepared</SelectItem>
-                                    <SelectItem value="Completed" className="bg-green-500 text-white rounded" >Completed</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
+                            <span className="m-auto mr-1 ml-3">status: </span>
+                            <Select value={selectedOption} onValueChange={(value) => setSelectedOption(value)} >
+                                <SelectTrigger className={`w-[130px] text-white ${color} rounded`} >
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="bg-white rounded shadow shadow-color1">
+                                    <SelectGroup className="flex flex-col gap-1" >
+                                        <SelectItem value="Waiting" className="bg-rose-500 text-white rounded">Waiting</SelectItem>
+                                        <SelectItem value="Preparing" className="bg-blue-500 text-white rounded" >Preparing</SelectItem>
+                                        <SelectItem value="Prepared" className="bg-purple-500 text-white rounded" >Prepared</SelectItem>
+                                        <SelectItem value="Completed" className="bg-green-500 text-white rounded" >Completed</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
                     <div className="text-end">

@@ -11,7 +11,7 @@ import { toast } from "react-toastify"
 import axios from "axios"
 import { IoWarning } from "react-icons/io5"
 
-const ConfirmTableOrder = () => {
+const UserConfirmTableOrder = () => {
     const params = useParams()
     const { hotelId } = params
     const { isOpen, type, data, onClose,reloadCom } = useModal()
@@ -35,7 +35,7 @@ const ConfirmTableOrder = () => {
     const handleOrder=async()=>{
         setLoading(true)
         try {
-            const res=await axios.post(`${backend_url}/order-table/${hotelId}/food-item-order/${tableId}`,{order},{withCredentials:true})
+            const res=await axios.post(`${backend_url}/order-table/${hotelId}/user-order/${tableId}`,{order},{withCredentials:true})
             console.log(res)
             if(res.data.success){
                 toast.success("order created successfully")
@@ -178,4 +178,4 @@ const FoodItemOpen = ({ item, order, setOrder,index }) => {
     )
 }
 
-export default ConfirmTableOrder
+export default UserConfirmTableOrder

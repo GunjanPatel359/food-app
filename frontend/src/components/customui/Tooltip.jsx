@@ -8,7 +8,7 @@ const Tooltip = ({ position, content, children,TooltipStyle,style }) => {
             <span
             style={style}
             className={classNames(
-                        `absolute rounded-full px-3 py-1 text-sm font-semibold`,
+                        `absolute rounded-full px-3 py-1 text-sm font-semibold z-10`,
                         TooltipStyle
                         ,
                         position === "top"

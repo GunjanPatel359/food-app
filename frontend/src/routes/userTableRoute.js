@@ -1,5 +1,7 @@
-import UserOccupedTablePage from "../pages/UserOccupedTablePage"
+import UserOccupingTablePage from "../pages/UserOccupingTablePage"
+import UserBookedTablePage from "../pages/UserBookedTablePage"
 
 export  {
-    UserOccupedTablePage
+    UserOccupingTablePage,
+    UserBookedTablePage
 }

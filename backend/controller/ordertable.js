@@ -184,11 +184,15 @@ router.get('/:hotelId/qrcode/:orderTableId/:uniqueString/:memberId', isAuthentic
         }
         const table = await OrderTable.findOne({
             restaurantId: hotelId,
-            _id: orderTableId,
-            status: "Available"
+            _id: orderTableId
         })
         if (!table) {
             return next(new ErrorHandler("table not found", 400))
+        }
+        if(table.userId){
+            if((table.userId).toString()==(req.user._id).toString()){
+                return res.status(200).json({success:true,message:"you already have accquire the table"})
+            }
         }
         if (table.userId) {
             return next(new ErrorHandler("table is already assigned to a user", 400))
@@ -217,9 +221,30 @@ router.get('/:hotelId/qrcode/:orderTableId/:uniqueString/:memberId', isAuthentic
         if (!assignTable) {
             return next(new ErrorHandler("table is not found", 400))
         }
-        return res.status(200).json({ success: true })
+        return res.status(200).json({ success: true,message:'table accquired' })
     } catch (error) {
+        console.log(error)
         return next(new ErrorHandler(error.message, 400))
+    }
+}))
+
+router.get('/:hotelId/:orderTableId/get-user-table-details',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const { hotelId, orderTableId } = req.params
+        if (!hotelId || !orderTableId) {
+            return next(new ErrorHandler("hotelId and orderTableId are missing", 400))
+        }
+        const orderTable=await OrderTable.findOne({
+            _id:orderTableId,
+            restaurantId:hotelId,
+            userId:req.user._id
+        }).populate('restaurantId').populate({ path: "orders", populate: { path: "foodItemId" } })
+        if(!orderTable){
+            return next(new ErrorHandler("table is not assigned to you",400))
+        }
+        return res.status(200).json({success:true,orderTableDetails:orderTable})
+    } catch (error) {
+        return  next(new ErrorHandler(error.message, 400))
     }
 }))
 
@@ -428,6 +453,73 @@ router.post('/:hotelId/food-item-order/:orderTableId', isSellerAuthenticated, ca
         return res.status(200).json({ success: true, message: "order created successfully" })
     } catch (error) {
         return next(new ErrorHandler(error.message, 400))
+    }
+}))
+
+router.post('/:hotelId/user-order/:orderTableId',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const { hotelId, orderTableId } = req.params
+        if (!hotelId && !orderTableId) {
+            return next(new ErrorHandler("hotelId and orderTableId are missing", 400))
+        }
+        const ordertable = OrderTable.findOne({
+            _id: orderTableId,
+            restaurantId: hotelId,
+            userId:req.user._id,
+        })
+        if (!ordertable) {
+            return next(new ErrorHandler("order table is not found", 400))
+        }
+        const orders = req.body.order
+        const checkOrder = orders.map(async (item) => {
+            try {
+                const foodItem = await FoodItem.findOne({
+                    _id: item.item._id,
+                    restaurantId: hotelId
+                });
+                return foodItem;
+            } catch (error) {
+                return next(new ErrorHandler("fooditem not found", 400))
+            }
+        });
+        var result
+        await Promise.all(checkOrder)
+            .then(values => {
+                result = values.map((item) => {
+                    if (item == null) {
+                        return next(new ErrorHandler("food item is not found", 400))
+                    }
+                    return item
+                });
+            })
+            .catch(error => {
+                return next(new ErrorHandler("An error occurred during food item retrieval", 400))
+            });
+        const orderfood = orders.map((item) => {
+            return FoodOrder.create({
+                foodItemId: item.item._id,
+                restaurantId: hotelId,
+                price: result.find((temp) => { if (item.item._id == temp._id) return temp }).price,
+                quantity: item.quantity
+            })
+        })
+        var createdItems
+        await Promise.all(orderfood).then(values => {
+            createdItems = values.map(item => item._id)
+        }).catch(error => {
+            return next(new ErrorHandler("An error occurred during order food creation", 400))
+        })
+        const table = await OrderTable.findOneAndUpdate({
+            _id: orderTableId
+        }, {
+            $push: { "orders": createdItems }
+        })
+        if (table == null) {
+            return next(new ErrorHandler("table not found", 400))
+        }
+        return res.status(200).json({ success: true, message: "order created successfully" })
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
     }
 }))
 

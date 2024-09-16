@@ -55,8 +55,8 @@ const CreateTableModal = () => {
                         </div>
 
                         <div className='p-2 border-color4 border-2 border-dotted'>
-                        <div className=' font-semibold'>Role Description:</div>
-                        <input type='text' placeholder='Enter the role description' className='p-2 w-full text-color5 border border-color1 outline-color3 rounded  hover:border-color4 placeholder:text-color3' required value={tableDescription} onChange={(e)=>setTableDescription(e.target.value)}/>
+                        <div className=' font-semibold'>Table Description:</div>
+                        <input type='text' placeholder='Enter the Table description' className='p-2 w-full text-color5 border border-color1 outline-color3 rounded  hover:border-color4 placeholder:text-color3' required value={tableDescription} onChange={(e)=>setTableDescription(e.target.value)}/>
                         </div>
 
                         <div className='bg-white rounded border-2 border-color4 p-2 border-dotted'>
@@ -64,10 +64,10 @@ const CreateTableModal = () => {
                             <div className='flex justify-between'>
                             <input type='number' placeholder='Enter the number of seats' className='p-2 w-full text-color5 border border-color1 outline-color3 rounded  hover:border-color4 placeholder:text-color3' required value={seats} onChange={(e)=>setSeats(e.target.value)}/>
                              </div>
-                             <p className='pl-1 h-auto text-justify mt-1'>
+                             {/* <p className='pl-1 h-auto text-justify mt-1'>
                                 <IoWarning size={22} className='text-color5 inline mr-1'/>
                                 Please note that give the numbers accroding to your hotel
-                             </p>
+                             </p> */}
                         </div>
                         <button type='submit' className='transition-all hover:opacity-90 bg-color5 p-2 text-white rounded'>Create Table</button>
                         <button type='button' className='transition-all hover:opacity-90 bg-white p-2 text-color5 rounded border border-color5' onClick={()=>onClose()}>Cancel</button>

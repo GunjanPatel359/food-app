@@ -118,8 +118,15 @@ const SellerResturantInfo = () => {
         <div className='w-full h-[300px] flex flex-wrap'>
          {manageHotels.map((item,i)=>{
           return (
-            <div key={i} className='transition-all duration-300 p-3 border min-w-[250px] border-color5 rounded-xl bg-white shadow-xl m-2'
+            <div key={i} className='transition-all duration-300 p-3 border min-w-[250px] border-color5 rounded-xl bg-white shadow-xl m-2 relative'
             >
+              <div className='bg-white right-3 top-3 rounded-bl-[10px] rounded-tr-xl absolute p-[4px] border-t border-color4 border-r shadow-md shadow-color5 border-l border-l-color3 border-b border-b-color4'>
+                <MyTooltip position="right" content="settings" TooltipStyle="text-color5 bg-white border border-color4 ml-3 z-10 shadow mt-[-2px] shadow-lg">
+                <IoSettingsOutline className='text-color5 transition-all duration-500 cursor-pointer hover:rotate-180' size={25}
+                onClick={()=>navigate(`/seller/${item._id}`)}
+                />
+                </MyTooltip>
+                </div>
               <img src={`${img_url}/${item.imgUrl}`} className='h-[170px] rounded-xl m-auto' />
               <div className='flex flex-col p-1'>
               <div className='text-2xl text-color5 font-bold flex flex-wrap'>{item.name}</div>
@@ -128,9 +135,8 @@ const SellerResturantInfo = () => {
               <div className='text-color5 font-semibold flex flex-wrap'>City: <span className='ml-1 text-color5 font-normal'>{item.addresses.city}</span></div>
               <div className='text-color5 font-semibold mb-2 flex flex-wrap'>zipcode: <span className='ml-1 text-color5 font-normal'>{item.addresses.zipCode}</span></div>
               <button className='mb-1 transition-all bg-color5 text-white p-1 rounded-xl px-3 hover:opacity-90 shadow'
-              onClick={()=>navigate(`/seller/${item._id}`)}
+              onClick={()=>navigate(`/seller/restaurant/${item._id}`)}
               >View</button>
-              <button className='bg-white text-red-500 p-1 rounded-xl px-3 border border-red-500 shadow hover:text-red-600 hover:border-red-600' onClick={()=>onOpen("delete-restaurant",item)}>Delete</button>
               </div>
             </div>
           )

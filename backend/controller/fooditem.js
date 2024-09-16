@@ -6,7 +6,7 @@ const path=require('path')
 const catchAsyncErrors = require("../middleware/catchAsyncErrors")
 const ErrorHandler = require("../utils/ErrorHandler")
 const { upload } = require("../multer")
-const { isSellerAuthenticated } = require("../middleware/auth")
+const { isSellerAuthenticated, isAuthenticated } = require("../middleware/auth")
 
 const Role = require("../model/role")
 const Member = require("../model/member")
@@ -226,6 +226,22 @@ router.get('/getallfood/:hotelId',catchAsyncErrors(async(req,res,next)=>{
         res.status(200).json({success:true,food:fooditems})
     } catch (error) {
         return next(new ErrorHandler(error.message))
+    }
+}))
+
+router.get('/getfooditem/table-user/:foodItemId',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {foodItemId}=req.params
+        if(!foodItemId){
+            return next(new ErrorHandler("food id is missing", 400))
+        }
+        const fooditem=await FoodItem.findOne({_id:foodItemId})
+        if(!fooditem){
+            return next(new ErrorHandler("food item not found", 404))
+        }
+        return res.status(200).json({success:true,fooditem})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
     }
 }))
 

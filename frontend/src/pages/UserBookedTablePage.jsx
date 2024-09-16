@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import { IoIosArrowDown } from "react-icons/io"
 import Tooltip from "../components/customui/Tooltip"
-import SellerProfileHeader from "../components/sellerprofile/SellerProfileHeader"
 import { backend_url, img_url, theme_colors } from "../server"
 import { useEffect, useMemo, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -12,17 +11,22 @@ import { IoIosArrowForward } from "react-icons/io";
 import { Checkbox } from "../components/ui/checkbox"
 import { Minus, Plus } from "lucide-react"
 import { useModal } from "../customhooks/zusthook"
-import SellerOrderTableManageProvider from "../provider/SellerOrderTableManageProvider"
+import UserTableProvider from "../provider/UserTableProvider"
+import ProfileHeader from "../components/profile/ProfileHeader"
+import RestaurantInfo from "../components/restaurant/RestaurantInfo"
+import RatingShow from "../components/customui/RatingShow"
 
 
-const SellerRestaurantOrderTablePage = () => {
-    const Themes=useMemo(()=>theme_colors,[])
-    const [theme,setTheme]=useState(Themes[0]);
+const UserBookedTablePage = () => {
+    const Themes = useMemo(() => theme_colors, [])
+    const [theme, setTheme] = useState(Themes[0]);
 
     const params = useParams()
     const { hotelId } = params
     const { orderTableId } = params
-    const { onOpen,reloadCmd } = useModal()
+    const { onOpen, reloadCmd } = useModal()
+
+    const [hotel, setHotel] = useState('')
 
     const [orderTableDetails, setOrderTableDetails] = useState('')
     const [orderFood, setOrderFood] = useState(false)
@@ -30,29 +34,32 @@ const SellerRestaurantOrderTablePage = () => {
     const [food, setFood] = useState([]);
 
     const [order, setOrder] = useState([])
-    
-    const [onGoing,setOnGoing]=useState([])
 
-    useEffect(()=>{
-        const initiatePage=async()=>{
+    const [onGoing, setOnGoing] = useState([])
+
+    console.log(orderTableDetails)
+
+    useEffect(() => {
+        const initiatePage = async () => {
             try {
-                const res=await axios.get(`${backend_url}/seller/gethoteldata/${hotelId}`,{withCredentials:true})
-                if(res.data.hotel.colors){
-                  if(Themes.includes(res.data.hotel.colors)){
-                    setTheme(res.data.hotel.colors)
-                  }
+                const res = await axios.get(`${backend_url}/restaurant/${hotelId}`)
+                if (res.data.hotel.colors) {
+                    if (Themes.includes(res.data.hotel.colors)) {
+                        setTheme(res.data.hotel.colors)
+                    }
                 }
             } catch (error) {
                 toast.error("Somthing went wrong")
             }
         }
         initiatePage()
-    },[Themes, hotelId])
+    }, [Themes, hotelId])
 
     useEffect(() => {
         const initiatePage = async () => {
             try {
-                const response = await axios.get(`${backend_url}/order-table/${hotelId}/${orderTableId}/get-order-table-details`, { withCredentials: true })
+                const response = await axios.get(`${backend_url}/order-table/${hotelId}/${orderTableId}/get-user-table-details`, { withCredentials: true })
+                console.log(response)
                 if (response.data.success) {
                     setOrderTableDetails(response.data.orderTableDetails)
                     setOnGoing(response.data.orderTableDetails.orders)
@@ -65,8 +72,24 @@ const SellerRestaurantOrderTablePage = () => {
         if (hotelId && orderTableId) {
             initiatePage()
         }
-    }, [hotelId, orderTableId,reloadCmd])
+    }, [hotelId, orderTableId, reloadCmd])
 
+    useEffect(() => {
+        const hotelInfo = async () => {
+            try {
+                const res = await axios.get(`${backend_url}/restaurant/${hotelId}`)
+                console.log(res.data)
+                if (res.data.success) {
+                    setHotel(res.data.hotel)
+                }
+            } catch (error) {
+                toast.error(error.message)
+            }
+        }
+        if (hotelId) {
+            hotelInfo()
+        }
+    }, [hotelId])
 
     useEffect(() => {
         const initialCom = async () => {
@@ -84,35 +107,28 @@ const SellerRestaurantOrderTablePage = () => {
 
     return (
         <div className={`theme-${theme}`}>
-            <SellerProfileHeader />
-            <div className="w-[70%] m-auto mt-8 mb-36">
+            <ProfileHeader />
+            <RestaurantInfo hotel={hotel} />
+            <div className="w-[70%] m-auto mb-36 mt-2">
                 {
                     orderTableDetails && (
                         <>
-                            <div className="m-2">
-                                <div className="text-color5 text-2xl"><span className="text-color5 font-semibold">Restaurant Name:</span> {orderTableDetails.restaurantId.name}</div>
-                                <div className="text-color5 text-xl"><span className="text-color5 font-semibold">Table Number:</span> {orderTableDetails.tableNumber}</div>
-                                <div className="text-color5 text-xl"><span className="text-color5 font-semibold">Table Description:</span> {orderTableDetails.tableDescription}</div>
-                                <div className="text-color5"><span className="text-color5 font-semibold">Status:</span> {orderTableDetails.status}</div>
-                                <div className="text-color5"><span className="text-color5 font-semibold">Seats:</span> {orderTableDetails.seats}</div>
-                            </div>
-
                             <div className="">
                                 <div className="">
                                     <div className="text-white font-semibold text-2xl bg-color5 p-2 pl-5">Orders</div>
                                     {onGoing.length > 0 ? (
                                         <>
-                                        {onGoing.map((item,i)=>
-                                        <OrderItems item={item} key={i}/>
-                                        )}
-                                        <div className="flex justify-between p-2">
-                                            <span className="text-xl text-color5 font-semibold">
-                                                Total Amount
+                                            {onGoing.map((item, i) =>
+                                                <OrderItems item={item} key={i} />
+                                            )}
+                                            <div className="flex justify-between p-2">
+                                                <span className="text-xl text-color5 font-semibold">
+                                                    Total Amount
                                                 </span>
-                                            <span className="text-xl text-color5 font-semibold pr-1">
-                                            {onGoing.reduce((total, item) => total + item.foodItemId.price * item.quantity, 0)}/-
+                                                <span className="text-xl text-color5 font-semibold pr-1">
+                                                    {onGoing.reduce((total, item) => total + item.foodItemId.price * item.quantity, 0)}/-
                                                 </span>
-                                        </div>
+                                            </div>
                                         </>
                                     ) : <div className="text-color5 mt-3 text-center font-semibold">{`Haven't ordered anything yet`}</div>}
                                     <div className="w-full h-[2px] bg-color4 mb-3 mt-3 shadow shadow-color0"></div>
@@ -154,33 +170,38 @@ const SellerRestaurantOrderTablePage = () => {
                     )
                 }
             </div>
-            <SellerOrderTableManageProvider />
+            <UserTableProvider />
         </div>
     )
 }
 
-const OrderItems=({item})=>{
-    const food=item.foodItemId
-    var color="text-rose-500"
-    switch(item.status){
-        case 'Waiting':{ color="bg-rose-500"
+const OrderItems = ({ item }) => {
+    const {onOpen}=useModal()
+    const food = item.foodItemId
+    var color = "text-rose-500"
+    switch (item.status) {
+        case 'Waiting': {
+            color = "bg-rose-500"
             break
         }
-        case 'Preparing':{ color="bg-blue-500"
+        case 'Preparing': {
+            color = "bg-blue-500"
             break
         }
-        case 'Prepared':{ color="bg-purple-500"
+        case 'Prepared': {
+            color = "bg-purple-500"
             break
         }
-        case 'Completed':{ color="bg-green-500"
+        case 'Completed': {
+            color = "bg-green-500"
             break
         }
     }
     // "Waiting","Preparing","prepared","Completed"
-    return(
+    return (
         <div className='p-2 bg-white border-b border-color2'>
             <div className='flex transition-all'>
-            <img
+                <img
                     src={`${img_url}/${food.imageUrl}`}
                     className='h-[90px] rounded shadow shadow-color3'
                 />
@@ -204,13 +225,26 @@ const OrderItems=({item})=>{
                             </span>
                         </div>
                     </div>
+                    <div className='flex justify-between w-full '>
                     <div className='flex'>
-                        <Tooltip position="right" content={`${food.veg ? 'veg' : 'non-veg'}`} TooltipStyle={`whitespace-nowrap ${food.veg?'bg-green-600 text-green-50 border-white shadow-sm shadow-black' : 'bg-red-600 text-red-50 border-white shadow-sm shadow-black'}`}>
+                        <Tooltip position="right" content={`${food.veg ? 'veg' : 'non-veg'}`} TooltipStyle={`whitespace-nowrap ${food.veg ? 'bg-green-600 text-green-50 border-white shadow-sm shadow-black' : 'bg-red-600 text-red-50 border-white shadow-sm shadow-black'}`}>
                             <span className={`border-2 w-6 h-6 flex justify-evenly p-[2.3px] ${food.veg ? 'border-green-500' : 'border-red-500'}`}>
                                 <span className={`m-auto mx-auto rounded-full w-full h-full ${food.veg ? 'bg-green-500' : 'bg-red-500'} `} size={17}>
                                 </span>
                             </span>
                         </Tooltip>
+                        <span className="ml-2 flex my-auto">
+                            <span className="my-auto">
+                                <RatingShow ratingCount={3.3} maxRatingCount={5} size={18} />
+                            </span>
+                            <span className="my-auto ml-1 text-color4"> 3/5 </span>
+                        </span>
+                    </div>
+                    <div>
+                        <button className="transition-all bg-color5 text-white p-1 px-3 mr-1 shadow shadow-color0 hover:bg-color4 hover:shadow-md rounded" onClick={()=>onOpen("User-food-item",{UserItemInfo:food._id})}>
+                            View
+                        </button>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -242,8 +276,8 @@ const CategoryOpen = ({ item, order, setOrder }) => {
             <div className={`ease-linear duration-300 transition-all ${open ? "max-h-screen overflow-clip" : "max-h-0 overflow-hidden"}`}>
                 {item?.foodItemIds && item.foodItemIds.length > 0 &&
                     item.foodItemIds.map((item, i) =>
-                                <FoodItemOpen item={item} key={i} order={order} setOrder={setOrder} />
-                        )
+                        <FoodItemOpen item={item} key={i} order={order} setOrder={setOrder} />
+                    )
                 }
             </div>
         </div>
@@ -252,6 +286,7 @@ const CategoryOpen = ({ item, order, setOrder }) => {
 
 const FoodItemOpen = ({ item, order, setOrder }) => {
     const [count, setCount] = useState(1)
+    const {onOpen}=useModal()
     useEffect(() => {
         const check = order.find((food) => {
             if ((food._id).toString() == (item._id).toString())
@@ -352,7 +387,7 @@ const FoodItemOpen = ({ item, order, setOrder }) => {
                                     <span className="border border-color5 rounded text-center bg-color5 shadow">
                                         <Minus className="inline text-white cursor-pointer" onClick={onValuedown} />
                                     </span>
-                                    <input type="number" value={count} onChange={()=>{}} className="inline w-6 text-center outline-none border border-color5  rounded" inputMode="numeric" />
+                                    <input type="number" value={count} onChange={() => { }} className="inline w-6 text-center outline-none border border-color5  rounded" inputMode="numeric" />
                                     <span className="border border-color5 rounded text-center bg-color5 shadow">
                                         <Plus className="inline text-white cursor-pointer" onClick={onValueup} />
                                     </span>
@@ -360,13 +395,26 @@ const FoodItemOpen = ({ item, order, setOrder }) => {
                             </span>
                         </div>
                     </div>
-                    <div className='flex'>
-                        <Tooltip position="right" content={`${item.veg ? 'veg' : 'non-veg'}`} TooltipStyle={`whitespace-nowrap ${item.veg?'bg-green-600 text-green-50 border-white shadow-sm shadow-black' : 'bg-red-600 text-red-50 border-white shadow-sm shadow-black'}`}>
+                    <div className='flex justify-between'>
+                        <div className="flex">
+                        <Tooltip position="right" content={`${item.veg ? 'veg' : 'non-veg'}`} TooltipStyle={`whitespace-nowrap ${item.veg ? 'bg-green-600 text-green-50 border-white shadow-sm shadow-black' : 'bg-red-600 text-red-50 border-white shadow-sm shadow-black'}`}>
                             <span className={`border-2 w-6 h-6 flex justify-evenly p-[2.3px] ${item.veg ? 'border-green-500' : 'border-red-500'}`}>
                                 <span className={`m-auto mx-auto rounded-full w-full h-full ${item.veg ? 'bg-green-500' : 'bg-red-500'} `} size={17}>
                                 </span>
                             </span>
                         </Tooltip>
+                        <span className="ml-2 flex my-auto">
+                            <span className="my-auto">
+                                <RatingShow ratingCount={3.3} maxRatingCount={5} size={18} />
+                            </span>
+                            <span className="my-auto ml-1 text-color4"> 3/5 </span>
+                        </span>
+                        </div>
+                    <div>
+                        <button className="transition-all bg-color5 text-white p-1 px-3 mr-1 shadow shadow-color0 hover:bg-color4 hover:shadow-md rounded" onClick={()=>onOpen("User-food-item",{UserItemInfo:item._id})}>
+                            View
+                        </button>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -374,4 +422,4 @@ const FoodItemOpen = ({ item, order, setOrder }) => {
     )
 }
 
-export default SellerRestaurantOrderTablePage
+export default UserBookedTablePage
