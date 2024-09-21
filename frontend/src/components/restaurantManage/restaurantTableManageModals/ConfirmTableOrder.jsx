@@ -10,6 +10,7 @@ import { FiMinusCircle } from "react-icons/fi";
 import { toast } from "react-toastify"
 import axios from "axios"
 import { IoWarning } from "react-icons/io5"
+import { socket } from "../../../socket"
 
 const ConfirmTableOrder = () => {
     const params = useParams()
@@ -40,6 +41,7 @@ const ConfirmTableOrder = () => {
             if(res.data.success){
                 toast.success("order created successfully")
                 reloadCom()
+                socket.emit(`restaurant/hotel/order-tables/orderTableId`,{hotelId,orderTableId:tableId})
             }
         } catch (error) {
             toast.error(error.message)

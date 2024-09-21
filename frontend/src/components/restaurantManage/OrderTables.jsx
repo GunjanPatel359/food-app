@@ -5,11 +5,11 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
+import { socket } from "../../socket"
 
 const OrderTables = () => {
     const params = useParams()
     const { hotelId } = params
-
     return (
         <div>
             <>
@@ -24,6 +24,9 @@ const OrderTables = () => {
 
 const AvailableTables = ({ hotelId }) => {
     const [availableTables, setAvialableTables] = useState([])
+    useEffect(()=>{
+        socket.connect()
+    },[])
     useEffect(() => {
         const initiatePage = async () => {
             try {
@@ -36,6 +39,13 @@ const AvailableTables = ({ hotelId }) => {
             }
         }
         initiatePage()
+        socket.on(`restaurant/${hotelId}/order-tables`,()=>{
+            initiatePage()
+            console.log("working")
+        })
+        return ()=>{
+            socket.off(`restaurant/${hotelId}/order-tables`)
+        }
     }, [hotelId])
     return (
         <>
@@ -71,6 +81,13 @@ const OccupiedTables = ({ hotelId }) => {
             }
         }
         initiatePage()
+        socket.on(`restaurant/${hotelId}/order-tables`,()=>{
+            initiatePage()
+            console.log("working")
+        })
+        return ()=>{
+            socket.off(`restaurant/${hotelId}/order-tables`)
+        }
     }, [hotelId])
     return (
         <>
@@ -96,6 +113,7 @@ const AvailableTableBox = ({ table }) => {
             const res=await axios.get(`${backend_url}/order-table/${hotelId}/offline-booking/${table._id}`,{withCredentials:true})
             if(res.data.success){
                 toast.success('Table is now occupied')
+                socket.emit("restaurant/hotel/order-tables",hotelId)
             }
         } catch (error) {
             toast.error(error.message)

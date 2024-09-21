@@ -16,11 +16,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../ui/select"
-import RatingShow from "../customui/RatingShow"
+import { socket } from "../../socket"
 
 const ManageOrders = () => {
     const { hotelId } = useParams()
     const [table, setTable] = useState([])
+    useEffect(()=>{
+        socket.connect()
+    },[])
     useEffect(() => {
         const initiatePage = async () => {
             try {
@@ -36,6 +39,13 @@ const ManageOrders = () => {
             }
         }
         initiatePage()
+        socket.on(`restaurant/${hotelId}/orders`,()=>{
+            console.log(hotelId)
+            initiatePage()
+        })
+        return ()=>{
+            socket.off(`restaurant/${hotelId}/orders`)
+        }
     }, [hotelId])
 
     return (
@@ -82,7 +92,7 @@ const TableItems = ({ item }) => {
                         <div className="overflow-hidden">
                             {item.orders.map((item, i) => {
                                 return (
-                                    <FoodItemContainer item={item} key={i} />
+                                    <FoodItemContainer item={item} key={i}  />
                                 )
                             })}
                         </div>
@@ -123,11 +133,12 @@ const FoodItemContainer = ({ item }) => {
         setColor(color)
     }, [item.status, selectedOption])
 
-    const handleStatusChange = async () => {
+    const handleStatusChange = async (item) => {
         try {
             const res = await axios.patch(`${backend_url}/food-order/${item._id}/change-status`, { status: selectedOption }, { withCredentials: true })
             if (res.data.success) {
                 toast.success(res.data.message)
+                socket.emit("restaurant/hotel/orders",item.restaurantId)
             }
         } catch (error) {
             toast.error(error.message)
@@ -169,7 +180,7 @@ const FoodItemContainer = ({ item }) => {
                         </div>
                     </div>
                     <div className="text-end">
-                        <button className="text-white bg-color4 p-1 px-2 rounded" onClick={handleStatusChange}>change</button>
+                        <button className="text-white bg-color4 p-1 px-2 rounded" onClick={()=>handleStatusChange(item)}>change</button>
                     </div>
                 </div>
             </div>

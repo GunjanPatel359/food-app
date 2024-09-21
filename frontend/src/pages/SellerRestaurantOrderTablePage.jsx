@@ -14,15 +14,16 @@ import { Minus, Plus } from "lucide-react"
 import { useModal } from "../customhooks/zusthook"
 import SellerOrderTableManageProvider from "../provider/SellerOrderTableManageProvider"
 
+import { socket } from "../socket"
 
 const SellerRestaurantOrderTablePage = () => {
-    const Themes=useMemo(()=>theme_colors,[])
-    const [theme,setTheme]=useState(Themes[0]);
+    const Themes = useMemo(() => theme_colors, [])
+    const [theme, setTheme] = useState(Themes[0]);
 
     const params = useParams()
     const { hotelId } = params
     const { orderTableId } = params
-    const { onOpen,reloadCmd } = useModal()
+    const { onOpen, reloadCmd } = useModal()
 
     const [orderTableDetails, setOrderTableDetails] = useState('')
     const [orderFood, setOrderFood] = useState(false)
@@ -30,24 +31,28 @@ const SellerRestaurantOrderTablePage = () => {
     const [food, setFood] = useState([]);
 
     const [order, setOrder] = useState([])
-    
-    const [onGoing,setOnGoing]=useState([])
 
-    useEffect(()=>{
-        const initiatePage=async()=>{
+    const [onGoing, setOnGoing] = useState([])
+
+    useEffect(() => {
+        const initiatePage = async () => {
             try {
-                const res=await axios.get(`${backend_url}/seller/gethoteldata/${hotelId}`,{withCredentials:true})
-                if(res.data.hotel.colors){
-                  if(Themes.includes(res.data.hotel.colors)){
-                    setTheme(res.data.hotel.colors)
-                  }
+                const res = await axios.get(`${backend_url}/seller/gethoteldata/${hotelId}`, { withCredentials: true })
+                if (res.data.hotel.colors) {
+                    if (Themes.includes(res.data.hotel.colors)) {
+                        setTheme(res.data.hotel.colors)
+                    }
                 }
             } catch (error) {
                 toast.error("Somthing went wrong")
             }
         }
         initiatePage()
-    },[Themes, hotelId])
+    }, [Themes, hotelId])
+
+    useEffect(() => {
+        socket.connect()
+    }, [])
 
     useEffect(() => {
         const initiatePage = async () => {
@@ -65,7 +70,14 @@ const SellerRestaurantOrderTablePage = () => {
         if (hotelId && orderTableId) {
             initiatePage()
         }
-    }, [hotelId, orderTableId,reloadCmd])
+        socket.on(`restaurant/${hotelId}/order-tables/${orderTableId}`, () => {
+            initiatePage()
+            console.log('working')
+        })
+        return () => {
+            socket.off(`restaurant/${hotelId}/order-tables/${orderTableId}`)
+        }
+    }, [hotelId, orderTableId, reloadCmd])
 
 
     useEffect(() => {
@@ -102,17 +114,17 @@ const SellerRestaurantOrderTablePage = () => {
                                     <div className="text-white font-semibold text-2xl bg-color5 p-2 pl-5">Orders</div>
                                     {onGoing.length > 0 ? (
                                         <>
-                                        {onGoing.map((item,i)=>
-                                        <OrderItems item={item} key={i}/>
-                                        )}
-                                        <div className="flex justify-between p-2">
-                                            <span className="text-xl text-color5 font-semibold">
-                                                Total Amount
+                                            {onGoing.map((item, i) =>
+                                                <OrderItems item={item} key={i} />
+                                            )}
+                                            <div className="flex justify-between p-2">
+                                                <span className="text-xl text-color5 font-semibold">
+                                                    Total Amount
                                                 </span>
-                                            <span className="text-xl text-color5 font-semibold pr-1">
-                                            {onGoing.reduce((total, item) => total + item.foodItemId.price * item.quantity, 0)}/-
+                                                <span className="text-xl text-color5 font-semibold pr-1">
+                                                    {onGoing.reduce((total, item) => total + item.foodItemId.price * item.quantity, 0)}/-
                                                 </span>
-                                        </div>
+                                            </div>
                                         </>
                                     ) : <div className="text-color5 mt-3 text-center font-semibold">{`Haven't ordered anything yet`}</div>}
                                     <div className="w-full h-[2px] bg-color4 mb-3 mt-3 shadow shadow-color0"></div>
@@ -159,28 +171,32 @@ const SellerRestaurantOrderTablePage = () => {
     )
 }
 
-const OrderItems=({item})=>{
-    const food=item.foodItemId
-    var color="text-rose-500"
-    switch(item.status){
-        case 'Waiting':{ color="bg-rose-500"
+const OrderItems = ({ item }) => {
+    const food = item.foodItemId
+    var color = "text-rose-500"
+    switch (item.status) {
+        case 'Waiting': {
+            color = "bg-rose-500"
             break
         }
-        case 'Preparing':{ color="bg-blue-500"
+        case 'Preparing': {
+            color = "bg-blue-500"
             break
         }
-        case 'Prepared':{ color="bg-purple-500"
+        case 'Prepared': {
+            color = "bg-purple-500"
             break
         }
-        case 'Completed':{ color="bg-green-500"
+        case 'Completed': {
+            color = "bg-green-500"
             break
         }
     }
     // "Waiting","Preparing","prepared","Completed"
-    return(
+    return (
         <div className='p-2 bg-white border-b border-color2'>
             <div className='flex transition-all'>
-            <img
+                <img
                     src={`${img_url}/${food.imageUrl}`}
                     className='h-[90px] rounded shadow shadow-color3'
                 />
@@ -205,7 +221,7 @@ const OrderItems=({item})=>{
                         </div>
                     </div>
                     <div className='flex'>
-                        <Tooltip position="right" content={`${food.veg ? 'veg' : 'non-veg'}`} TooltipStyle={`whitespace-nowrap ${food.veg?'bg-green-600 text-green-50 border-white shadow-sm shadow-black' : 'bg-red-600 text-red-50 border-white shadow-sm shadow-black'}`}>
+                        <Tooltip position="right" content={`${food.veg ? 'veg' : 'non-veg'}`} TooltipStyle={`whitespace-nowrap ${food.veg ? 'bg-green-600 text-green-50 border-white shadow-sm shadow-black' : 'bg-red-600 text-red-50 border-white shadow-sm shadow-black'}`}>
                             <span className={`border-2 w-6 h-6 flex justify-evenly p-[2.3px] ${food.veg ? 'border-green-500' : 'border-red-500'}`}>
                                 <span className={`m-auto mx-auto rounded-full w-full h-full ${food.veg ? 'bg-green-500' : 'bg-red-500'} `} size={17}>
                                 </span>
@@ -242,8 +258,8 @@ const CategoryOpen = ({ item, order, setOrder }) => {
             <div className={`ease-linear duration-300 transition-all ${open ? "max-h-screen overflow-clip" : "max-h-0 overflow-hidden"}`}>
                 {item?.foodItemIds && item.foodItemIds.length > 0 &&
                     item.foodItemIds.map((item, i) =>
-                                <FoodItemOpen item={item} key={i} order={order} setOrder={setOrder} />
-                        )
+                        <FoodItemOpen item={item} key={i} order={order} setOrder={setOrder} />
+                    )
                 }
             </div>
         </div>
@@ -352,7 +368,7 @@ const FoodItemOpen = ({ item, order, setOrder }) => {
                                     <span className="border border-color5 rounded text-center bg-color5 shadow">
                                         <Minus className="inline text-white cursor-pointer" onClick={onValuedown} />
                                     </span>
-                                    <input type="number" value={count} onChange={()=>{}} className="inline w-6 text-center outline-none border border-color5  rounded" inputMode="numeric" />
+                                    <input type="number" value={count} onChange={() => { }} className="inline w-6 text-center outline-none border border-color5  rounded" inputMode="numeric" />
                                     <span className="border border-color5 rounded text-center bg-color5 shadow">
                                         <Plus className="inline text-white cursor-pointer" onClick={onValueup} />
                                     </span>
@@ -361,7 +377,7 @@ const FoodItemOpen = ({ item, order, setOrder }) => {
                         </div>
                     </div>
                     <div className='flex'>
-                        <Tooltip position="right" content={`${item.veg ? 'veg' : 'non-veg'}`} TooltipStyle={`whitespace-nowrap ${item.veg?'bg-green-600 text-green-50 border-white shadow-sm shadow-black' : 'bg-red-600 text-red-50 border-white shadow-sm shadow-black'}`}>
+                        <Tooltip position="right" content={`${item.veg ? 'veg' : 'non-veg'}`} TooltipStyle={`whitespace-nowrap ${item.veg ? 'bg-green-600 text-green-50 border-white shadow-sm shadow-black' : 'bg-red-600 text-red-50 border-white shadow-sm shadow-black'}`}>
                             <span className={`border-2 w-6 h-6 flex justify-evenly p-[2.3px] ${item.veg ? 'border-green-500' : 'border-red-500'}`}>
                                 <span className={`m-auto mx-auto rounded-full w-full h-full ${item.veg ? 'bg-green-500' : 'bg-red-500'} `} size={17}>
                                 </span>

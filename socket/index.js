@@ -6,6 +6,7 @@ const cors = require("cors");
 
 const app = express();
 const server = createServer(app);
+
 const io = new Server(server,{
     cors:{
         origin:"http://localhost:5174",
@@ -24,15 +25,25 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
     console.log(`a user is connected`);
 
-    socket.on("do",()=>{
-        console.log("hello")
+    socket.on("start",()=>{
+      console.log("start");
     })
 
-  socket.on(`order`,(orderID)=>{
-    console.log("hi")
-    console.log(orderID)
-    io.emit(`/order/${orderID}`,"hello everyone")
-  })
+    socket.on("restaurant/hotel/order-tables",(hotelId)=>{
+      console.log(hotelId)
+      io.emit(`restaurant/${hotelId}/order-tables`)
+    })
+
+    socket.on("restaurant/hotel/order-tables/orderTableId",({hotelId,orderTableId})=>{
+      console.log(orderTableId,hotelId)
+      io.emit(`restaurant/${hotelId}/order-tables/${orderTableId}`)
+    })
+
+    socket.on("restaurant/hotel/orders",(hotelId)=>{
+      console.log(hotelId)
+      console.log("lovely")
+      io.emit(`restaurant/${hotelId}/orders`)
+    })
 
   //when disconnect
   socket.on("disconnect", () => {

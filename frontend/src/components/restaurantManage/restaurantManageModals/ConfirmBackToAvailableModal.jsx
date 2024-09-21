@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { IoWarning } from 'react-icons/io5'
+import { socket } from '../../../socket'
 
 const ConfirmBackToAvailableModal = () => {
     const params=useParams()
@@ -21,6 +22,7 @@ const ConfirmBackToAvailableModal = () => {
             const res=await axios.get(`${backend_url}/order-table/${hotelId}/back-to-available/${data.backToAvailable._id}`,{withCredentials:true})
             if(res.data.success){
                 toast.success("back to available succesfully")
+                socket.emit("restaurant/hotel/order-tables",hotelId)
                 onClose()
             }
         } catch (error) {

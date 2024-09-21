@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
 import SellerProfileHeader from "../components/sellerprofile/SellerProfileHeader"
-import { io } from "socket.io-client"
 import SlideMenu from "../components/slidemenu/SlideMenu"
 
 import { MdOutlineTableBar } from "react-icons/md";
@@ -27,16 +26,7 @@ const SellerRestaurantManagePage = () => {
     const [select, setSelected] = useState(0)
     const [loading, setLoading] = useState(true)
 
-    
-    useEffect(() => {
-        // const socket = io("http://localhost:4000", { query: { orderID: '123' } })
-        // socket.on(`/order`)
-        // socket.emit('order', 123)
-        // socket.on('do')
-        // socket.on(`/order/123`, (message) => {
-        //     console.log(message)
-        // })
-    }, [])
+
 
     useEffect(()=>{
         const initiatePage=async()=>{
@@ -109,8 +99,8 @@ const SellerRestaurantManagePage = () => {
                 <SlideMenu select={select} setSelected={setSelected} menuItemList={menuItemList} />
 
                 <div className='w-full'>
-                    {select === 0 && <OrderTables/>} 
-                    {select === 1 && <ManageOrders/>} 
+                    {select === 0 && <OrderTables />} 
+                    {select === 1 && <ManageOrders />} 
                 </div>
             </div>
             <RestaurantManageProvider theme={theme} />
