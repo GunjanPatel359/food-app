@@ -13,7 +13,9 @@ const Seller = require('../model/seller')
 const Role = require('../model/role')
 const Member = require('../model/member')
 const Subscription = require('../model/subscription')
+const FoodItem = require('../model/foodItem')
 const FoodCategory = require('../model/foodCategory')
+const Review = require('../model/review')
 
 const {checkForSellerSubscription}=require("../utils/repeatQuery")
 const {static_colors}=require("../utils/colorUtil")
@@ -196,6 +198,28 @@ router.patch('/:hotelId/change-color',isSellerAuthenticated,catchAsyncErrors(asy
             return next(new ErrorHandler("hotel not found",400))
         }
         res.status(200).json({success:true,message:"color updated successfully"})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
+router.get('/restaurants/search-restarants/search',catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const keyPair=req.query
+        console.log(keyPair)
+        const hotel=await Hotel.find()
+        res.status(200).json({success:true,hotel})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
+router.get('/food-items/search-food-items/search',catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const keyPair=req.query
+        console.log(keyPair)
+        const fooditem=await FoodItem.find()
+        res.status(200).json({success:true,fooditem})
     } catch (error) {
         return next(new ErrorHandler(error.message,400))
     }

@@ -18,7 +18,7 @@ const CategoryOpen = ({ item }) => {
                 </div>
                 <div className="flex">
                     <div className="m-auto mr-3">
-                        <div className="border-1 bg-color0 p-1" onClick={()=>setOpen(!open)}>
+                        <div className="border-1 bg-color0 p-1 cursor-pointer" onClick={()=>setOpen(!open)}>
                             <IoIosArrowDown className={`${open?"":"-rotate-90"} transition-all duration-500`} size={20} />
                         </div>
                     </div>

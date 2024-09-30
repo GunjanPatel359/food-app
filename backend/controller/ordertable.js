@@ -12,6 +12,8 @@ const OrderTableLogs = require('../model/orderTableLogs')
 const FoodItem = require('../model/foodItem')
 const FoodOrder = require('../model/foodOrder')
 
+const socket=require('../utils/socket')
+
 router.get('/:hotelId/get-all-tables', isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
         const { hotelId } = req.params
@@ -153,6 +155,30 @@ router.get('/:hotelId/get-all-Billing-hotels', isSellerAuthenticated, catchAsync
     }
 }))
 
+router.get('/:hotelId/:foodOrderId/order-tabel-food-item', isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { hotelId, foodOrderId } = req.params
+        if (!hotelId || !foodOrderId) {
+            return next(new ErrorHandler("hotelId and food order id are missing", 400))
+        }
+        const member = await Member.findOne({
+            sellerId: req.seller._id,
+            restaurantId: hotelId
+        })
+        if (!member) {
+            return next(new ErrorHandler("seller is not associated with this hotel", 400))
+        }
+        const fooditem = await FoodOrder.findById(foodOrderId).populate("foodItemId")
+        if (!fooditem) {
+            return next(new ErrorHandler("orderTable is not found", 400))
+        }
+        return res.status(200).json({ success: true, fooditem })
+    } catch (error) {
+        console.log(error)
+        return next(new ErrorHandler(error.message, 400))
+    }
+}))
+
 router.get('/:hotelId/:orderTableId/get-order-table-details', isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
         const { hotelId, orderTableId } = req.params
@@ -273,8 +299,10 @@ router.get('/:hotelId/offline-booking/:orderTableId', isSellerAuthenticated, cat
         if (!assignTable) {
             return next(new ErrorHandler("table is not found", 400))
         }
+        socket.emit("restaurant/hotel/order-tables",hotelId)
         return res.status(200).json({ success: true })
     } catch (error) {
+        console.log(error)
         return next(new ErrorHandler(error.message, 400))
     }
 }))
@@ -359,9 +387,13 @@ router.get('/:hotelId/get-all-tables-order', isSellerAuthenticated, catchAsyncEr
         if (!memberRole) {
             return next(new ErrorHandler("seller role is not found", 400))
         }
+        // const table = await OrderTable.find({
+        //     restaurantId: hotelId,
+        // }).populate({ path: 'orders', populate: { path: 'foodItemId' } })
         const table = await OrderTable.find({
             restaurantId: hotelId,
-        }).populate({ path: 'orders', populate: { path: 'foodItemId' } })
+        })
+        // console.log(table)
         if (!table) {
             return next(new ErrorHandler("no order found", 400))
         }

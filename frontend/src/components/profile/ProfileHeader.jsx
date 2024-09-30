@@ -21,8 +21,8 @@ const ProfileHeader = () => {
               <Link to="/profile">
                 {
                   user && user?.avatar ? (
-                    <div className='border-2 border-color4 rounded-full' onClick={()=>navigate('/profile')}>
-                      <img className='rounded-full w-[40px]' src={`${img_url}/${user.avatar}`} />
+                    <div className='border-2 border-white rounded-full' onClick={()=>navigate('/profile')}>
+                      <img className='rounded-full w-[50px]' src={`${img_url}/${user.avatar}`} />
                     </div>) : (
                     <div className='border-2 border-white rounded-full p-1'>
                       <User size={30} color="white" className='text-color5' />

@@ -1,33 +1,35 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const path=require("path")
-const fs=require("fs")
+const path = require("path")
+const fs = require("fs")
 
 const ErrorHandler = require("../utils/ErrorHandler");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 
 const User = require("../model/user");
+const Review = require("../model/review");
+const Hotel = require("../model/hotel");
 
 const transporter = require("../utils/sendmailer");
 const sendToken = require("../utils/jwtToken");
-const {isAuthenticated, isSellerAuthenticated} = require("../middleware/auth");
-const {upload}=require("../multer");
+const { isAuthenticated, isSellerAuthenticated } = require("../middleware/auth");
+const { upload } = require("../multer");
 const { static_colors } = require("../utils/colorUtil");
 
-router.get("/getpaypalclientdetail",isAuthenticated || isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
-    try{
+router.get("/getpaypalclientdetail", isAuthenticated || isSellerAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
 
-        return res.status(200).json({clientId:process.env.PAYPAL_CLIENT_ID})
-    }catch{
-        return res.status(401).json({msg:"please try again later"})
+        return res.status(200).json({ clientId: process.env.PAYPAL_CLIENT_ID })
+    } catch {
+        return res.status(401).json({ msg: "please try again later" })
     }
 }))
 
-router.get("/userinfo",isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+router.get("/userinfo", isAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
-        const user=req.user
-        res.status(200).json({success:true,user})
+        const user = req.user
+        res.status(200).json({ success: true, user })
     } catch (error) {
         return next(new ErrorHandler(error.message, 400));
     }
@@ -100,91 +102,166 @@ router.post('/login', catchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler("User doesn't exists", 400))
         }
         const isPasswordValid = await user.comparePass(password);
-        const {password:newPassword,...rest}=user
+        const { password: newPassword, ...rest } = user
         if (!isPasswordValid) {
             return next(new ErrorHandler("Please provide the correct information", 400))
         }
-        sendToken(user, 200, res, "logged in successfull",rest);
+        sendToken(user, 200, res, "logged in successfull", rest);
     } catch (err) {
         return next(new ErrorHandler(err.message, 400))
     }
 }))
 
-router.post('/setimage',isAuthenticated,upload.single('userimage'),catchAsyncErrors(async (req, res, next) => {
-      try {
+router.post('/setimage', isAuthenticated, upload.single('userimage'), catchAsyncErrors(async (req, res, next) => {
+    try {
         const { _id } = req.user._id;
         const user = await User.findById(_id);
         if (user.avatar) {
-          fs.unlinkSync(path.join(__dirname, '../../uploads', user.avatar));
+            fs.unlinkSync(path.join(__dirname, '../../uploads', user.avatar));
         }
         const filename = req.file.filename;
 
         const tempuser = await User.findByIdAndUpdate(
-          { _id: _id },
-          { avatar: filename },
-          {new:true}
+            { _id: _id },
+            { avatar: filename },
+            { new: true }
         );
         res.status(201).json({
-          success: true,
-          user: tempuser
+            success: true,
+            user: tempuser
         });
-      } catch (err) {
+    } catch (err) {
         return next(new ErrorHandler(err.message, 400));
-      }
-    })
-  );
+    }
+})
+);
 
-router.patch('/add-address',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+router.patch('/add-address', isAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
-        const {_id}=req.user._id;
+        const { _id } = req.user._id;
         console.log(req.user)
-        if(req.user.addresses.length>=5){
-            return next( new ErrorHandler("you can't hold more than 5 Address",400))
+        if (req.user.addresses.length >= 5) {
+            return next(new ErrorHandler("you can't hold more than 5 Address", 400))
         }
-        const {country,state,city,address,zipCode}=req.body
-        if(!country||!city || !address || !zipCode){
-            return next (new ErrorHandler("please fill all the required fields",400))
+        const { country, state, city, address, zipCode } = req.body
+        if (!country || !city || !address || !zipCode) {
+            return next(new ErrorHandler("please fill all the required fields", 400))
         }
-        if(zipCode.length!==6){
-            return next (new ErrorHandler("please provide valid zipcode",400))
+        if (zipCode.length !== 6) {
+            return next(new ErrorHandler("please provide valid zipcode", 400))
         }
         const user = await User.findByIdAndUpdate(
-            {_id},
-            {$push:{addresses:{country,state,city,address,zipCode}}},
-            {new:true})
+            { _id },
+            { $push: { addresses: { country, state, city, address, zipCode } } },
+            { new: true })
         console.log(user)
         res.status(200).json({
-            success:true,
-            user:user
+            success: true,
+            user: user
         })
     } catch (err) {
-        return next (new ErrorHandler(err.message,400))
+        return next(new ErrorHandler(err.message, 400))
     }
 }))
 
-router.get('/colors/all-the-colors',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+router.get('/colors/all-the-colors', isAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
-        res.status(200).json({success:true,colors:static_colors})
+        res.status(200).json({ success: true, colors: static_colors })
     } catch (error) {
-        return next(new ErrorHandler(error.message,400))
+        return next(new ErrorHandler(error.message, 400))
     }
 }))
 
-router.patch('/colors/change-color',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+router.patch('/colors/change-color', isAuthenticated, catchAsyncErrors(async (req, res, next) => {
     try {
-        const {color}=req.body
-        if(!static_colors.includes(color)){
-            return next(new ErrorHandler("Invalid color",400))
+        const { color } = req.body
+        if (!static_colors.includes(color)) {
+            return next(new ErrorHandler("Invalid color", 400))
         }
-        const user=await User.findOneAndUpdate({
-            _id:req.user._id
-        },{
-            colors:color
-        },{new:true})
-        if(!user){
-            return next(new ErrorHandler("hotel not found",400))
+        const user = await User.findOneAndUpdate({
+            _id: req.user._id
+        }, {
+            colors: color
+        }, { new: true })
+        if (!user) {
+            return next(new ErrorHandler("hotel not found", 400))
         }
-        res.status(200).json({success:true,message:"color updated successfully"})
+        res.status(200).json({ success: true, message: "color updated successfully" })
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 400))
+    }
+}))
+
+router.post('/hotel/:hotelId/submit-hotel-review', isAuthenticated, catchAsyncErrors(async (req, res, next) => {
+    try {
+        const { hotelId } = req.params
+        if (!hotelId) {
+            return next(new ErrorHandler("hotel id is required", 400))
+        }
+        const { rating, comment } = req.body
+        if (rating <= 0 && rating > 5) {
+            return next(new ErrorHandler("rating must be between 1 and 5", 400))
+        }
+        if (!comment) {
+            return next(new ErrorHandler("comment is required", 400))
+        }
+        const findRedundant = await Review.findOne({
+            reviewType: "HOTEL",
+            userId: req.user._id,
+            reviewItemId: hotelId
+        })
+        if (findRedundant) {
+            return next(new ErrorHandler("you have already submitted a review for this hotel", 400))
+        }
+        const review = await Review.create({
+            reviewType: "HOTEL",
+            userId: req.user._id,
+            reviewItemId: hotelId,
+            rating,
+            description: comment
+        })
+        const addReviewToUser = await User.findOneAndUpdate({
+            _id: req.user._id
+        }, {
+            $push: { reviewIds: review._id }
+        })
+        const hotel = await Hotel.findById(hotelId);
+        if (!hotel) {
+            throw new Error('Hotel not found');
+        }
+        const totalReviews = hotel.totalReview || 0;
+        const currentAvgReview = hotel.avgreview || 0;
+        const newAvgReview = ((currentAvgReview * totalReviews) + rating) / (totalReviews + 1);
+        const updateHotelReview = await Hotel.findOneAndUpdate({
+            _id: hotelId
+        }, {
+            $set: { avgreview: newAvgReview },
+            $inc: {
+                toatalReview: 1,
+                [`reviewCount.${rating}`]: 1
+            }
+        })
+        res.status(200).json({ success: true, message: "review submitted successfully" })
+    } catch (error) {
+        return next(new ErrorHandler(error.message, 400))
+    }
+}))
+
+router.get('/hotel/:hotelId/user-rating',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {hotelId}=req.params
+        if(!hotelId){
+            return next(new ErrorHandler("hotel id is required", 400))
+        }
+        const review=await Review.findOne({
+            reviewType:"HOTEL",
+            userId:req.user._id,
+            reviewItemId:req.params.hotelId
+        }).populate("userId")
+        if(!review){
+            return res.status(200).json({success:false,message:"no review found for this hotel"})
+            }
+        res.status(200).json({success:true,review})
     } catch (error) {
         return next(new ErrorHandler(error.message,400))
     }

@@ -7,26 +7,26 @@ import { useSelector } from 'react-redux'
 import { User } from 'lucide-react'
 import { img_url } from '../../server'
 
-const Header = ({page}) => {
+const HeaderPublic = () => {
   const user=useSelector((state)=>state.user)
   const navigate=useNavigate()
   return (
-    <div className='w-full'>
-      <div className='bg-gradient-to-tr from-rose-400 to-red-400 w-full'>
+    <div className='w-full shadow-md border-b border-color0'>
+      <div className='bg-gradient-to-tr from-color4 to-color5 w-full'>
         <div className='w-[80%] m-auto flex px-2 text-white h-[80px] justify-between'>
-        <span className='flex text-4xl gap-x-4 cursor-pointer my-auto'>
+        <span className='flex text-4xl gap-x-4 cursor-pointer my-auto' onClick={()=>navigate('/')}>
           <IoFastFoodOutline size={40} color='white' />
           <span>Taste</span>
         </span>
         <span className='text-center items-center my-auto'>
-          <Command className='bg-white text-rose-600 rounded w-[300px]'>
+          <Command className='bg-white text-color5 rounded w-[300px]'>
             <CommandInput placeholder='Enter the shop or dish name' />
           </Command>
         </span>
         {
           user.user?(<>
           {user.user?.avatar ? (
-                    <span className='border-2 border-color4 rounded-full min-h-fit p-[1px] my-auto cursor-pointer' onClick={()=>navigate('/profile')}>
+                    <span className='border-2 border-color4 rounded-full min-h-fit p-[2px] my-auto cursor-pointer bg-white' onClick={()=>navigate('/profile')}>
                       <img className='rounded-full w-[50px] h-[50px]' src={`${img_url}/${user.user.avatar}`} />
                     </span>) : (
                     <span className='border-2 border-white rounded-full my-auto p-1 cursor-pointer' onClick={()=>navigate('/profile')}>
@@ -37,7 +37,7 @@ const Header = ({page}) => {
             <>
             <span className='text-center items-center'>
           <Link to='/login'>
-            <Button className="text-lg hover:text-rose-100">
+            <Button className="text-lg hover:text-color1">
               SignIn
             </Button>
           </Link>/
@@ -52,38 +52,8 @@ const Header = ({page}) => {
         }
         </div>
       </div>
-
-      <div className='w-full'>
-        <div className='w-[80%] m-auto'>
-
-      <span className=''>
-        <ul className='flex gap-x-1 items-center text-center text-lg'>
-          <Link to=''>
-            <Button className={`hover:text-rose-600 text-md rounded-[5px] transition duration-300 p-3 ${page==='home'?"text-rose-500":""}`}>
-              Home
-            </Button>
-          </Link>
-          <Link to='/restaurants'>
-            <Button className='hover:text-rose-600 text-md rounded-[5px] transition duration-300 p-3'>
-              Restaurants
-            </Button>
-          </Link>
-          <Link to='food-items'>
-            <Button className='hover:text-rose-600 text-md rounded-[5px] transition duration-300 p-3'>
-              Dishes
-            </Button>
-          </Link>
-          <Link to=''>
-            <Button className='hover:text-red-600 hover:bg-white text-md rounded-[5px] transition duration-300 p-3'>
-              Contact Us
-            </Button>
-          </Link>
-        </ul>
-      </span>
-        </div>
-      </div>
     </div>
   )
 }
 
-export default Header
+export default HeaderPublic

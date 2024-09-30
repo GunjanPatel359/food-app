@@ -6,10 +6,11 @@ const ErrorHandler = require('../utils/ErrorHandler')
 const Member = require('../model/member')
 const FoodOrder = require('../model/foodOrder')
 const Role = require('../model/role')
+const socket=require("../utils/socket")
 
-router.patch('/:foodOrderId/change-status',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+router.patch('/:orderTableId/:foodOrderId/change-status',isSellerAuthenticated,catchAsyncErrors(async(req,res,next)=>{
     try {
-        const {foodOrderId}=req.params
+        const {foodOrderId,orderTableId}=req.params
         if(!foodOrderId){
             return next(new ErrorHandler('Invalid food order id',400))
         }
@@ -36,17 +37,17 @@ router.patch('/:foodOrderId/change-status',isSellerAuthenticated,catchAsyncError
             return next(new ErrorHandler('You do not have permission to change order status',403))
         }
         if(foodOrder.status==='Completed'){
-            return next(new ErrorHandler('Order is already Compeled',403))
+            return next(new ErrorHandler('Order is already Completed',403))
         }
         const forder=await FoodOrder.findOneAndUpdate({
             _id:foodOrderId   
         },{
             status:req.body.status
         })
+        socket.emit("restaurant/hotel/order-tables/orderTableId",{hotelId:forder.restaurantId,orderTableId})
         res.status(200).json({success:true,message:'Order status changed successfully',})
     } catch (error) {
         return next(new ErrorHandler(error.message,400))
-
     }
 }))
 

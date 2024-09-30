@@ -14,7 +14,9 @@ import {
 } from "./routes/userRoute"
 
 import {
-  RestaurantPage
+  RestaurantPage,
+  RestaurantsPage,
+  FoodItemsPage
 } from "./routes/publicRoute.js"
 
 import {
@@ -44,6 +46,8 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path='/restaurants' element={<RestaurantsPage/>} />
+        <Route path='/food-items' element={<FoodItemsPage />} />
         <Route path='/restaurant/:hotelId' element={<RestaurantPage />} />
       </Routes>
 
@@ -70,8 +74,8 @@ function App() {
         </Routes>
 
         <Routes>
-          <Route path='/user/:hotelId/:orderTableId/user-table' element={<UserBookedTablePage />} />
           <Route path='/user/restaurant/:hotelId/qrcode/:orderTabelId/:randomString/:memberId' element={<UserOccupingTablePage />} />
+          <Route path='/user/:hotelId/:orderTableId/user-table' element={<UserBookedTablePage />} />
         </Routes>
 
         {/* react toastify configuration */}

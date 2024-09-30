@@ -41,7 +41,6 @@ const AvailableTables = ({ hotelId }) => {
         initiatePage()
         socket.on(`restaurant/${hotelId}/order-tables`,()=>{
             initiatePage()
-            console.log("working")
         })
         return ()=>{
             socket.off(`restaurant/${hotelId}/order-tables`)
@@ -113,7 +112,6 @@ const AvailableTableBox = ({ table }) => {
             const res=await axios.get(`${backend_url}/order-table/${hotelId}/offline-booking/${table._id}`,{withCredentials:true})
             if(res.data.success){
                 toast.success('Table is now occupied')
-                socket.emit("restaurant/hotel/order-tables",hotelId)
             }
         } catch (error) {
             toast.error(error.message)

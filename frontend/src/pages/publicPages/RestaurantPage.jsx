@@ -1,8 +1,8 @@
 import { addUser } from "../../redux/reducers/user"
 import ProfileHeader from "../../components/profile/ProfileHeader"
-import { backend_url } from "../../server"
+import { backend_url, theme_colors } from "../../server"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useDispatch } from "react-redux"
 import { useParams } from "react-router-dom"
 import { toast } from "react-toastify"
@@ -13,6 +13,9 @@ const RestaurantPage = () => {
     const params=useParams()
     const {hotelId}=params
     const dispatch=useDispatch()
+
+    const Themes = useMemo(() => theme_colors, [])
+    const [theme, setTheme] = useState(Themes[0]);
     const [hotel,setHotel]=useState('')
     const [user,setUser]=useState('')
 
@@ -28,6 +31,9 @@ const RestaurantPage = () => {
                   dispatch(addUser(res.data.user))
                   setUser(res.data.user)
               }
+              if (res.data.user.colors) {
+                setTheme(res.data.user.colors)
+            }
         }
         userinfo()
     },[dispatch])
@@ -57,9 +63,11 @@ const RestaurantPage = () => {
     }
   return (
     <div>
+        <div className={`theme-${theme}`}>
         <ProfileHeader user={user} />
         <RestaurantInfo hotel={hotel} />
         <RestaurantFoodInfo />
+        </div>
     </div>
   )
 }
