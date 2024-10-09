@@ -9,8 +9,7 @@
 // //       user: process.env.SMTP_MAIL,
 // //       pass: process.env.SMTP_PASSWORD,
 // //     },
-// //   });
-
+//
 
 // module.exports = transporter
 
