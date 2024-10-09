@@ -1,22 +1,22 @@
 /* eslint-disable react/prop-types */
 
-import { FaRegStar, FaStar } from "react-icons/fa"
+import { useEffect, useState } from "react"
 import { backend_url, img_url } from "../../server"
 import RatingShow from "../customui/RatingShow"
-import RatingBar from "../customui/RatingBar"
-import { useEffect, useState } from "react"
 import axios from "axios"
-import { toast } from "react-toastify"
 import { User } from "lucide-react"
+import { FaRegStar, FaStar } from "react-icons/fa"
+import RatingBar from "../customui/RatingBar"
+import { toast } from "react-toastify"
 
-const RestaurantInfo = ({ hotel }) => {
+const FoodInfo = ({ fooditem }) => {
     const [userRating, setUserRating] = useState('')
     const [publicRating, setPublicRating] = useState([])
 
     useEffect(() => {
         const retrieveUserRating = async () => {
             try {
-                const res = await axios.get(`${backend_url}/user/hotel/${hotel._id}/user-rating`, { withCredentials: true })
+                const res = await axios.get(`${backend_url}/user/food-item/${fooditem._id}/user-rating`, { withCredentials: true })
                 if (res.data.success) {
                     console.log(res.data.review)
                     setUserRating(res.data.review)
@@ -25,13 +25,15 @@ const RestaurantInfo = ({ hotel }) => {
                 console.log(error)
             }
         }
-        retrieveUserRating()
-    }, [hotel._id])
+        if (fooditem && fooditem._id) {
+            retrieveUserRating()
+        }
+    }, [fooditem])
 
     useEffect(() => {
         const retrievePublicRating = async () => {
             try {
-                const res = await axios.get(`${backend_url}/review/hotel/${hotel._id}/public-review`,{withCredentials:true})
+                const res = await axios.get(`${backend_url}/review/food-item/${fooditem._id}/public-review`, { withCredentials: true })
                 if (res.data.success) {
                     setPublicRating(res.data.reviews)
                 }
@@ -39,37 +41,33 @@ const RestaurantInfo = ({ hotel }) => {
                 console.log(error)
             }
         }
-        if(hotel && hotel._id){
+        if (fooditem && fooditem._id) {
             retrievePublicRating()
         }
-    }, [hotel, hotel._id])
-
-    if (!hotel) {
-        return <div>Loading...</div>
-    }
-
+    }, [fooditem])
     return (
         <>
             <div className="sm:flex m-2 border border-color5 rounded lg:w-[70%] mx-auto">
                 <div className="sm:w-[40%] w-[100%] p-2">
-                    <img src={`${img_url}/${hotel.imgUrl}`} className="rounded shadow shadow-color4 w-full" />
+                    <img src={`${img_url}/${fooditem.imageUrl}`} className="rounded shadow shadow-color4 w-full my-auto" />
                 </div>
-                <div className="sm:w-[60%] p-2 pt-0 sm:pt-2 flex flex-col gap-2">
-                    <div className="text-2xl font-bold text-color5">{hotel.name}</div>
+                <div className="sm:w-[60%] p-2 pt-0 sm:pt-2 flex flex-col gap-1">
+                    <div className="text-2xl font-bold text-color5">{fooditem.name}</div>
+                    <div className="text-lg text-color4">{fooditem.smallDescription}</div>
                     <div className="flex">
                         <span className="text-color5 font-semibold text-md mr-1">Ratings:</span>
-                        <span className="p-[1px]"><RatingShow ratingCount={parseFloat(hotel.avgreview).toFixed(1)} maxRatingCount={5} size={20} /></span>
-                        <span className="text-color4 text-sm ml-1 my-auto">{parseFloat(hotel.avgreview).toFixed(1)}/5</span>
-                        <span className="text-sm my-auto text-color4 ml-1 border border-color4 rounded-full px-3 bg-color0">Total ratings: {hotel.totalReview}</span>
+                        <span className="p-[1px]"><RatingShow ratingCount={parseFloat(fooditem.avgreview).toFixed(1)} maxRatingCount={5} size={20} /></span>
+                        <span className="text-color4 text-sm ml-1 my-auto">{parseFloat(fooditem.avgreview).toFixed(1)}/5</span>
+                        <span className="text-sm my-auto text-color4 ml-1 border border-color4 rounded-full px-3 bg-color0">Total ratings: {fooditem.totalReview}</span>
                     </div>
-                    <div className="my-1">{hotel.cusineTypes.length > 0 && hotel.cusineTypes.map((item, i) => {
+                    <div className="my-2">{fooditem.foodTypes.length > 0 && fooditem.foodTypes.map((item, i) => {
                         return (
                             <div key={i} className="inline border border-color5 p-1 rounded-xl mr-1 text-color5 bg-color0 px-2 text-center shadow shadow-color2">
                                 <div className="inline text-center relative -top-[1px] -left-[1px]">{item}</div>
                             </div>)
                     })}</div>
                     <div>
-                        <div className="text-color5 w-full text-justify"><span className="text-color5 font-semibold">location:</span> {hotel.addresses.address}, {hotel.addresses.city}, {hotel.addresses.state}, {hotel.addresses.country} </div>
+                        <div className="text-color4"><span className="font-semibold text-color5">description:</span> {fooditem.description}</div>
                     </div>
                 </div>
             </div>
@@ -79,22 +77,22 @@ const RestaurantInfo = ({ hotel }) => {
                     <div className="w-[35%] flex flex-col items-center">
                         <div className="flex flex-col gap-1">
                             <div className="text-7xl text-color5">
-                                {parseFloat(hotel.avgreview).toFixed(1)}
+                                {parseFloat(fooditem.avgreview).toFixed(1)}
                             </div>
-                            <RatingShow ratingCount={hotel.avgreview} maxRatingCount={5} size={20} />
-                            <div className="mt-1 flex"><span className="bg-color5 border-1 border-color4 p-1 px-3 rounded-full text-sm text-white mx-auto min-w-10 text-end">{hotel.totalReview.toString().length < 4
-                                ? `${'0'.repeat(4 - hotel.totalReview.toString().length)}${hotel.totalReview}`
-                                : hotel.totalReview}</span></div>
+                            <RatingShow ratingCount={fooditem.avgreview} maxRatingCount={5} size={20} />
+                            <div className="mt-1 flex"><span className="bg-color5 border-1 border-color4 p-1 px-3 rounded-full text-sm text-white mx-auto min-w-10 text-end">{fooditem.totalReview.toString().length < 4
+                                ? `${'0'.repeat(4 - fooditem.totalReview.toString().length)}${fooditem.totalReview}`
+                                : fooditem.totalReview}</span></div>
                         </div>
                     </div>
                     <div className=" w-[2px] bg-color4 flex flex-col">
                     </div>
                     <div className="w-[65%] pl-10">
-                        <div className="flex text-color5">5<FaStar className="text-color5 my-auto ml-1 mr-4" /><div className="flex w-full flex-1 m-auto"><RatingBar count={hotel.reviewCount["5"]} totalCount={hotel.totalReview} /></div></div>
-                        <div className="flex text-color5">4<FaStar className="text-color5 my-auto ml-1 mr-4" /><div className="flex w-full flex-1 m-auto"><RatingBar count={hotel.reviewCount["4"]} totalCount={hotel.totalReview} /></div></div>
-                        <div className="flex text-color5">3<FaStar className="text-color5 my-auto ml-1 mr-4" /><div className="flex w-full flex-1 m-auto"><RatingBar count={hotel.reviewCount["3"]} totalCount={hotel.totalReview} /></div></div>
-                        <div className="flex text-color5">2<FaStar className="text-color5 my-auto ml-1 mr-4" /><div className="flex w-full flex-1 m-auto"><RatingBar count={hotel.reviewCount["2"]} totalCount={hotel.totalReview} /></div></div>
-                        <div className="flex text-color5">1<FaStar className="text-color5 my-auto ml-1 mr-4" /><div className="flex w-full flex-1 m-auto"><RatingBar count={hotel.reviewCount["1"]} totalCount={hotel.totalReview} /></div></div>
+                        <div className="flex text-color5">5<FaStar className="text-color5 my-auto ml-1 mr-4" /><div className="flex w-full flex-1 m-auto"><RatingBar count={fooditem.reviewCount["5"]} totalCount={fooditem.totalReview} /></div></div>
+                        <div className="flex text-color5">4<FaStar className="text-color5 my-auto ml-1 mr-4" /><div className="flex w-full flex-1 m-auto"><RatingBar count={fooditem.reviewCount["4"]} totalCount={fooditem.totalReview} /></div></div>
+                        <div className="flex text-color5">3<FaStar className="text-color5 my-auto ml-1 mr-4" /><div className="flex w-full flex-1 m-auto"><RatingBar count={fooditem.reviewCount["3"]} totalCount={fooditem.totalReview} /></div></div>
+                        <div className="flex text-color5">2<FaStar className="text-color5 my-auto ml-1 mr-4" /><div className="flex w-full flex-1 m-auto"><RatingBar count={fooditem.reviewCount["2"]} totalCount={fooditem.totalReview} /></div></div>
+                        <div className="flex text-color5">1<FaStar className="text-color5 my-auto ml-1 mr-4" /><div className="flex w-full flex-1 m-auto"><RatingBar count={fooditem.reviewCount["1"]} totalCount={fooditem.totalReview} /></div></div>
                     </div>
                 </div>
 
@@ -188,7 +186,7 @@ const RestaurantInfo = ({ hotel }) => {
                     <div className="border border-color3 p-4 rounded">
                         <div className="text-color5 text-2xl font-bold my-2">Rate Us</div>
                         <div>
-                            <RatingForm maxRatingCount={5} size={50} hotelId={hotel._id} />
+                            <RatingForm maxRatingCount={5} size={50} foodItemId={fooditem._id} />
                         </div>
                     </div>
                 )}
@@ -198,7 +196,7 @@ const RestaurantInfo = ({ hotel }) => {
     )
 }
 
-const RatingForm = ({ maxRatingCount = 5, size, hotelId }) => {
+const RatingForm = ({ maxRatingCount = 5, size, foodItemId }) => {
     const [count, setCount] = useState(0)
     const [demon, setDemon] = useState(0)
     const [text, setText] = useState('')
@@ -210,7 +208,7 @@ const RatingForm = ({ maxRatingCount = 5, size, hotelId }) => {
             return toast.error("please enter your review")
         }
         try {
-            const res = await axios.post(`${backend_url}/user/hotel/${hotelId}/submit-hotel-review`, {
+            const res = await axios.post(`${backend_url}/user/food-item/${foodItemId}/submit-food-item-review`, {
                 rating: count,
                 comment: text
             }, { withCredentials: true })
@@ -267,4 +265,4 @@ const RatingForm = ({ maxRatingCount = 5, size, hotelId }) => {
     )
 }
 
-export default RestaurantInfo
+export default FoodInfo

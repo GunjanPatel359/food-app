@@ -79,9 +79,9 @@ const SellerLoginPage = () => {
     <>
     {!loading?(
     <div className='w-full flex m-auto justify-center h-[100vh]'>
-      <div className='lg:w-[30%] sm:w-[60%] flex m-auto justify-center border border-gray-500 p-8'>
+      <div className='lg:w-[30%] sm:w-[60%] flex m-auto justify-center border border-color3 shadow shadow-color0 p-8'>
         <div className='w-[250px]'>
-        <p className='text-center text-xl from-neutral-700 font-bold mb-5'>Login In</p>
+        <p className='text-center text-2xl from-neutral-700 font-bold mb-5 text-color5'>Login In</p>
         <Form {...form} >
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-1'>
            
@@ -90,10 +90,10 @@ const SellerLoginPage = () => {
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email address</FormLabel>
+                  <FormLabel className="text-color5">Email address</FormLabel>
                   <FormControl>
                     <Input placeholder='Enter your email' 
-                    className="rounded border border-gray-400 hover:border-gray-700"
+                    className="rounded border border-color2 hover:border-color5"
                     {...field} />
                   </FormControl>
                   <FormMessage className="text-red-600" />
@@ -105,13 +105,13 @@ const SellerLoginPage = () => {
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-color5">Password</FormLabel>
                   <FormControl>
                     <Input
                       type='password'
                       required
                       placeholder='Enter your password'
-                      className="rounded border border-gray-400 hover:border-gray-700"
+                      className="rounded border border-color2 hover:border-color5"
                       {...field}
                       />
                   </FormControl>
@@ -119,11 +119,11 @@ const SellerLoginPage = () => {
                 </FormItem>
               )}
             />
-            <Button type='submit' className="bg-gray-300 rounded  hover:bg-gray-200 py-0">Login In</Button>
+            <Button type='submit' className="bg-color3 rounded hover:bg-color4 py-0 w-full text-white">Login In</Button>
           </form>
         </Form>
         <hr className='hidden h-6'/>
-        <Link to="/seller/sign-up" className='underline text-blue-900'>{`Don't have an Account`}</Link>
+        <Link to="/seller/sign-up" className='underline text-color4 hover:text-color5'>{`Don't have an Account`}</Link>
         </div>
       </div>
     </div>

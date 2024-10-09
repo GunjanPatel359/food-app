@@ -20,6 +20,15 @@ const Review = require('../model/review')
 const {checkForSellerSubscription}=require("../utils/repeatQuery")
 const {static_colors}=require("../utils/colorUtil")
 
+router.get('/restaurant-get-home',catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const hotel=await Hotel.find({}).limit(5)
+        res.status(200).json({success:true,hotel})
+    } catch (error) {
+        return next(new ErrorHandler(error.message))
+    }
+}))
+
 router.post('/create-restaurant', isSellerAuthenticated, upload.single('restaurantimage'), catchAsyncErrors(async (req, res, next) => {
     try {
         let sellerinfo=req.seller;
@@ -203,23 +212,76 @@ router.patch('/:hotelId/change-color',isSellerAuthenticated,catchAsyncErrors(asy
     }
 }))
 
-router.get('/restaurants/search-restarants/search',catchAsyncErrors(async(req,res,next)=>{
+router.get('/restaurants/search-restaurants/search', catchAsyncErrors(async (req, res, next) => {
     try {
-        const keyPair=req.query
-        console.log(keyPair)
-        const hotel=await Hotel.find()
-        res.status(200).json({success:true,hotel})
+        const { minrate, mintotalrate,search } = req.query;
+
+        let ratingCondition = {};
+        if (minrate) {
+            const minRate = parseFloat(minrate) || 0;
+            ratingCondition = { avgreview: { $gte: minRate } };
+        }
+
+        let totalRatingCondition = {};
+        if (mintotalrate) {
+            const minTotalRate = parseInt(mintotalrate) || 0;
+            totalRatingCondition = { totalReview: { $gte: minTotalRate } };
+        }
+
+        // search query
+
+        let searchQuery={};
+        if(search){
+            searchQuery = {name: { $regex: search, $options: 'i' }}
+        }
+
+        const queryConditions = {
+            ...searchQuery,
+            ...ratingCondition,
+            ...totalRatingCondition
+        };
+
+        const hotel = await Hotel.find(queryConditions).limit(10);
+
+        res.status(200).json({ success: true, hotel });
+
     } catch (error) {
-        return next(new ErrorHandler(error.message,400))
+        return next(new ErrorHandler(error.message, 400));
     }
-}))
+}));
 
 router.get('/food-items/search-food-items/search',catchAsyncErrors(async(req,res,next)=>{
     try {
-        const keyPair=req.query
-        console.log(keyPair)
-        const fooditem=await FoodItem.find()
-        res.status(200).json({success:true,fooditem})
+        const { minrate, mintotalrate,search } = req.query;
+
+        //min total rating
+        let ratingCondition = {};
+        if (minrate) {
+            const minRate = parseFloat(minrate) || 0;
+            ratingCondition = { avgreview: { $gte: minRate } };
+        }
+
+        //min total reviews
+        let totalRatingCondition = {};
+        if (mintotalrate) {
+            const minTotalRate = parseInt(mintotalrate) || 0;
+            totalRatingCondition = { totalReview: { $gte: minTotalRate } };
+        }
+
+        // search query
+        let searchQuery={};
+        if(search){
+            searchQuery = {name: { $regex: search, $options: 'i' }}
+        }
+
+        const queryConditions = {
+            ...searchQuery,
+            ...ratingCondition,
+            ...totalRatingCondition
+        };
+
+        const fooditem = await FoodItem.find(queryConditions).limit(10);
+        res.status(200).json({ success: true, fooditem });
     } catch (error) {
         return next(new ErrorHandler(error.message,400))
     }

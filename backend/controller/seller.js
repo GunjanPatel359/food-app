@@ -14,7 +14,8 @@ const Role = require("../model/role");
 const Subscription = require("../model/subscription");
 const SubscriptionLog = require("../model/subscriptionlog")
 
-const transporter = require("../utils/sendmailer");
+// const transporter = require("../utils/sendmailer");
+const sgMail=require("../utils/sendmailer")
 const { isSellerAuthenticated } = require("../middleware/auth");
 const { upload } = require("../multer");
 const Seller = require("../model/seller");
@@ -44,13 +45,22 @@ router.post("/create-seller", catchAsyncErrors(async (req, res, next) => {
                 name, email, password,
             }
             const token = jwt.sign(seller, process.env.ACTIVATION_TOKEN, { expiresIn: "5m" })
-            const mailOptions = {
-                from: process.env.SMTP_MAIL,
-                to: seller.email,
+            // const mailOptions = {
+            //     from: process.env.SMTP_MAIL,
+            //     to: seller.email,
+            //     subject: "Account Activation",
+            //     html: `<a href="http://localhost:5174/seller/activation/${token}">Click on the link to activate your seller account</a>`
+            // }
+            // await transporter.sendMail(mailOptions)
+
+            const msg = {
+                to: seller.email, 
+                from: process.env.SMTP_MAIL, 
                 subject: "Account Activation",
                 html: `<a href="http://localhost:5174/seller/activation/${token}">Click on the link to activate your seller account</a>`
-            }
-            await transporter.sendMail(mailOptions)
+              }
+              await sgMail.send(msg)
+
             return res.status(201).json({
                 success: true,
                 message: `please check your email:- ${seller.email} to activate your seller account`

@@ -84,8 +84,8 @@ const SignupPage = () => {
     <>
     {!loading?(
     <div className="min-w-screen min-h-screen items-center justify-center flex">
-      <div className="w-[470px] align-middle m-auto justify-center items-center flex flex-col gap-3 border-e-blue-50 border py-[70px]">
-        <h1 className="text-[30px] font-[600]">Sign up</h1>
+      <div className="w-[470px] align-middle m-auto justify-center items-center flex flex-col gap-3 shadow shadow-color0 border border-color3 py-[30px]">
+        <h1 className="text-[30px] font-[600] text-color4">Sign up</h1>
         <form className="flex flex-col gap-4 justify-center" onSubmit={handleSubmit}>
           <TextField value={name} type="text" label="username" variant="outlined" className="w-[250px]" onChange={(e) => setName(e.target.value)} required />
           <TextField value={email} type="email" label="email" variant="outlined" className="w-[250px]" onChange={(e) => setEmail(e.target.value)} required />

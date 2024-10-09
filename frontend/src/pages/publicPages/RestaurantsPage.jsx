@@ -22,6 +22,24 @@ const RestaurantsPage = () => {
 
     const [restaurantData, setRestaurantData] = useState([])
 
+    const [searchString, setSearchString] = useState()
+
+    const [searchQuery, setSearchQuery] = useState('')
+    const [filterQuery, setFilterQuery] = useState('minrate=0&mintotalrate=0')
+
+    const handleSearchChange = (e) => {
+        setSearchString(e.target.value)
+    }
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault()   
+        try {
+            setSearchQuery(`${searchString}`)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         const userinfo = async () => {
             setLoading(true)
@@ -48,16 +66,16 @@ const RestaurantsPage = () => {
     useEffect(() => {
         const fetchRestaurantData = async () => {
             try {
-                const res = await axios.get(`${backend_url}/restaurant/restaurants/search-restarants/search?search=searching&hello=now`)
+                const res = await axios.get(`${backend_url}/restaurant/restaurants/search-restaurants/search?${filterQuery}&search=${searchQuery}`)
                 if (res.data.success) {
                     setRestaurantData(res.data.hotel)
                 }
             } catch (error) {
-                toast.error(error)
+                toast.error(error.message)
             }
         }
         fetchRestaurantData()
-    }, [])
+    }, [filterQuery,searchQuery])
 
     return (
         <>
@@ -68,17 +86,21 @@ const RestaurantsPage = () => {
                         <div className="flex h-[100vh] mt-1">
 
                             <div className="w-[25%] h-full border-r rounded-md flex flex-col border-color3 bg-white shadow">
-                                <div className='mx-auto mt-8 p-[7px] border rounded-full w-[70%] flex border-color5'>
-                                    <MdOutlineSearch className="my-auto ml-1 mr-1 text-color5" size={20} />
-                                    <input
-                                        type="text"
-                                        className="outline-none text-color5 placeholder-color3"
-                                        placeholder="Enter restaurant name"
-                                    />
-                                </div>
+                                <form onSubmit={handleSearchSubmit}>
+                                    <div className='mx-auto mt-8 p-[7px] border rounded-full w-[80%] flex border-color5'>
+                                        <MdOutlineSearch className="my-auto ml-1 mr-1 text-color5" size={20} />
+                                        <input
+                                            type="text"
+                                            className="outline-none text-color5 placeholder-color3 w-full"
+                                            placeholder="Enter restaurant name"
+                                            onChange={handleSearchChange}
+                                            value={searchString}
+                                        />
+                                    </div>
+                                </form>
                                 <div className="w-[80%] h-[1px] bg-color2 mt-3 mx-auto"></div>
                                 <div className="bg-red w-[70%] mx-auto font-semibold text-color5 mt-3 text-xl">Filters</div>
-                                <FilterForms />
+                                <FilterForms setFilterQuery={setFilterQuery} />
                                 {/* <form className="w-[80%] mx-auto mt-5 border border-black">
                                     <div className="">
                                         <DoubleScrollBar 
@@ -104,21 +126,42 @@ const RestaurantsPage = () => {
     )
 }
 
-const FilterForms = () => {
+const FilterForms = ({ setFilterQuery }) => {
     const [minimumRating, setMinimumRating] = useState(0)
+    const [minimumTotalRating, setMinimumTotalRating] = useState(0)
+
+    const handleFilterApplyClick = () => {
+        setFilterQuery(`minrate=${encodeURIComponent(minimumRating / 10)}&mintotalrate=${encodeURIComponent(minimumTotalRating)}`)
+    }
+
+    const handleClearFilterClick = () => {
+        setMinimumRating(0)
+        setMinimumTotalRating(0)
+        setFilterQuery('minrate=0&mintotalrate=0')
+    }
+
     return (
         <>
-            <form className="w-[80%] mx-auto mt-5 border border-color5 rounded-md p-3">
+            <form className="w-[80%] mx-auto mt-2 border border-color5 rounded-md p-3">
                 <div className="flex flex-col w-[80%] mx-auto">
                     <div className="text-color5">
                         minimum rating: <span className="text-color5">{parseFloat(minimumRating / 10).toFixed(1)}</span>
                     </div>
-                    <OneWayScrollBar max={50} min={0} value={minimumRating} onChange={(e) => { setMinimumRating(e.target.value) }} />
+                    <OneWayScrollBar max={50} min={0} step={1} value={minimumRating} onChange={(e) => { setMinimumRating(e.target.value) }} />
+                    <div className="text-color5">
+                        minimum total review: <span className="text-color5">{parseInt(minimumTotalRating)}</span>
+                    </div>
+                    <OneWayScrollBar max={1000} min={0} step={10} value={minimumTotalRating} onChange={(e) => { setMinimumTotalRating(e.target.value) }} />
+
                     <div className="flex gap-1 mt-2">
-                        <div className="w-[50%] border p-1 text-center text-color4 border-color4 cursor-pointer transition-all hover:shadow">
+                        <div className="w-[50%] border p-1 text-center text-color4 border-color4 cursor-pointer transition-all hover:shadow"
+                            onClick={handleClearFilterClick}
+                        >
                             Clear Filter
                         </div>
-                        <div className="w-[50%] border p-1 text-center bg-color4 text-white cursor-pointer hover:bg-color5 transition-all hover:shadow">
+                        <div className="w-[50%] border p-1 text-center bg-color4 text-white cursor-pointer hover:bg-color5 transition-all hover:shadow"
+                            onClick={handleFilterApplyClick}
+                        >
                             Apply
                         </div>
                     </div>
@@ -129,7 +172,6 @@ const FilterForms = () => {
 }
 
 const RestaurantsShow = ({ restaurantData }) => {
-    console.log(restaurantData)
     return (
         <>
             <div className="m-3 ml-8 mr-8">
@@ -151,9 +193,9 @@ const RestaurantsShow = ({ restaurantData }) => {
 }
 
 const RestaurantCard = ({ item }) => {
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     return (
-        <div className="flex border-b border-color3 p-2 rounded-md cursor-pointer" onClick={()=>navigate(`/restaurant/${item._id}`)}>
+        <div className="flex border-b border-color3 p-2 rounded-md cursor-pointer" onClick={() => navigate(`/restaurant/${item._id}`)}>
             <div>
                 <img src={`${img_url}/${item.imgUrl}`} className="h-[90px] rounded-md shadow shadow-color4" />
             </div>

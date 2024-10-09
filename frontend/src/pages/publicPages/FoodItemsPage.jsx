@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useDispatch } from "react-redux";
 import HeaderPublic from "../../components/header/HeaderPublic";
-import { backend_url, img_url, theme_colors } from "../../server";
+import { backend_url, theme_colors } from "../../server";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { addUser } from "../../redux/reducers/user";
@@ -9,9 +9,9 @@ import { Command, CommandInput } from '../../components/ui/command'
 import { MdOutlineSearch } from "react-icons/md";
 import { DoubleScrollBar } from "../../components/customui/DoubleScrollBar";
 import { toast } from "react-toastify";
-import RatingShow from "../../components/customui/RatingShow";
+// import RatingShow from "../../components/customui/RatingShow";
+// import { useNavigate } from "react-router-dom";
 import OneWayScrollBar from "../../components/customui/OneWayScrollBar";
-import { useNavigate } from "react-router-dom";
 import FoodItemOpen from "../../components/restaurant/FoodItemOpen";
 
 const FoodItemsPage = () => {
@@ -22,6 +22,24 @@ const FoodItemsPage = () => {
     const [loading, setLoading] = useState(true)
 
     const [foodItemData, setFoodItemData] = useState([])
+
+    const [searchString, setSearchString] = useState()
+
+    const [searchQuery, setSearchQuery] = useState('')
+    const [filterQuery, setFilterQuery] = useState('minrate=0&mintotalrate=0')
+
+    const handleSearchChange = (e) => {
+        setSearchString(e.target.value)
+    }
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault()   
+        try {
+            setSearchQuery(`${searchString}`)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
         const userinfo = async () => {
@@ -49,7 +67,7 @@ const FoodItemsPage = () => {
     useEffect(() => {
         const fetchRestaurantData = async () => {
             try {
-                const res = await axios.get(`${backend_url}/restaurant/food-items/search-food-items/search?search=searching&hello=now`)
+                const res = await axios.get(`${backend_url}/restaurant/food-items/search-food-items/search?${filterQuery}&search=${searchQuery}`)
                 if (res.data.success) {
                     setFoodItemData(res.data.fooditem)
                 }
@@ -58,7 +76,7 @@ const FoodItemsPage = () => {
             }
         }
         fetchRestaurantData()
-    }, [])
+    }, [filterQuery,searchQuery])
 
     return (
         <>
@@ -69,17 +87,21 @@ const FoodItemsPage = () => {
                         <div className="flex h-[100vh] mt-1">
 
                             <div className="w-[25%] h-full border-r rounded-md flex flex-col border-color3 bg-white shadow">
-                                <div className='mx-auto mt-8 p-[7px] border rounded-full w-[70%] flex border-color5'>
+                            <form onSubmit={handleSearchSubmit}>
+                                <div className='mx-auto mt-8 p-[7px] border rounded-full w-[80%] flex border-color5'>
                                     <MdOutlineSearch className="my-auto ml-1 mr-1 text-color5" size={20} />
                                     <input
                                         type="text"
-                                        className="outline-none text-color5 placeholder-color3"
+                                        className="outline-none text-color5 placeholder-color3 w-full"
+                                        onChange={handleSearchChange}
+                                        value={searchString}
                                         placeholder="Enter food name"
                                     />
                                 </div>
+                                </form>
                                 <div className="w-[80%] h-[1px] bg-color2 mt-3 mx-auto"></div>
                                 <div className="bg-red w-[70%] mx-auto font-semibold text-color5 mt-3 text-xl">Filters</div>
-                                <FilterForms />
+                                <FilterForms setFilterQuery={setFilterQuery} />
                                 {/* <form className="w-[80%] mx-auto mt-5 border border-black">
                                     <div className="">
                                         <DoubleScrollBar 
@@ -105,21 +127,42 @@ const FoodItemsPage = () => {
     )
 }
 
-const FilterForms = () => {
+const FilterForms = ({setFilterQuery}) => {
     const [minimumRating, setMinimumRating] = useState(0)
+    const [minimumTotalRating, setMinimumTotalRating] = useState(0)
+
+    const handleFilterApplyClick = () => {
+        setFilterQuery(`minrate=${encodeURIComponent(minimumRating / 10)}&mintotalrate=${encodeURIComponent(minimumTotalRating)}`)
+    }
+
+    const handleClearFilterClick = () => {
+        setMinimumRating(0)
+        setMinimumTotalRating(0)
+        setFilterQuery('minrate=0&mintotalrate=0')
+    }
+
     return (
         <>
-            <form className="w-[80%] mx-auto mt-5 border border-color5 rounded-md p-3">
+            <form className="w-[80%] mx-auto mt-2 border border-color5 rounded-md p-3">
                 <div className="flex flex-col w-[80%] mx-auto">
                     <div className="text-color5">
                         minimum rating: <span className="text-color5">{parseFloat(minimumRating / 10).toFixed(1)}</span>
                     </div>
-                    <OneWayScrollBar max={50} min={0} value={minimumRating} onChange={(e) => { setMinimumRating(e.target.value) }} />
+                    <OneWayScrollBar max={50} min={0} step={1} value={minimumRating} onChange={(e) => { setMinimumRating(e.target.value) }} />
+                    <div className="text-color5">
+                        minimum total review: <span className="text-color5">{parseInt(minimumTotalRating)}</span>
+                    </div>
+                    <OneWayScrollBar max={1000} min={0} step={10} value={minimumTotalRating} onChange={(e) => { setMinimumTotalRating(e.target.value) }} />
+
                     <div className="flex gap-1 mt-2">
-                        <div className="w-[50%] border p-1 text-center text-color4 border-color4 cursor-pointer transition-all hover:shadow">
+                        <div className="w-[50%] border p-1 text-center text-color4 border-color4 cursor-pointer transition-all hover:shadow"
+                            onClick={handleClearFilterClick}
+                        >
                             Clear Filter
                         </div>
-                        <div className="w-[50%] border p-1 text-center bg-color4 text-white cursor-pointer hover:bg-color5 transition-all hover:shadow">
+                        <div className="w-[50%] border p-1 text-center bg-color4 text-white cursor-pointer hover:bg-color5 transition-all hover:shadow"
+                            onClick={handleFilterApplyClick}
+                        >
                             Apply
                         </div>
                     </div>

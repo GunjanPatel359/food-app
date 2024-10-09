@@ -85,9 +85,9 @@ const SellerSignupPage = () => {
     <>
     {!loading?(
     <div className='w-full flex m-auto justify-center h-[100vh]'>
-      <div className='lg:w-[30%] sm:w-[60%] flex m-auto justify-center border border-gray-500 p-8'>
+      <div className='lg:w-[30%] sm:w-[60%] flex m-auto justify-center border border-color3 shadow shadow-color0 p-8'>
         <div className='w-[250px]'>
-        <p className='text-center text-xl from-neutral-700 font-bold'>Sign Up</p>
+        <p className='text-center text-2xl font-bold text-color5'>Sign Up</p>
         <Form {...form} >
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-1'>
             <FormField
@@ -95,10 +95,10 @@ const SellerSignupPage = () => {
               name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Seller name</FormLabel>
+                  <FormLabel className="text-color5">Seller name</FormLabel>
                   <FormControl>
                     <Input placeholder='Enter your name' 
-                    className="rounded border border-gray-400 hover:border-gray-700"
+                    className="rounded border border-color2 hover:border-color5"
                      {...field} />
                   </FormControl>
                   <FormMessage className="text-red-600" />
@@ -110,10 +110,10 @@ const SellerSignupPage = () => {
               name='email'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email address</FormLabel>
+                  <FormLabel className="text-color5">Email address</FormLabel>
                   <FormControl>
                     <Input placeholder='Enter your email' 
-                    className="rounded border border-gray-400 hover:border-gray-700"
+                    className="rounded border border-color2 hover:border-color5"
                     {...field} />
                   </FormControl>
                   <FormMessage className="text-red-600" />
@@ -125,13 +125,13 @@ const SellerSignupPage = () => {
               name='password'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel className="text-color5">Password</FormLabel>
                   <FormControl>
                     <Input
                       type='password'
                       required
                       placeholder='Enter your password'
-                      className="rounded border border-gray-400 hover:border-gray-700"
+                      className="rounded border border-color2 hover:border-color5"
                       {...field}
                       />
                   </FormControl>
@@ -144,13 +144,13 @@ const SellerSignupPage = () => {
               name='confirmPassword'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel className="text-color5">Confirm Password</FormLabel>
                   <FormControl>
                     <Input
                       type='password'
                       required
                       placeholder='confirm password'
-                      className="rounded border border-gray-400 hover:border-gray-700"
+                      className="rounded border border-color2 hover:border-color5"
                       {...field}
                     />
                   </FormControl>
@@ -158,10 +158,10 @@ const SellerSignupPage = () => {
                 </FormItem>
               )}
             />
-            <Button type='submit' className="bg-gray-300 rounded  hover:bg-gray-200 py-0">Submit</Button>
+            <Button type='submit' className="bg-color3 rounded hover:bg-color4 py-0 w-full text-white">Submit</Button>
           </form>
         </Form>
-        <Link to="/seller/login" className='underline text-blue-900'>{`Already have an Account`}</Link>
+        <Link to="/seller/login" className='underline text-color4 hover:text-color5'>{`Already have an Account`}</Link>
         </div>
       </div>
     </div>

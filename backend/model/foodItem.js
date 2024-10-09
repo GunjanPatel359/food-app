@@ -24,7 +24,34 @@ const foodItemSchema=new mongoose.Schema({
     },
     avgreview:{
         type:Number,
-    },
+        default:0
+      },
+      totalReview:{
+        type:Number,
+        default:0
+      },
+      reviewCount:{
+        "1":{
+          type:Number,
+          default:0
+        },
+        "2":{
+          type:Number,
+          default:0
+        },
+        "3":{
+          type:Number,
+          default:0
+        },
+        "4":{
+          type:Number,
+          default:0
+        },
+        "5":{
+          type:Number,
+          default:0
+        },
+      },
     order:{
        type: Number
     },

@@ -16,7 +16,8 @@ import {
 import {
   RestaurantPage,
   RestaurantsPage,
-  FoodItemsPage
+  FoodItemsPage,
+  FoodItemPage
 } from "./routes/publicRoute.js"
 
 import {
@@ -49,6 +50,7 @@ function App() {
         <Route path='/restaurants' element={<RestaurantsPage/>} />
         <Route path='/food-items' element={<FoodItemsPage />} />
         <Route path='/restaurant/:hotelId' element={<RestaurantPage />} />
+        <Route path='/food-item/:foodItemId' element={<FoodItemPage />} />
       </Routes>
 
         <Routes>

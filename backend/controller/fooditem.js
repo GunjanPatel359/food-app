@@ -245,4 +245,17 @@ router.get('/getfooditem/table-user/:foodItemId',isAuthenticated,catchAsyncError
     }
 }))
 
+router.get('/:foodItemId/get-food-item',catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const {foodItemId}=req.params
+        if(!foodItemId){
+            return next(new ErrorHandler("Please provide food item id", 400))
+        }
+        const fooditem=await FoodItem.findOne({_id:foodItemId})
+        res.status(200).json({success:true,fooditem})
+    } catch (error) {
+        return next(new ErrorHandler(error.message,400))
+    }
+}))
+
 module.exports = router

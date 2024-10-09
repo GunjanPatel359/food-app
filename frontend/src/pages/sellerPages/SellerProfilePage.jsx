@@ -12,7 +12,6 @@ import { User } from 'lucide-react'
 import { BiPurchaseTagAlt } from "react-icons/bi";
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 
-// import SlideMenuVariant2 from '../../components/slidemenu/SlideMenuVariant2'
 import SellerInfo from '../../components/sellerprofile/SellerInfo'
 import SlideMenu from '../../components/slidemenu/SlideMenu'
 import SellerProfileHeader from '../../components/sellerprofile/SellerProfileHeader'
@@ -66,10 +65,14 @@ useEffect(() => {
     { icon:<LuSettings2 size={22} />,text:"settings",alert:false } 
   ]
 
+  console.log(theme)
+
+
   return (
     <div className={`theme-${theme}`}>
     {!loading ? (
       <>
+      <div>
       <SellerProfileHeader />
       
       <div className='flex w-full transition-all duration-1000'>
@@ -81,10 +84,10 @@ useEffect(() => {
           {select === 1 && <SellerResturantInfo/>}
           {select === 2 && <SellerSubscription/>}
           {select === 3 && <AdditionalSettingsSeller setTheme={setTheme} theme={theme} />}
-          {/* {select === 1 && <ProfileAddresses/>}  */}
         </div>
       </div>
       <SellerProfileModalProvider/>
+      </div>
     </>
     ):("") }
     </div>
@@ -92,13 +95,3 @@ useEffect(() => {
 }
 
 export default SellerProfilePage
-
-
-
-// import ProfileHeader from '../../components/profile/ProfileHeader'
-// import SlideMenu from '../../components/slidemenu/SlideMenu'
-// import ProfileInfo from '../../components/profile/ProfileInfo'
-// import { User } from 'lucide-react'
-// import { FaRegAddressBook } from 'react-icons/fa'
-// import ProfileAddresses from '../../components/profile/ProfileAddresses'
-// import { ProfileModalProvider } from '../../provider/ProfileModalProvider'

@@ -12,14 +12,14 @@ const Header = ({page}) => {
   const navigate=useNavigate()
   return (
     <div className='w-full'>
-      <div className='bg-gradient-to-tr from-rose-400 to-red-400 w-full'>
+      <div className='bg-gradient-to-tr from-color4 to-color5 w-full'>
         <div className='w-[80%] m-auto flex px-2 text-white h-[80px] justify-between'>
         <span className='flex text-4xl gap-x-4 cursor-pointer my-auto'>
           <IoFastFoodOutline size={40} color='white' />
           <span>Taste</span>
         </span>
         <span className='text-center items-center my-auto'>
-          <Command className='bg-white text-rose-600 rounded w-[300px]'>
+          <Command className='bg-white text-color5 rounded w-[300px]'>
             <CommandInput placeholder='Enter the shop or dish name' />
           </Command>
         </span>
@@ -37,7 +37,7 @@ const Header = ({page}) => {
             <>
             <span className='text-center items-center'>
           <Link to='/login'>
-            <Button className="text-lg hover:text-rose-100">
+            <Button className="text-lg hover:text-color1">
               SignIn
             </Button>
           </Link>/
@@ -59,22 +59,22 @@ const Header = ({page}) => {
       <span className=''>
         <ul className='flex gap-x-1 items-center text-center text-lg'>
           <Link to=''>
-            <Button className={`hover:text-rose-600 text-md rounded-[5px] transition duration-300 p-3 ${page==='home'?"text-rose-500":""}`}>
+            <Button className={`hover:text-color5 text-md rounded-[5px] transition duration-300 p-3 ${page==='home'?"text-color5":""}`}>
               Home
             </Button>
           </Link>
           <Link to='/restaurants'>
-            <Button className='hover:text-rose-600 text-md rounded-[5px] transition duration-300 p-3'>
+            <Button className='hover:text-color5 text-md rounded-[5px] transition duration-300 p-3'>
               Restaurants
             </Button>
           </Link>
           <Link to='food-items'>
-            <Button className='hover:text-rose-600 text-md rounded-[5px] transition duration-300 p-3'>
+            <Button className='hover:text-color5 text-md rounded-[5px] transition duration-300 p-3'>
               Dishes
             </Button>
           </Link>
           <Link to=''>
-            <Button className='hover:text-red-600 hover:bg-white text-md rounded-[5px] transition duration-300 p-3'>
+            <Button className='hover:text-color5 hover:bg-white text-md rounded-[5px] transition duration-300 p-3'>
               Contact Us
             </Button>
           </Link>

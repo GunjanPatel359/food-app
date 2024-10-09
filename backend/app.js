@@ -15,7 +15,8 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json())
 app.use("/",express.static("uploads"));
-socket.connect()
+// socket.connect()
+
 //config
 if(process.env.NODE_ENV !== "PRODUCTION"){
     require("dotenv").config({
@@ -34,6 +35,7 @@ const category=require("./controller/category");
 const fooditem=require("./controller/fooditem");
 const ordertable=require("./controller/ordertable");
 const foodorder=require("./controller/foodorder")
+const review=require("./controller/review")
 
 app.use("/api/v1/user",user)
 app.use("/api/v1/seller",seller)
@@ -45,9 +47,7 @@ app.use("/api/v1/category",category)
 app.use("/api/v1/fooditem",fooditem)
 app.use("/api/v1/order-table",ordertable)
 app.use("/api/v1/food-order",foodorder)
-
-
-
+app.use("/api/v1/review",review)
 
 app.use(ErrorHandler);
 

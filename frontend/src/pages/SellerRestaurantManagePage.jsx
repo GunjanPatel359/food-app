@@ -15,11 +15,11 @@ import RestaurantManageProvider from "../provider/RestaurantManageProvider";
 import ManageOrders from "../components/restaurantManage/ManageOrders";
 
 const SellerRestaurantManagePage = () => {
-    const Themes=useMemo(()=>theme_colors,[])
-    const [theme,setTheme]=useState(Themes[0]);
+    const Themes = useMemo(() => theme_colors, [])
+    const [theme, setTheme] = useState(Themes[0]);
 
-    const params=useParams()
-    const {hotelId}=params
+    const params = useParams()
+    const { hotelId } = params
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -28,21 +28,24 @@ const SellerRestaurantManagePage = () => {
 
 
 
-    useEffect(()=>{
-        const initiatePage=async()=>{
+    useEffect(() => {
+        const initiatePage = async () => {
+            setLoading(true)
             try {
-                const res=await axios.get(`${backend_url}/seller/gethoteldata/${hotelId}`,{withCredentials:true})
-                if(res.data.hotel.colors){
-                  if(Themes.includes(res.data.hotel.colors)){
-                    setTheme(res.data.hotel.colors)
-                  }
+                const res = await axios.get(`${backend_url}/seller/gethoteldata/${hotelId}`, { withCredentials: true })
+                if (res.data.hotel.colors) {
+                    if (Themes.includes(res.data.hotel.colors)) {
+                        setTheme(res.data.hotel.colors)
+                    }
                 }
             } catch (error) {
                 toast.error("Somthing went wrong")
+            }finally{
+                setLoading(false)
             }
         }
         initiatePage()
-    },[Themes, hotelId])
+    }, [Themes, hotelId])
 
     useEffect(() => {
         const userinfo = async () => {
@@ -67,10 +70,11 @@ const SellerRestaurantManagePage = () => {
                 setLoading(false)
             }
         }
-        const memberInfo=async()=>{
+        
+        const memberInfo = async () => {
             setLoading(true)
             try {
-                const response=await axios.get(`${backend_url}/member/${hotelId}/ismember`,{withCredentials:true})
+                const response = await axios.get(`${backend_url}/member/${hotelId}/ismember`, { withCredentials: true })
                 if (response.data.data) {
                     return
                 }
@@ -78,34 +82,43 @@ const SellerRestaurantManagePage = () => {
             } catch (error) {
                 navigate('/seller/login')
                 toast.error(error)
-            }finally{
+            } finally {
                 setLoading(false)
             }
         }
+
         userinfo()
         memberInfo()
-    }, [dispatch, navigate,hotelId])
+    }, [dispatch, navigate, hotelId])
 
     const menuItemList = [
         { icon: <MdOutlineTableBar size={22} />, text: "Table", alert: false },
         { icon: <ImSpoonKnife size={22} />, text: "Order", alert: false },
     ]
 
-    return (
-        <div className={`theme-${theme}`}>
-            <SellerProfileHeader />
-            <div className='flex w-full transition-all duration-1000'>
+    console.log(theme)
 
-                <SlideMenu select={select} setSelected={setSelected} menuItemList={menuItemList} />
-
-                <div className='w-full'>
-                    {select === 0 && <OrderTables />} 
-                    {select === 1 && <ManageOrders />} 
-                </div>
-            </div>
-            <RestaurantManageProvider theme={theme} />
+     return (
+        <div className={`theme-${theme}`} key={theme}>
+            {!loading ? (
+                <>
+                    <SellerProfileHeader />
+                    <div className='flex w-full transition-all duration-1000'>
+                        <SlideMenu select={select} setSelected={setSelected} menuItemList={menuItemList} />
+                        <div className='w-full'>
+                            {select === 0 && <OrderTables />}
+                            {select === 1 && <ManageOrders />}
+                        </div>
+                    </div>
+                    <RestaurantManageProvider theme={theme} />
+                </>
+            ) : (
+            <>
+            </>
+                // <LoadingSpinner /> // Optional loading component
+            )}
         </div>
-    )
-}
+    );
+};
 
 export default SellerRestaurantManagePage

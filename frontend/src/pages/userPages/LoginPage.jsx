@@ -15,8 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../../redux/reducers/user";
 
-import { GoogleLogin } from '@react-oauth/google';
-
 const LoginPage = () => {
   const {user}=useSelector((state)=>state.user);
   const dispatch=useDispatch()
@@ -64,19 +62,12 @@ const LoginPage = () => {
     }
   }
 
-  const responseMessage = (response) => {
-    console.log(response);
-};
-const errorMessage = (error) => {
-    console.log(error);
-};
-
   return (
     <>
     {!loading?(
       <div className="min-w-screen min-h-screen items-center justify-center flex">
-      <div className="w-[470px] m-auto justify-center items-center flex flex-col gap-3 border-e-blue-50 border py-[90px]">
-        <h1 className="text-[30px] font-[600]">Login In</h1>
+      <div className="w-[470px] m-auto justify-center items-center flex flex-col gap-3 shadow shadow-color0 border border-color3 py-[90px]">
+        <h1 className="text-[30px] font-[600] text-color4">Login In</h1>
         <form className="flex flex-col gap-4 justify-center" onSubmit={handleSubmit}>
           <TextField value={email} type="email" label="email" variant="outlined" className="w-[250px]" onChange={(e) => setEmail(e.target.value)} required />
           <div className="relative">
@@ -99,7 +90,6 @@ const errorMessage = (error) => {
           <Button variant="contained" type="submit">Login In</Button>
         </form>
         <Link href="/sign-up"><p className="text-[15px]">{`Don't have an Account`}</p></Link>
-        <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
       </div>
     </div>):("")}
     </>
