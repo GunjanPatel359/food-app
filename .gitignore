@@ -1,3 +1,4 @@
 backend/config/.env
+backend/config/sample.env
 node_modules
 uploads
