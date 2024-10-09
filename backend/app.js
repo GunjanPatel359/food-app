@@ -7,7 +7,7 @@ const socket=require("./utils/socket")
 
 const cors = require("cors")
 app.use(cors({
-    origin:"http://localhost:5174",
+    origin: ["http://localhost:5174","https://food-app-ixbg-gunjan-patels-projects.vercel.app", "https://food-app-ixbg-git-main-gunjan-patels-projects.vercel.app"],
     credentials:true
 }))
 app.use(express.json())

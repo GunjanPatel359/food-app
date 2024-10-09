@@ -57,7 +57,7 @@ router.post("/create-seller", catchAsyncErrors(async (req, res, next) => {
                 to: seller.email, 
                 from: process.env.SMTP_MAIL, 
                 subject: "Account Activation",
-                html: `<a href="http://localhost:5174/seller/activation/${token}">Click on the link to activate your seller account</a>`
+                html: `<a href="https://food-app-ixbg-gunjan-patels-projects.vercel.app/seller/activation/${token}">Click on the link to activate your seller account</a>`
               }
               await sgMail.send(msg)
 
