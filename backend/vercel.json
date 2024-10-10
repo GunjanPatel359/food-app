@@ -6,6 +6,12 @@
     ],
     "routes": [
        { "src": "/(.*)", "dest": "/server.js" }
-    ]
+    ],
+    "rewrites": [
+    {
+      "source": "/",
+      "destination": "https://food-app-ixbg.vercel.app"
+    }
+  ]
  }
 
