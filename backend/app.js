@@ -8,7 +8,9 @@ const socket=require("./utils/socket")
 const cors = require("cors")
 app.use(cors({
     origin: ["http://localhost:5174","https://food-app-ixbg.vercel.app"],
-    credentials:true
+    credentials:true,
+    methods:['GET','POST','PATCH','DELETE'],
+    exposedHeaders:["set-cookie"]
 }))
 app.use(express.json())
 app.use(cookieParser())

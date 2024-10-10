@@ -5,7 +5,7 @@ const sendToken =async(user,statusCode,res,msg,rest)=>{
         httpOnly:true,
         secure: true,
         httpOnly:true,
-        sameSite: 'None'   
+        sameSite: 'none'   
     };
     res.status(statusCode).cookie("token",token,options).json({
         success:true,
