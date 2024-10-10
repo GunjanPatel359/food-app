@@ -72,7 +72,7 @@ router.post("/create-user", catchAsyncErrors(async (req, res, next) => {
         }
         return next(new ErrorHandler("provide all the detils", 400))
     } catch (error) {
-        console.log(error)
+        console.log(error.response.body.errors)
         return next(new ErrorHandler(error.message, 400));
     }
 }))
