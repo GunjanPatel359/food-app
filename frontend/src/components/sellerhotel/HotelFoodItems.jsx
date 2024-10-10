@@ -17,7 +17,7 @@ const HotelFoodItems = () => {
     useEffect(() => {
         const initiatePage = async () => {
             try {
-                const roleinfo = await axios.get(`${backend_url}/role//memberrole-info/${hotelId}`, { withCredentials: true })
+                const roleinfo = await axios.get(`${backend_url}/role/memberrole-info/${hotelId}`, { withCredentials: true })
                 if (roleinfo.data.success) {
                     setRole(roleinfo.data.role)
                 }
