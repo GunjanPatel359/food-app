@@ -113,16 +113,21 @@ router.post('/login', catchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler("Please provide the correct information", 400))
         }
         const seller_token = await seller.getJwtToken()
-        const options = {
+        // const options = {
+        //     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+        //     httpOnly: true,
+        //     secure: true,
+        //     sameSite: 'None' 
+        // };
+        res.status(200).cookie("seller_token", seller_token, {
             expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             secure: true,
             sameSite: 'None'
-        };
-        res.status(200).cookie("seller_token", seller_token, options).json({
+        }).json({
             success: true,
             message: "logged in successfully",
-            token
+            seller_token
         })
     } catch (err) {
         return next(new ErrorHandler(err.message, 400))
