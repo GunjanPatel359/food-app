@@ -61,7 +61,7 @@ router.post("/create-user", catchAsyncErrors(async (req, res, next) => {
                 to: user.email, 
                 from: process.env.SMTP_MAIL, 
                 subject: "Account Activation",
-                html: `<a href="https://food-app-ixbg-gunjan-patels-projects.vercel.app/user/activation/${token}">Click on the link to activate your account</a>`
+                html: `<a href="https://food-app-ixbg.vercel.app/user/activation/${token}">Click on the link to activate your account</a>`
               }
               await sgMail.send(msg)
 
