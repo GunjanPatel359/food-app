@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+  }
+  
+*{
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+  }
+
+/* rose50  #fff1f2
+rose100 #ffe4e6
+rose200 #fecdd3
+rose300 #fda4af
+rose400 #fb7185
+rose500 #f43f5e
+rose600 #e11d48
+rose700 #be123c
+rose800 #9f1239
+rose900 #881337
+rose950 #4c0519 */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* input[type="number"] {
+  -moz-appearance: textfield   
+} */

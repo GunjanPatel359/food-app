@@ -1,0 +1,26 @@
+{
+    "version": 2,
+    "name": "food-app",
+    "builds": [
+       { "src": "server.js", "use": "@vercel/node" }
+    ],
+    "routes": [
+       { "src": "/(.*)", "dest": "/server.js" }
+    ],
+    "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://food-app-ixbg.vercel.app"
+        },
+        {
+          "key": "Access-Control-Allow-Credentials",
+          "value": "true"
+        }
+      ]
+    }
+  ]
+ }
+
