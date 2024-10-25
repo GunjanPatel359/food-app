@@ -33,7 +33,7 @@ const FoodItemsPage = () => {
     }
 
     const handleSearchSubmit = (e) => {
-        e.preventDefault()   
+        e.preventDefault()
         try {
             setSearchQuery(`${searchString}`)
         } catch (error) {
@@ -76,7 +76,7 @@ const FoodItemsPage = () => {
             }
         }
         fetchRestaurantData()
-    }, [filterQuery,searchQuery])
+    }, [filterQuery, searchQuery])
 
     return (
         <>
@@ -84,23 +84,23 @@ const FoodItemsPage = () => {
                 <>
                     <div className={`theme-${theme}`}>
                         <HeaderPublic page='home' />
-                        <div className="flex h-[100vh] mt-1">
+                        <div className="flex h-[100vh] mt-1 flex-col md:flex-row">
 
-                            <div className="w-[25%] h-full border-r rounded-md flex flex-col border-color3 bg-white shadow">
-                            <form onSubmit={handleSearchSubmit}>
-                                <div className='mx-auto mt-8 p-[7px] border rounded-full w-[80%] flex border-color5'>
-                                    <MdOutlineSearch className="my-auto ml-1 mr-1 text-color5" size={20} />
-                                    <input
-                                        type="text"
-                                        className="outline-none text-color5 placeholder-color3 w-full"
-                                        onChange={handleSearchChange}
-                                        value={searchString}
-                                        placeholder="Enter food name"
-                                    />
-                                </div>
+                            <div className="lg:w-[25%] lg:min-w-[330px] md:min-w-[280px] h-full border-r rounded-md md:flex flex-col border-color3 bg-white shadow hidden">
+                                <form onSubmit={handleSearchSubmit}>
+                                    <div className='mx-auto mt-8 p-[7px] border rounded-full lg:w-[80%] md:w-[85%] flex border-color5'>
+                                        <MdOutlineSearch className="my-auto ml-1 mr-1 text-color5" size={20} />
+                                        <input
+                                            type="text"
+                                            className="outline-none text-color5 placeholder-color3 w-full"
+                                            onChange={handleSearchChange}
+                                            value={searchString}
+                                            placeholder="Enter food name"
+                                        />
+                                    </div>
                                 </form>
-                                <div className="w-[80%] h-[1px] bg-color2 mt-3 mx-auto"></div>
-                                <div className="bg-red w-[70%] mx-auto font-semibold text-color5 mt-3 text-xl">Filters</div>
+                                <div className="lg:w-[80%] md:w-[85%] h-[1px] bg-color2 mt-3 mx-auto"></div>
+                                <div className="bg-red lg:w-[70%] md:w-[80%] mx-auto font-semibold text-color5 mt-3 text-xl">Filters</div>
                                 <FilterForms setFilterQuery={setFilterQuery} />
                                 {/* <form className="w-[80%] mx-auto mt-5 border border-black">
                                     <div className="">
@@ -115,7 +115,22 @@ const FoodItemsPage = () => {
                                 </form> */}
                             </div>
 
-                            <div className="w-[75%] h-full">
+                            <div className="md:hidden">
+                            <form onSubmit={handleSearchSubmit} className="w-[90%] mx-auto">
+                                    <div className='mx-auto mt-3 p-[7px] border rounded-full lg:w-[80%] md:w-[85%] flex border-color5'>
+                                        <MdOutlineSearch className="my-auto ml-1 mr-1 text-color5" size={20} />
+                                        <input
+                                            type="text"
+                                            className="outline-none text-color5 placeholder-color3 w-full"
+                                            onChange={handleSearchChange}
+                                            value={searchString}
+                                            placeholder="Enter food name"
+                                        />
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div className="w-full h-full">
                                 <FoodItemsShow foodItemData={foodItemData} />
                             </div>
                         </div>
@@ -127,7 +142,7 @@ const FoodItemsPage = () => {
     )
 }
 
-const FilterForms = ({setFilterQuery}) => {
+const FilterForms = ({ setFilterQuery }) => {
     const [minimumRating, setMinimumRating] = useState(0)
     const [minimumTotalRating, setMinimumTotalRating] = useState(0)
 
@@ -143,8 +158,8 @@ const FilterForms = ({setFilterQuery}) => {
 
     return (
         <>
-            <form className="w-[80%] mx-auto mt-2 border border-color5 rounded-md p-3">
-                <div className="flex flex-col w-[80%] mx-auto">
+            <form className="lg:w-[80%] md:w-[85%] mx-auto mt-2 border border-color5 rounded-md p-3">
+                <div className="flex flex-col lg:w-[80%] md:w-[90%] mx-auto">
                     <div className="text-color5">
                         minimum rating: <span className="text-color5">{parseFloat(minimumRating / 10).toFixed(1)}</span>
                     </div>
@@ -176,7 +191,7 @@ const FoodItemsShow = ({ foodItemData }) => {
     console.log(foodItemData)
     return (
         <>
-            <div className="m-3 ml-8 mr-8">
+            <div className="m-3 lg:mx-8 md:mx-4">
                 <div className="text-2xl font-semibold text-color5">
                     Food Items
                 </div>

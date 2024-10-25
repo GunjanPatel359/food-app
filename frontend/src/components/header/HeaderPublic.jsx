@@ -13,16 +13,16 @@ const HeaderPublic = () => {
   return (
     <div className='w-full shadow-md border-b border-color0'>
       <div className='bg-gradient-to-tr from-color4 to-color5 w-full'>
-        <div className='w-[80%] m-auto flex px-2 text-white h-[80px] justify-between'>
+        <div className='md:w-[80%] sm:w-[90%] m-auto flex px-2 text-white h-[80px] justify-between'>
         <span className='flex text-4xl gap-x-4 cursor-pointer my-auto' onClick={()=>navigate('/')}>
           <IoFastFoodOutline size={40} color='white' />
           <span>Taste</span>
         </span>
-        <span className='text-center items-center my-auto'>
+        {/* <span className='text-center items-center my-auto'>
           <Command className='bg-white text-color5 rounded w-[300px]'>
             <CommandInput placeholder='Enter the shop or dish name' />
           </Command>
-        </span>
+        </span> */}
         {
           user.user?(<>
           {user.user?.avatar ? (

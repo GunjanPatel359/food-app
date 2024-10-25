@@ -32,7 +32,7 @@ const RestaurantsPage = () => {
     }
 
     const handleSearchSubmit = (e) => {
-        e.preventDefault()   
+        e.preventDefault()
         try {
             setSearchQuery(`${searchString}`)
         } catch (error) {
@@ -75,7 +75,7 @@ const RestaurantsPage = () => {
             }
         }
         fetchRestaurantData()
-    }, [filterQuery,searchQuery])
+    }, [filterQuery, searchQuery])
 
     return (
         <>
@@ -196,8 +196,8 @@ const RestaurantCard = ({ item }) => {
     const navigate = useNavigate()
     return (
         <div className="flex border-b border-color3 p-2 rounded-md cursor-pointer" onClick={() => navigate(`/restaurant/${item._id}`)}>
-            <div>
-                <img src={`${img_url}/${item.imgUrl}`} className="h-[90px] rounded-md shadow shadow-color4" />
+            <div className="h-[90px] overflow-hidden shadow shadow-color4 rounded-md shadow-inner-custom">
+                <img className="h-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-110 rounded-md cursor-pointer" src={`${img_url}/${item.imgUrl}`} />
             </div>
             <div className="ml-3">
                 <div className="text-lg text-color5 font-semibold">

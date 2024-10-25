@@ -7,14 +7,13 @@ import Tooltip from '../customui/Tooltip'
 
 const FoodItemOpen = ({ item }) => {
   console.log(item)
-  const navigate=useNavigate()
+  const navigate = useNavigate()
   return (
-    <div className='p-2 bg-white border-b border-color2 cursor-pointer' onClick={()=>navigate(`/food-item/${item._id}`)}>
+    <div className='p-2 bg-white border-b border-color2 cursor-pointer' onClick={() => navigate(`/food-item/${item._id}`)}>
       <div className='flex transition-all'>
-        <img
-          src={`${img_url}/${item.imageUrl}`}
-          className='h-[80px] rounded shadow shadow-color3'
-        />
+        <div className="h-[90px] overflow-hidden shadow shadow-color4 rounded-md shadow-inner-custom">
+          <img className="h-full object-cover transition-transform duration-500 ease-in-out transform hover:scale-110 rounded-md cursor-pointer" src={`${img_url}/${item.imageUrl}`} />
+        </div>
         <div className='ml-2 w-full'>
           <div className='flex justify-between w-full'>
             <div className='text-xl text-color5 font-semibold flex'>
@@ -42,10 +41,10 @@ const FoodItemOpen = ({ item }) => {
           </div>
           <div className='flex'>
             <RatingShow ratingCount={item.avgreview} maxRatingCount={5} size={18} />
-                    <span className="ml-1 text-color5 text-md"> {parseFloat(item.avgreview).toFixed(1)}/5</span>
-                    <span className="bg-color5 border-1 border-color4 p-1 px-3 rounded-full text-xs text-white ml-1">{item.totalReview.toString().length < 4
-                        ? `${'0'.repeat(4 - item.totalReview.toString().length)}${item.totalReview}`
-                        : item.totalReview}</span>
+            <span className="ml-1 text-color5 text-md"> {parseFloat(item.avgreview).toFixed(1)}/5</span>
+            <span className="bg-color5 border-1 border-color4 p-1 px-3 rounded-full text-xs text-white ml-1">{item.totalReview.toString().length < 4
+              ? `${'0'.repeat(4 - item.totalReview.toString().length)}${item.totalReview}`
+              : item.totalReview}</span>
           </div>
         </div>
       </div>
