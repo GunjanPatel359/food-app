@@ -90,6 +90,14 @@ const hotelSchema = new mongoose.Schema({
   colors:{
     type:String,
   },
+  orderCancelLimit:{
+    type:Number,
+    default:0
+  },
+  orderCancelCount:{
+    type:Number,
+    default:0
+  },
   // orderLimit:{
   //   type:Number,
   //   default:500,

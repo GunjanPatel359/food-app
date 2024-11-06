@@ -9,6 +9,11 @@ const OrderTableLogsSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Hotel"
     },
+    orderStatus:{
+        type:String,
+        enum:["Completed","Cancelled"],
+        default:"Completed"
+    },
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"

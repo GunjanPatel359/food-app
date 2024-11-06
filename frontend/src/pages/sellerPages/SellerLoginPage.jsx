@@ -20,6 +20,7 @@ import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { setCookie } from '../../lib/setCookie'
 
 const SellerLoginPage = () => {
   const [loading,setLoading]=useState(false);
@@ -64,6 +65,7 @@ const SellerLoginPage = () => {
         if(res.data.success){
           toast.success(res.data.message)
           // dispatch(sellerLogin(res.data.seller))
+          setCookie("seller_token",res.data.seller_token,1,true)
           form.reset()
           navigate("/seller/profile")
         }

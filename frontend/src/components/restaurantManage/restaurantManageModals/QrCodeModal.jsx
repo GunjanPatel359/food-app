@@ -27,7 +27,7 @@ const QrCodeModal = ({theme}) => {
       }
     }
     const initiatQr=async(memberId)=>{
-        setQrCodeString(`http://localhost:5174/user/restaurant/${hotelId}/qrcode/${data.QrCodeSetUserTable._id}/${data.QrCodeSetUserTable.randomString}/${memberId}`)
+        setQrCodeString(`http://localhost:5173/user/restaurant/${hotelId}/qrcode/${data.QrCodeSetUserTable._id}/${data.QrCodeSetUserTable.randomString}/${memberId}`)
     }
     if(data && data?.QrCodeSetUserTable){
         findMember()

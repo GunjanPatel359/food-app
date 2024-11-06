@@ -252,8 +252,8 @@ router.get('/restaurants/search-restaurants/search', catchAsyncErrors(async (req
 
 router.get('/food-items/search-food-items/search',catchAsyncErrors(async(req,res,next)=>{
     try {
-        const { minrate, mintotalrate,search } = req.query;
-
+        const { minrate, mintotalrate,search,minPrice,maxPrice } = req.query;
+        console.log(minrate,mintotalrate,search,minPrice,maxPrice)
         //min total rating
         let ratingCondition = {};
         if (minrate) {

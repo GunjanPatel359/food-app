@@ -336,6 +336,12 @@ router.get('/:hotelId/back-to-available/:orderTableId', isSellerAuthenticated, c
         if (!table) {
             return next(new ErrorHandler("table not found", 400))
         }
+        const hotel=await Hotel.findOne({
+            _id:hotelId
+        })
+        if(hotel.orderCancelCount>=hotel.orderCancelLimit){
+            return next(new ErrorHandler("hotel order cancel limit reached", 400))
+        }
         if (table.status != "Available") {
             const ordertablelog = await OrderTableLogs.create({
                 orderTableId: table._id,
@@ -344,6 +350,7 @@ router.get('/:hotelId/back-to-available/:orderTableId', isSellerAuthenticated, c
                 orders: table.orders,
                 memberId: table.memberId,
                 offline: table.offline,
+                orderStatus: "Cancelled"
             })
         }
         const assignTable = await OrderTable.findOneAndUpdate({
