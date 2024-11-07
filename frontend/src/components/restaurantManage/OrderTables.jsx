@@ -143,7 +143,7 @@ const OccupiedTableBox = ({ table,hotelId }) => {
                 <div className="text-color5"><span className="text-color5 font-semibold">Status:</span> {table.status}</div>
                 <div className="text-color5"><span className="text-color5 font-semibold">Seats:</span> {table.seats}</div>
                 <button className="bg-color5 w-full rounded p-1 text-white mt-2 shadow hover:opacity-90 transition-all" onClick={()=>navigate(`/seller/restaurant/${hotelId}/ordertable/${table._id}`)}>View Orders</button>
-                <button className="bg-white text-color5 p-1 mt-1 border border-color5 rounded shadow" onClick={()=>onOpen("back-to-available",{backToAvailable:table})}>Cancel Order</button>
+                <button className="bg-white text-color5 p-1 mt-1 border border-color5 rounded shadow" onClick={()=>onOpen("back-to-available",{backToAvailable:table})}>Cancel Booking</button>
             </div>
         </>
     )

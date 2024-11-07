@@ -98,6 +98,16 @@ const hotelSchema = new mongoose.Schema({
     type:Number,
     default:0
   },
+  orderHistory:{
+    type:[mongoose.Schema.Types.ObjectId],
+    ref:"OrderTableLogs"
+  },
+  hotelGSTTax:{
+    type:Number,
+  },
+  hotelServiceTax:{
+    type:Number,
+  },
   // orderLimit:{
   //   type:Number,
   //   default:500,

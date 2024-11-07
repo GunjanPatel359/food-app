@@ -92,7 +92,7 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
     >
       {icon}
       <span
-        className={`overflow-hidden transition-all duration-1000  ${
+        className={`overflow-hidden transition-all duration-1000 whitespace-nowrap  ${
           expanded ? 'w-52 ml-3' : 'w-0'
         } ${active?"text-white":"text-color5"}`}
       >
@@ -114,7 +114,7 @@ export function SidebarItem ({ item, expanded,active,setSelected,index }) {
           text-sm
           invisible opacity-20 -translate-x-3 transition-all duration-200
           group-hover:visible group-hover:opacity-100 group-hover:translate-x-0
-          z-10
+          z-10 over whitespace-nowrap
           ${active?"bg-color5 text-white":"bg-color0"}
       `}
         >

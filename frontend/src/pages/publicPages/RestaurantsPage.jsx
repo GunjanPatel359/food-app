@@ -5,13 +5,11 @@ import { backend_url, img_url, theme_colors } from "../../server";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { addUser } from "../../redux/reducers/user";
-import { Command, CommandInput } from '../../components/ui/command'
-import { MdOutlineSearch } from "react-icons/md";
-import { DoubleScrollBar } from "../../components/customui/DoubleScrollBar";
 import { toast } from "react-toastify";
 import RatingShow from "../../components/customui/RatingShow";
 import OneWayScrollBar from "../../components/customui/OneWayScrollBar";
 import { useNavigate } from "react-router-dom";
+import { MdOutlineSearch } from "react-icons/md";
 
 const RestaurantsPage = () => {
     const dispatch = useDispatch()
@@ -22,23 +20,9 @@ const RestaurantsPage = () => {
 
     const [restaurantData, setRestaurantData] = useState([])
 
-    const [searchString, setSearchString] = useState()
-
     const [searchQuery, setSearchQuery] = useState('')
     const [filterQuery, setFilterQuery] = useState('minrate=0&mintotalrate=0')
 
-    const handleSearchChange = (e) => {
-        setSearchString(e.target.value)
-    }
-
-    const handleSearchSubmit = (e) => {
-        e.preventDefault()
-        try {
-            setSearchQuery(`${searchString}`)
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
     useEffect(() => {
         const userinfo = async () => {
@@ -83,11 +67,10 @@ const RestaurantsPage = () => {
                 <>
                     <div className={`theme-${theme}`}>
                         <HeaderPublic page='home' />
-                        <div className="flex h-[100vh] mt-1">
+                        <div className="flex h-[100vh] mt-1 flex-col md:flex-row">
 
-                            <div className="w-[25%] h-full border-r rounded-md flex flex-col border-color3 bg-white shadow">
-                                <form onSubmit={handleSearchSubmit}>
-                                    <div className='mx-auto mt-8 p-[7px] border rounded-full w-[80%] flex border-color5'>
+                            <div className="lg:w-[25%] lg:min-w-[330px] md:min-w-[300px] h-full border-r rounded-md md:flex flex-col border-color3 bg-white shadow hidden">
+                                    {/* <div className='mx-auto mt-8 p-[7px] border rounded-full w-[80%] flex border-color5'>
                                         <MdOutlineSearch className="my-auto ml-1 mr-1 text-color5" size={20} />
                                         <input
                                             type="text"
@@ -96,11 +79,13 @@ const RestaurantsPage = () => {
                                             onChange={handleSearchChange}
                                             value={searchString}
                                         />
+                                    </div> */}
+                                    <div className="p-2">
+                                        <Filter setFilterQuery={setFilterQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                                     </div>
-                                </form>
-                                <div className="w-[80%] h-[1px] bg-color2 mt-3 mx-auto"></div>
+                                {/* <div className="w-[80%] h-[1px] bg-color2 mt-3 mx-auto"></div>
                                 <div className="bg-red w-[70%] mx-auto font-semibold text-color5 mt-3 text-xl">Filters</div>
-                                <FilterForms setFilterQuery={setFilterQuery} />
+                                <FilterForms setFilterQuery={setFilterQuery} /> */}
                                 {/* <form className="w-[80%] mx-auto mt-5 border border-black">
                                     <div className="">
                                         <DoubleScrollBar 
@@ -114,7 +99,7 @@ const RestaurantsPage = () => {
                                 </form> */}
                             </div>
 
-                            <div className="w-[75%] h-full">
+                            <div className="w-full h-full">
                                 <RestaurantsShow restaurantData={restaurantData} />
                             </div>
                         </div>
@@ -126,50 +111,80 @@ const RestaurantsPage = () => {
     )
 }
 
-const FilterForms = ({ setFilterQuery }) => {
-    const [minimumRating, setMinimumRating] = useState(0)
-    const [minimumTotalRating, setMinimumTotalRating] = useState(0)
+const Filter = ({ setFilterQuery,searchQuery,setSearchQuery }) => {
+
+    const [minRating, setMinRating] = useState(0);
+    const [minRatingCount, setMinRatingCount] = useState(0);
+
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value)
+    };
+
+    const handleMinRatingChange = (e) => {
+        setMinRating(e.target.value);
+    };
+
+    const handleMinRatingCountChange = (e) => {
+        setMinRatingCount(e.target.value);
+    };
 
     const handleFilterApplyClick = () => {
-        setFilterQuery(`minrate=${encodeURIComponent(minimumRating / 10)}&mintotalrate=${encodeURIComponent(minimumTotalRating)}`)
+        applyFilters();
     }
 
-    const handleClearFilterClick = () => {
-        setMinimumRating(0)
-        setMinimumTotalRating(0)
+    const applyFilters = () => {
+        console.log(`minrate=${encodeURIComponent(minRating)}&mintotalrate=${encodeURIComponent(minRatingCount)}`)
+        setFilterQuery(`minrate=${encodeURIComponent(minRating)}&mintotalrate=${encodeURIComponent(minRatingCount)}`);
+    };
+
+    const handleClearFilterClick = ()=>{
+        setSearchQuery('')
+        setMinRating(0)
+        setMinRatingCount(0)
         setFilterQuery('minrate=0&mintotalrate=0')
     }
 
     return (
-        <>
-            <form className="w-[80%] mx-auto mt-2 border border-color5 rounded-md p-3">
-                <div className="flex flex-col w-[80%] mx-auto">
-                    <div className="text-color5">
-                        minimum rating: <span className="text-color5">{parseFloat(minimumRating / 10).toFixed(1)}</span>
-                    </div>
-                    <OneWayScrollBar max={50} min={0} step={1} value={minimumRating} onChange={(e) => { setMinimumRating(e.target.value) }} />
-                    <div className="text-color5">
-                        minimum total review: <span className="text-color5">{parseInt(minimumTotalRating)}</span>
-                    </div>
-                    <OneWayScrollBar max={1000} min={0} step={10} value={minimumTotalRating} onChange={(e) => { setMinimumTotalRating(e.target.value) }} />
+        <div className="flex flex-col gap-2 p-4 bg-white">
+            <div className="px-2 py-2 border border-color3 rounded-md  focus:border-color5 text-color5 flex">
+            <MdOutlineSearch className="my-auto translate-y-[2px] mr-1 text-color5" size={25} />
+            <input
+                type="text"
+                placeholder="Search by name"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="placeholder:text-color3 text-color5 focus:outline-none"
+            />
+            </div>
+            <div className="h-[2px] w-full bg-color4 rounded-full"></div>
+            <div className="text-xl font-semibold text-color5">Filter</div>
 
-                    <div className="flex gap-1 mt-2">
-                        <div className="w-[50%] border p-1 text-center text-color4 border-color4 cursor-pointer transition-all hover:shadow"
-                            onClick={handleClearFilterClick}
-                        >
-                            Clear Filter
-                        </div>
-                        <div className="w-[50%] border p-1 text-center bg-color4 text-white cursor-pointer hover:bg-color5 transition-all hover:shadow"
-                            onClick={handleFilterApplyClick}
-                        >
-                            Apply
-                        </div>
-                    </div>
+            <label className="text-color5 font-semibold">Min Rating: <span className="ml-2 font-normal">{minRating}/5</span></label>
+            <div className="flex flex-col lg:w-[80%] md:w-[100%] mx-auto">
+                <OneWayScrollBar min={0} max={5} step={0.1} value={minRating} onChange={handleMinRatingChange} />
+            </div>
+
+            <label className=" text-color5 font-semibold">Min Rating Count: <span className="ml-2 font-normal">{minRatingCount}</span></label>
+            <div className="flex flex-col lg:w-[80%] md:w-[100%] mx-auto">
+                <OneWayScrollBar min={0} max={500} step={1} value={minRatingCount} onChange={handleMinRatingCountChange} />
+            </div>
+            <div className="flex gap-1 mt-2">
+                <div className="w-[50%] border p-1 text-center text-color4 border-color4 cursor-pointer transition-all hover:shadow"
+                onClick={handleClearFilterClick}
+                >
+                    Clear Filter
                 </div>
-            </form>
-        </>
-    )
-}
+                <div className="w-[50%] border p-1 text-center bg-color4 text-white cursor-pointer hover:bg-color5 transition-all hover:shadow"
+                    onClick={handleFilterApplyClick}
+                >
+                    Apply
+                </div>
+            </div>
+            <div className="h-[2px] w-full bg-color4 rounded-full"></div>
+        </div>
+    );
+};
+
 
 const RestaurantsShow = ({ restaurantData }) => {
     return (

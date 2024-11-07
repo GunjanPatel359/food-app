@@ -18,6 +18,7 @@ import { socket } from "../socket"
 import SelectInput from "../components/customui/SelectInput"
 import { DoubleScrollBar } from "../components/customui/DoubleScrollBar"
 import OneWayScrollBar from "../components/customui/OneWayScrollBar"
+import { MdOutlineSearch } from "react-icons/md"
 
 const SellerRestaurantOrderTablePage = () => {
     const Themes = useMemo(() => theme_colors, [])
@@ -117,7 +118,7 @@ const SellerRestaurantOrderTablePage = () => {
                             <div className="flex mx-2 mb-2">
                                 <div className="w-[400px] mr-2">
                                     <div>
-                                        <RestaurantBill item={onGoing} />
+                                        <RestaurantBill item={onGoing} hotel={orderTableDetails.restaurantId} />
                                     </div>
                                 </div>
                                 <div className="flex-1">
@@ -409,24 +410,29 @@ const FoodItemOpen = ({ item, order, setOrder }) => {
     )
 }
 
-const RestaurantBill = ({ item }) => {
-
-    const TAX_RATE = 0.08; // 8% tax rate
-
+const RestaurantBill = ({ item,hotel }) => {
     // Calculate the subtotal
     const calculateSubtotal = () => {
         return item.reduce((sum, item) => sum + item.price * item.quantity, 0);
     };
 
     // Calculate tax
-    const calculateTax = () => {
-        return calculateSubtotal() * TAX_RATE;
+    const calculateGSTTax = () => {
+        return calculateSubtotal() * (hotel.hotelGSTTax/100);
     };
+
+    const calculateServiceTax = () =>{
+        return calculateSubtotal() * (hotel.hotelServiceTax/100)
+    }
 
     // Calculate the total amount
     const calculateTotal = () => {
-        return calculateSubtotal() + calculateTax();
+        return calculateSubtotal() + calculateServiceTax() + calculateGSTTax() ;
     };
+
+    const handleFinish = ()=>{
+
+    }
 
     return (
         <div className="mx-auto px-6 py-4 border border-color1 rounded-lg bg-white shadow-md">
@@ -456,12 +462,19 @@ const RestaurantBill = ({ item }) => {
                 <span className="text-right">{calculateSubtotal().toFixed(2)}</span>
             </div>
             <div className="flex justify-between mb-2 text-color5">
-                <span>Tax (8%):</span>
-                <span className="text-right">{calculateTax().toFixed(2)}</span>
+                <span>Tax ({hotel.hotelGSTTax}%):</span>
+                <span className="text-right">{calculateGSTTax().toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between mb-2 text-color5">
+                <span>Service Tax ({hotel.hotelServiceTax}%):</span>
+                <span className="text-right">{calculateServiceTax().toFixed(2)}</span>
             </div>
             <div className="flex justify-between font-semibold text-lg mt-2 text-color5">
                 <span>Total:</span>
                 <span className="text-right">{calculateTotal().toFixed(2)}</span>
+            </div>
+            <div className="text-right mt-2">
+                <span className="px-4 py-1 border border-color5 font-semibold text-white bg-color5 rounded cursor-pointer hover:shadow hover:shadow-color1 transition-all" onClick={()=>handleFinish()}>Finish</span>
             </div>
         </div>
 
@@ -577,13 +590,16 @@ const Filter = ({ items, onFilter }) => {
 
     return (
         <div className="flex flex-col gap-2 p-4 border border-color2 rounded-lg bg-white shadow-md">
+            <div className="px-2 py-2 border border-color3 rounded-md  focus:border-color5 text-color5 flex">
+            <MdOutlineSearch className="my-auto translate-y-[2px] mr-1 text-color5" size={25} />
             <input
                 type="text"
                 placeholder="Search by name"
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="px-4 py-2 border border-color3 rounded-md focus:outline-none focus:border-color5 placeholder:text-color3 text-color5"
+                className="placeholder:text-color3 text-color5 focus:outline-none"
             />
+            </div>
             <div className="h-[2px] w-full bg-color4 rounded-full"></div>
             <div className="text-xl font-semibold text-color5">Filter</div>
             <SelectInput

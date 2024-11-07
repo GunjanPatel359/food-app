@@ -18,6 +18,7 @@ import RatingShow from "../components/customui/RatingShow"
 import OneWayScrollBar from "../components/customui/OneWayScrollBar"
 import { DoubleScrollBar } from "../components/customui/DoubleScrollBar"
 import SelectInput from "../components/customui/SelectInput"
+import { MdOutlineSearch } from "react-icons/md"
 
 
 const UserBookedTablePage = () => {
@@ -492,9 +493,9 @@ const Filter = ({ items, onFilter }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [category, setCategory] = useState("");
     const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 })
-    const [minRating, setMinRating] = useState(0); 
+    const [minRating, setMinRating] = useState(0);
     const [minRatingCount, setMinRatingCount] = useState(0);
-    const [reset,setReset]=useState(true)
+    const [reset, setReset] = useState(true)
 
     // Extract unique categories from items
     const categories = [...new Set(items.map(item => item.categoryName))];
@@ -588,17 +589,17 @@ const Filter = ({ items, onFilter }) => {
         onFilter(filteredItems);
     };
 
-    const handleClearFilterClick = ()=>{
+    const handleClearFilterClick = () => {
         setFilteredInto({
             searchTerm: '',
             category: '',
-            priceRange: {min: 0, max: 1000},
+            priceRange: { min: 0, max: 1000 },
             minRating: '',
             minRatingCount: ''
         })
         setSearchTerm('')
         setCategory('')
-        setPriceRange({min:0 , max:1000})
+        setPriceRange({ min: 0, max: 1000 })
         setReset((prevState) => !prevState);
         setMinRating(0)
         setMinRatingCount(0)
@@ -607,13 +608,17 @@ const Filter = ({ items, onFilter }) => {
 
     return (
         <div className="flex flex-col gap-2 p-4 border border-color2 rounded-lg bg-white shadow-md">
-            <input
-                type="text"
-                placeholder="Search by name"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="px-4 py-2 border border-color3 rounded-md focus:outline-none focus:border-color5 placeholder:text-color3 text-color5"
-            />
+            <div className="px-2 py-2 border border-color3 rounded-md  focus:border-color5 text-color5 flex">
+                <MdOutlineSearch className="my-auto translate-y-[2px] mr-1 text-color5" size={25} />
+                <input
+                    type="text"
+                    placeholder="Search by name"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="placeholder:text-color3 text-color5 focus:outline-none"
+                />
+            </div>
+
             <div className="h-[2px] w-full bg-color4 rounded-full"></div>
             <div className="text-xl font-semibold text-color5">Filter</div>
             <SelectInput
@@ -639,7 +644,7 @@ const Filter = ({ items, onFilter }) => {
             </div>
             <div className="flex gap-1 mt-2">
                 <div className="w-[50%] border p-1 text-center text-color4 border-color4 cursor-pointer transition-all hover:shadow"
-                onClick={handleClearFilterClick}
+                    onClick={handleClearFilterClick}
                 >
                     Clear Filter
                 </div>

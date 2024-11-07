@@ -113,7 +113,7 @@ const CreateRoleModal = () => {
                              </div>
                              <p className='pl-1 h-auto text-justify mt-1'>
                                 <IoWarning size={22} className='text-color5 inline mr-1'/>
-                                This permission give full power to the member. They can do whatever they want, so it is suggested to use it wisely.
+                                This permission grants full access to the member, allowing them to perform all actions within the system. Please assign this permission thoughtfully to ensure responsible use.
                              </p>
                         </div>
 

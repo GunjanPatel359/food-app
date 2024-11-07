@@ -11,6 +11,7 @@ const User = require("../model/user");
 const Review = require("../model/review");
 const Hotel = require("../model/hotel");
 const FoodItem = require("../model/foodItem");
+const OrderTable = require('../model/orderTable')
 
 // const transporter = require("../utils/sendmailer");
 const sgMail=require("../utils/sendmailer")
@@ -278,6 +279,21 @@ router.get('/hotel/:hotelId/user-rating',isAuthenticated,catchAsyncErrors(async(
     }
 }))
 
+router.get('/hotel/find-assigned-hotel',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
+    try {
+        const hotels = await Promise.all(
+            req.user.currentlyAssignedHotels.map(id =>
+                OrderTable.findOne({ _id: id }).populate("restaurantId")
+            )
+        );
+
+        res.status(200).json({success:true,hotels})
+    } catch (error) {
+        console.log(error.message)
+        return next(new ErrorHandler(error.message, 400))
+    }
+}))
+
 router.post('/food-item/:foodItemId/submit-food-item-review',isAuthenticated,catchAsyncErrors(async(req,res,next)=>{
     try {
         const {foodItemId}=req.params
@@ -352,5 +368,7 @@ router.get('/food-item/:foodItemId/user-rating',isAuthenticated,catchAsyncErrors
         return next(new ErrorHandler(error.message,400))
     }
 }))
+
+
 
 module.exports = router

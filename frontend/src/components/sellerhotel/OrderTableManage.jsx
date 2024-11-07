@@ -29,7 +29,6 @@ const OrderTableManage = () => {
   },[hotelId,reloadCmd])
   return (
     <div className='m-5'>
-      {
         <div className='m-5 mt-8'>
           <div className='text-color5 font-semibold text-2xl mb-4'>
             Manage Tables
@@ -77,7 +76,6 @@ const OrderTableManage = () => {
             }
           </div>
         </div>
-      }
     </div>
   )
 }

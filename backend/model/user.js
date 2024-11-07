@@ -52,6 +52,14 @@ const userSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Review"
   },
+  currentlyAssignedHotels:{
+    type:[mongoose.Schema.Types.ObjectId],
+    ref:"OrderTable"
+  },
+  orderHistory:{
+    type: [mongoose.Schema.Types.ObjectId],
+    ref:"OrderTableLogs"
+  },
   createdAt: {
     type: Date,
     default: Date.now(),

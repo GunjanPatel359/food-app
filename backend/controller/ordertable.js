@@ -4,6 +4,7 @@ const { isSellerAuthenticated, isAuthenticated } = require('../middleware/auth')
 const catchAsyncErrors = require('../middleware/catchAsyncErrors')
 const ErrorHandler = require('../utils/ErrorHandler')
 
+const User = require('../model/user')
 const Hotel = require('../model/hotel')
 const Role = require('../model/role')
 const OrderTable = require('../model/orderTable')
@@ -247,6 +248,11 @@ router.get('/:hotelId/qrcode/:orderTableId/:uniqueString/:memberId', isAuthentic
         if (!assignTable) {
             return next(new ErrorHandler("table is not found", 400))
         }
+        const user = await User.findOneAndUpdate({
+            _id: req.user._id
+        },{
+            $push: { currentlyAssignedHotels: orderTableId }
+        })
         return res.status(200).json({ success: true,message:'table accquired' })
     } catch (error) {
         console.log(error)
@@ -339,9 +345,14 @@ router.get('/:hotelId/back-to-available/:orderTableId', isSellerAuthenticated, c
         const hotel=await Hotel.findOne({
             _id:hotelId
         })
+        if(!hotel){
+            return next(new ErrorHandler("hotel not found", 400))
+        }
         if(hotel.orderCancelCount>=hotel.orderCancelLimit){
             return next(new ErrorHandler("hotel order cancel limit reached", 400))
         }
+        hotel.orderCancelCount += 1;
+        await hotel.save();
         if (table.status != "Available") {
             const ordertablelog = await OrderTableLogs.create({
                 orderTableId: table._id,
@@ -364,10 +375,15 @@ router.get('/:hotelId/back-to-available/:orderTableId', isSellerAuthenticated, c
             memberId: null,
             userId: null,
             seatCount: table.seatCount + 1
-        }, { new: true })
+        },{new:false})
         if (!assignTable) {
             return next(new ErrorHandler("table is not found", 400))
         }
+        const user = await User.findOneAndUpdate({
+            _id: assignTable.userId,
+        },{
+            $pull:{currentlyAssignedHotels:assignTable._id}
+        })
         return res.status(200).json({ success: true })
     } catch (error) {
         console.log(error)

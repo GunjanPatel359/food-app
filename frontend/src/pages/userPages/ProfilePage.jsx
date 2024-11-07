@@ -13,9 +13,11 @@ import UserSettings from '../../components/profile/UserSettings.jsx'
 import { User } from 'lucide-react'
 import { FaRegAddressBook } from 'react-icons/fa'
 import ProfileAddresses from '../../components/profile/ProfileAddresses'
+import CurrentlyAssignedHotel from "../../components/profile/CurrentlyAssignedHotel.jsx"
 import { ProfileModalProvider } from '../../provider/ProfileModalProvider'
 import { useNavigate } from 'react-router-dom'
 import { LuSettings2 } from 'react-icons/lu'
+import { IoMdRestaurant } from "react-icons/io";
 
 const ProfilePage = () => {
   const Themes=useMemo(()=>theme_colors,[])
@@ -58,6 +60,7 @@ const ProfilePage = () => {
   const menuItemList=[
     { icon:<User size={25}/>,text:"Profile", alert:false},
     { icon:<FaRegAddressBook size={25} />,text:"Addresses",alert:false },
+    { icon:<IoMdRestaurant size={25} />,text:"currently Assigned",alert:false },
     { icon:<LuSettings2 size={22} />,text:"preferences",alert:false }    
   ]
 
@@ -74,7 +77,8 @@ const ProfilePage = () => {
         <div className='w-full'>
           {select === 0 && <ProfileInfo/>} 
           {select === 1 && <ProfileAddresses/>}
-          {select === 2 && <UserSettings theme={theme} setTheme={setTheme} />} 
+          {select === 2 && <CurrentlyAssignedHotel />}
+          {select === 3 && <UserSettings theme={theme} setTheme={setTheme} />} 
           {/* {select === 1 && <h1>Hello</h1>} */}
         </div>
       </div>

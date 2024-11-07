@@ -111,6 +111,7 @@ const EditFoodItemModal = () => {
                   return reloadCom()
             }
         } catch (error) {
+            console.log(error)
             toast.error(error.message)
         } finally {
             setloading(false)
@@ -146,7 +147,7 @@ const EditFoodItemModal = () => {
                         <div>
                             <form
                             onSubmit={handleSubmit}
-                                className='flex flex-col text-red-500 gap-y-1'
+                                className='flex flex-col text-color-500 gap-y-1'
                                 encType='multipart/form-data'
                             >
                                 <div className='flex w-full'>

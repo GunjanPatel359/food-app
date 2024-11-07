@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react"
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import RestaurantInfo from "../components/restaurant/RestaurantInfo";
+// import RestaurantInfo from "../components/restaurant/RestaurantInfo";
 
 const UserOccupingTablePage = () => {
     const params=useParams()

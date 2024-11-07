@@ -8,6 +8,7 @@ import {IoFastFoodOutline} from "react-icons/io5"
 // import { MdManageAccounts } from "react-icons/md";
 import { MdOutlineTableBar } from "react-icons/md";
 import { LuSettings2 } from "react-icons/lu";
+import { MdAttachMoney } from "react-icons/md";
 import SellerManageRole from "../../components/sellerhotel/SellerManageRole";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -19,7 +20,7 @@ import OrderTableManage from "../../components/sellerhotel/OrderTableManage";
 import { useDispatch } from "react-redux";
 import { addSeller, sellerLogout } from "../../redux/reducers/seller";
 import AdditionalSettingsHotel from "../../components/sellerhotel/AdditionalSettingsHotel";
-
+import AdditonalTaxManage from "../../components/sellerhotel/AdditonalTaxManage.jsx"
 
 const SellerRestaurantPage = () => {
     const Themes=useMemo(()=>theme_colors,[])
@@ -37,6 +38,7 @@ const SellerRestaurantPage = () => {
         { icon:<MdOutlineManageAccounts size={22} />,text:"roles",alert:false },
         { icon:<IoFastFoodOutline size={22} />,text:"foodItem",alert:false },
         { icon:<MdOutlineTableBar size={22} />,text:"OrderTables",alert:false },
+        { icon:<MdAttachMoney size={22} />,text:"Payment",alert:false },
         { icon:<LuSettings2 size={22} />,text:"preferences",alert:false }        
     ]
 
@@ -93,7 +95,8 @@ const SellerRestaurantPage = () => {
             {select === 1 && <SellerManageRole />} 
             {select === 2 && <HotelFoodItems />}
             {select === 3 && <OrderTableManage />}
-            {select === 4 && <AdditionalSettingsHotel setTheme={setTheme} theme={theme} />}
+            {select === 4 && <AdditonalTaxManage/>}
+            {select === 5 && <AdditionalSettingsHotel setTheme={setTheme} theme={theme} />}
             </div>
         </div>
         <SellerHotelModalProvider />

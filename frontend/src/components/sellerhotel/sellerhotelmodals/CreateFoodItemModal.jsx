@@ -98,7 +98,7 @@ const CreateFoodItemModal = () => {
           <div className='flex flex-col w-[550px] p-12 pt-2 pb-2'>
             <div>
               <form
-                className='flex flex-col text-red-500 gap-y-1'
+                className='flex flex-col text-color5 gap-y-1'
                 onSubmit={handleSubmit}
                 encType='multipart/form-data'
               >
@@ -191,7 +191,7 @@ const CreateFoodItemModal = () => {
                             <span className=''>{item}</span>
                             <span className='flex justify-center align-middle items-center'>
                               <X
-                                className='inline text-color5 h-full mt-[3px] ml-1 hover:text-rose-600 cursor-pointer'
+                                className='inline text-color5 h-full mt-[3px] ml-1 hover:text-color5 cursor-pointer'
                                 size={14}
                                 onClick={() => handletagcancelbtn(i)}
                               />
