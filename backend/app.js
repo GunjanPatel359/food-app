@@ -18,9 +18,9 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json())
 
 if(process.env.NODE_ENV !== "PRODUCTION"){
-    app.use("/",express.static("./uploads"));
+    app.use("/",express.static("uploads/"));
 }else{
-    app.use("/",express.static("./uploads"));
+    app.use("/",express.static("uploads/"));
 }
 // socket.connect()
 
