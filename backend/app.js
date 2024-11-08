@@ -4,6 +4,7 @@ const app=express();
 const cookieParser=require("cookie-parser");
 const bodyParser=require("body-parser");
 const socket=require("./utils/socket")
+const path=require("path")
 
 const cors = require("cors")
 app.use(cors({
@@ -18,9 +19,9 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json())
 
 if(process.env.NODE_ENV !== "PRODUCTION"){
-    app.use("/",express.static("uploads"));
+    app.use("/",express.static(path.join(__dirname,"./uploads")));
 }else{
-    app.use("/",express.static("uploads"));
+    app.use("/",express.static(path.join(__dirname,"./uploads")));
 }
 // socket.connect()
 
