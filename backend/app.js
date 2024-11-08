@@ -4,7 +4,7 @@ const app=express();
 const cookieParser=require("cookie-parser");
 const bodyParser=require("body-parser");
 const socket=require("./utils/socket")
-
+////hwello
 const cors = require("cors")
 app.use(cors({
     origin: ["http://localhost:5173","https://food-app-ixbg.vercel.app"],
