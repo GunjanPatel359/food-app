@@ -29,11 +29,11 @@ router.get('/restaurant-get-home', catchAsyncErrors(async (req, res, next) => {
     }
 }))
 
-router.get('/food-item-get-home',catchAsyncErrors(async(req,res,next)=>{
-    try{
+router.get('/food-item-get-home', catchAsyncErrors(async (req, res, next) => {
+    try {
         const fooditem = await FoodItem.find({}).populate("restaurantId").limit(5)
-        res.status(200).json({success:true,fooditem})
-    }catch{
+        res.status(200).json({ success: true, fooditem })
+    } catch {
         return next(new ErrorHandler(error.message))
     }
 }))
@@ -223,7 +223,7 @@ router.patch('/:hotelId/change-color', isSellerAuthenticated, catchAsyncErrors(a
 
 router.get('/restaurants/search-restaurants/search', catchAsyncErrors(async (req, res, next) => {
     try {
-        const { minrate, mintotalrate, search } = req.query;
+        const { minrate, mintotalrate, search, page = 1, limit = 10 } = req.query;
 
         let ratingCondition = {};
         if (minrate) {
@@ -250,7 +250,13 @@ router.get('/restaurants/search-restaurants/search', catchAsyncErrors(async (req
             ...totalRatingCondition
         };
 
-        const hotel = await Hotel.find(queryConditions).limit(10);
+        let skip = (parseInt(page) - 1) * parseInt(limit);
+        if (skip < 0) {
+            skip = 0
+        }
+        const hotel = await Hotel.find(queryConditions)
+            .limit(parseInt(limit))
+            .skip(skip);;
 
         res.status(200).json({ success: true, hotel });
 
@@ -261,36 +267,65 @@ router.get('/restaurants/search-restaurants/search', catchAsyncErrors(async (req
 
 router.get('/food-items/search-food-items/search', catchAsyncErrors(async (req, res, next) => {
     try {
-        const { minrate, mintotalrate, search, minPrice, maxPrice } = req.query;
-        console.log(minrate, mintotalrate, search, minPrice, maxPrice)
-        //min total rating
+        const { minrate, mintotalrate, search, minPrice = 0, maxPrice, page = 1, limit = 10 } = req.query;
+        console.log(minrate, mintotalrate, search, minPrice, maxPrice, page, limit);
+
+        // Minimum average rating
         let ratingCondition = {};
         if (minrate) {
             const minRate = parseFloat(minrate) || 0;
             ratingCondition = { avgreview: { $gte: minRate } };
         }
 
-        //min total reviews
+        // Minimum total reviews
         let totalRatingCondition = {};
         if (mintotalrate) {
             const minTotalRate = parseInt(mintotalrate) || 0;
             totalRatingCondition = { totalReview: { $gte: minTotalRate } };
         }
 
-        // search query
+        // Search query
         let searchQuery = {};
         if (search) {
-            searchQuery = { name: { $regex: search, $options: 'i' } }
+            searchQuery = { name: { $regex: search, $options: 'i' } };
         }
 
+        // Price range condition (optional)
+        let priceCondition = {};
+        if (minPrice || maxPrice) {
+            priceCondition.price = {};
+            if (minPrice) priceCondition.price.$gte = parseFloat(minPrice);
+            if (maxPrice) priceCondition.price.$lte = parseFloat(maxPrice);
+        }
+
+        // Combine all conditions
         const queryConditions = {
             ...searchQuery,
             ...ratingCondition,
-            ...totalRatingCondition
+            ...totalRatingCondition,
+            ...priceCondition,
         };
 
-        const fooditem = await FoodItem.find(queryConditions).limit(10);
-        res.status(200).json({ success: true, fooditem });
+        // Calculate skip and limit for pagination
+        let skip = (parseInt(page) - 1) * parseInt(limit);
+        if (skip < 0) {
+            skip = 0
+        }
+        const fooditem = await FoodItem.find(queryConditions)
+            .limit(parseInt(limit))
+            .skip(skip);
+
+        // Send response with pagination data
+        res.status(200).json({
+            success: true,
+            fooditem,
+            // pagination: {
+            //     currentPage: parseInt(page),
+            //     itemsPerPage: parseInt(limit),
+            //     totalItems: await FoodItem.countDocuments(queryConditions)
+            // }
+        });
+
     } catch (error) {
         return next(new ErrorHandler(error.message, 400))
     }
@@ -332,11 +367,11 @@ router.patch('/update-tax-data/:hotelId', isSellerAuthenticated, catchAsyncError
         }
         const hotel = await Hotel.findOneAndUpdate({
             _id: hotelId,
-        },{
+        }, {
             hotelGSTTax: parsedGstCharge,
             hotelServiceTax: parsedServiceCharge
-        },{new:true})
-        res.status(200).json({success:true,hotel})
+        }, { new: true })
+        res.status(200).json({ success: true, hotel })
     } catch (error) {
         return next(new ErrorHandler(error.message, 400))
     }

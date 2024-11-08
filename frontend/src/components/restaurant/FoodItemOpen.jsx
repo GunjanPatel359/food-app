@@ -6,7 +6,6 @@ import RatingShow from "../customui/RatingShow"
 import Tooltip from '../customui/Tooltip'
 
 const FoodItemOpen = ({ item }) => {
-  console.log(item)
   const navigate = useNavigate()
   return (
     <div className='p-2 bg-white border-b border-color2 cursor-pointer' onClick={() => navigate(`/food-item/${item._id}`)}>

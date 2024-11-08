@@ -24,6 +24,7 @@ const FoodItemsPage = () => {
 
     const [searchQuery, setSearchQuery] = useState('')
     const [filterQuery, setFilterQuery] = useState('minrate=0&mintotalrate=0&minPrice=0')
+    const [pageNumber, setPageNumber] = useState(1)
 
     useEffect(() => {
         const userinfo = async () => {
@@ -51,7 +52,7 @@ const FoodItemsPage = () => {
     useEffect(() => {
         const fetchRestaurantData = async () => {
             try {
-                const res = await axios.get(`${backend_url}/restaurant/food-items/search-food-items/search?${filterQuery}&search=${searchQuery}`)
+                const res = await axios.get(`${backend_url}/restaurant/food-items/search-food-items/search?${filterQuery}&page=${pageNumber}&search=${searchQuery}`)
                 if (res.data.success) {
                     setFoodItemData(res.data.fooditem)
                 }
@@ -60,7 +61,7 @@ const FoodItemsPage = () => {
             }
         }
         fetchRestaurantData()
-    }, [filterQuery, searchQuery])
+    }, [filterQuery, searchQuery, pageNumber])
 
     return (
         <>
@@ -71,7 +72,7 @@ const FoodItemsPage = () => {
                         <div className="flex h-[100vh] mt-1 flex-col md:flex-row">
 
                             <div className="lg:w-[25%] lg:min-w-[330px] md:min-w-[300px] h-[100vh] border-r rounded-md md:flex flex-col border-color3 bg-white shadow hidden">
-                                    {/* <div className='mx-auto mt-8 p-[7px] border rounded-full lg:w-[80%] md:w-[85%] flex border-color5'>
+                                {/* <div className='mx-auto mt-8 p-[7px] border rounded-full lg:w-[80%] md:w-[85%] flex border-color5'>
                                         <MdOutlineSearch className="my-auto ml-1 mr-1 text-color5" size={20} />
                                         <input
                                             type="text"
@@ -81,9 +82,9 @@ const FoodItemsPage = () => {
                                             placeholder="Enter food name"
                                         />
                                     </div> */}
-                                    <div className="p-2">
-                                        <Filter setFilterQuery={setFilterQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-                                    </div>
+                                <div className="p-2">
+                                    <Filter setFilterQuery={setFilterQuery} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+                                </div>
                                 {/* <div className="lg:w-[80%] md:w-[85%] h-[1px] bg-color2 mt-3 mx-auto"></div>
                                 <div className="bg-red lg:w-[70%] md:w-[80%] mx-auto font-semibold text-color5 mt-3 text-xl">Filters</div> */}
                                 {/* <FilterForms setFilterQuery={setFilterQuery} /> */}
@@ -107,7 +108,7 @@ const FoodItemsPage = () => {
                                         <input
                                             type="text"
                                             className="outline-none text-color5 placeholder-color3 w-full"
-                                            onChange={(e)=>setSearchQuery(e.target.value)}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
                                             placeholder="Enter food name"
                                         />
                                     </div>
@@ -116,7 +117,7 @@ const FoodItemsPage = () => {
 
 
                             <div className="w-full h-full">
-                                <FoodItemsShow foodItemData={foodItemData} />
+                                <FoodItemsShow foodItemData={foodItemData} pageNumber={pageNumber} setPageNumber={setPageNumber} />
                             </div>
                         </div>
                     </div>
@@ -127,13 +128,13 @@ const FoodItemsPage = () => {
     )
 }
 
-const Filter = ({ setFilterQuery,searchQuery,setSearchQuery }) => {
+const Filter = ({ setFilterQuery, searchQuery, setSearchQuery }) => {
 
     // const [searchTerm, setSearchTerm] = useState("");
     const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 })
     const [minRating, setMinRating] = useState(0);
     const [minRatingCount, setMinRatingCount] = useState(0);
-    const [reset,setReset]=useState(true)
+    const [reset, setReset] = useState(true)
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value)
@@ -160,9 +161,9 @@ const Filter = ({ setFilterQuery,searchQuery,setSearchQuery }) => {
         setFilterQuery(`minrate=${encodeURIComponent(minRating)}&mintotalrate=${encodeURIComponent(minRatingCount)}&minPrice=${encodeURIComponent(priceRange.min)}&maxPrice=${encodeURIComponent(priceRange.max)}`);
     };
 
-    const handleClearFilterClick = ()=>{
+    const handleClearFilterClick = () => {
         setSearchQuery('')
-        setPriceRange({min:0 , max:1000})
+        setPriceRange({ min: 0, max: 1000 })
         setReset((prevState) => !prevState);
         setMinRating(0)
         setMinRatingCount(0)
@@ -172,14 +173,14 @@ const Filter = ({ setFilterQuery,searchQuery,setSearchQuery }) => {
     return (
         <div className="flex flex-col gap-2 p-4 bg-white">
             <div className="px-2 py-2 border border-color3 rounded-md  focus:border-color5 text-color5 flex">
-            <MdOutlineSearch className="my-auto translate-y-[2px] mr-1 text-color5" size={25} />
-            <input
-                type="text"
-                placeholder="Search by name"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                className="placeholder:text-color3 text-color5 focus:outline-none"
-            />
+                <MdOutlineSearch className="my-auto translate-y-[2px] mr-1 text-color5" size={25} />
+                <input
+                    type="text"
+                    placeholder="Search by name"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="placeholder:text-color3 text-color5 focus:outline-none"
+                />
             </div>
 
             <div className="h-[2px] w-full bg-color4 rounded-full"></div>
@@ -201,7 +202,7 @@ const Filter = ({ setFilterQuery,searchQuery,setSearchQuery }) => {
             </div>
             <div className="flex gap-1 mt-2">
                 <div className="w-[50%] border p-1 text-center text-color4 border-color4 cursor-pointer transition-all hover:shadow"
-                onClick={handleClearFilterClick}
+                    onClick={handleClearFilterClick}
                 >
                     Clear Filter
                 </div>
@@ -216,28 +217,72 @@ const Filter = ({ setFilterQuery,searchQuery,setSearchQuery }) => {
     );
 };
 
-const FoodItemsShow = ({ foodItemData }) => {
-    console.log(foodItemData)
+const FoodItemsShow = ({ foodItemData, pageNumber, setPageNumber }) => {
+    // Use `useCallback` to memoize increment and decrement functions
+    const incrementPage = useCallback(() => {
+        setPageNumber(prevPage => prevPage + 1);
+    }, [setPageNumber]);
+
+    const decrementPage = useCallback(() => {
+        setPageNumber(prevPage => (prevPage > 1 ? prevPage - 1 : 1));
+    }, [setPageNumber]);
+
+    // Handle page number input change
+    const handlePageInputChange = useCallback((e) => {
+        const inputValue = e.target.value;
+        const parsedValue = parseInt(inputValue, 10);
+
+        // Only set the page number if it's a valid positive integer
+        if (!isNaN(parsedValue) && parsedValue >= 1) {
+            setPageNumber(parsedValue);
+        } else {
+            setPageNumber(1);
+        }
+    }, [setPageNumber]);
+
     return (
         <>
             <div className="m-3 lg:mx-8 md:mx-4">
-                <div className="text-2xl font-semibold text-color5">
-                    Food Items
+                <div className="flex justify-between">
+                    <div className="text-2xl font-semibold text-color5">
+                        Food Items
+                    </div>
+                    <div className="my-auto">
+                        <button
+                            className="bg-color4 hover:bg-color5 transition-all text-white py-1 px-2 rounded cursor-pointer disabled:cursor-not-allowed"
+                            onClick={decrementPage}
+                            disabled={pageNumber < 2}
+                        >
+                            Previous
+                        </button>
+                        <input
+                            type="number"
+                            value={pageNumber}
+                            className="border border-color4 mx-2 w-8 rounded py-[3px] text-center text-color5 focus:outline-color5 hover:border-color5"
+                            onChange={handlePageInputChange} // Use the handler function here
+                        />
+                        <button
+                            className="bg-color4 hover:bg-color5 transition-all text-white py-1 px-2 rounded disabled:cursor-not-allowed"
+                            onClick={incrementPage}
+                            disabled={foodItemData.length < 10}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </div>
                 {foodItemData.length > 0 && (
-                    <>
-                        <div className="flex flex-col gap-1 mt-5 pb-5">
-                            <div className="h-[90vh] overflow-scroll">
-                            {foodItemData.map((item, i) => {
-                                return (<FoodItemOpen item={item} key={i} />)
-                            })}
-                            </div>
+                    <div className="flex flex-col gap-1 mt-5 pb-5">
+                        <div className="h-[90vh] overflow-scroll">
+                            {foodItemData.map((item, i) => (
+                                <FoodItemOpen item={item} key={i} />
+                            ))}
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
         </>
-    )
-}
+    );
+};
+
 
 export default FoodItemsPage
