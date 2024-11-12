@@ -7,29 +7,34 @@ import { IoPeople } from "react-icons/io5";
 
 import { useSortable } from "@dnd-kit/sortable";
 import { useModal } from "../../customhooks/zusthook";
-import {CSS} from "@dnd-kit/utilities"
+import { CSS } from "@dnd-kit/utilities"
 
-const RoleItem = ({item,role,ownerId}) => {
-    const {onOpen}=useModal()
+const RoleItem = ({ item, role, ownerId }) => {
+    const { onOpen } = useModal()
     const {
         attributes,
         listeners,
         setNodeRef,
         transform,
         transition
-    }=useSortable({id:item._id})
+    } = useSortable({ id: item._id })
 
-    const style={
-        transform:CSS.Transform.toString(transform),
-        transition
+    const style = {
+        transition,
+        transform: CSS.Translate.toString(transform)
     }
 
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="bg-color5 p-3 pl-4 rounded text-white shadow-md">
-        <div className=" flex justify-between">
-            <div className="flex">{item.roleName}{item.roleName=="Owner"?<FaUserShield className=" ml-2 cursor-pointer m-auto" size={22}/>:<><IoPeople className="ml-2 inline m-auto" size={26} onClick={()=>onOpen("manage-role-member",{manageMemberRole:item})} /><sup className="m-auto">{item.memberList.length}</sup></>}</div>
+    return (
+        <div ref={setNodeRef} style={style} className="bg-color5 p-3 pl-0 rounded text-white shadow-md flex">
+                <div className="flex gap-1 mx-auto flex-col my-auto pl-4 pr-2" {...attributes} {...listeners}>
+                    <div className="w-[5px] h-[5px] rounded-full bg-white"></div>
+                    <div className="w-[5px] h-[5px] rounded-full bg-white"></div>
+                    <div className="w-[5px] h-[5px] rounded-full bg-white"></div>
+                </div>
+            <div className="flex justify-between flex-1">
+                <div className="flex">{item.roleName}{item.roleName == "Owner" ? <FaUserShield className=" ml-2 cursor-pointer m-auto" size={22} /> : <><IoPeople className="ml-2 inline m-auto" size={26} onClick={() => onOpen("manage-role-member", { manageMemberRole: item })} /><sup className="m-auto">{item.memberList.length}</sup></>}</div>
                 <div className="flex gap-x-3 pr-4">
-                    {ManageButtons(item,role,onOpen,ownerId)}
+                    {ManageButtons(item, role, onOpen, ownerId)}
                     {/* {item.roleName!="Owner" &&(
                         <>
                         {(role.canManageRoles || role.adminPower || role.canAddMember)?<FaUserPlus className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('invite-member',{item})}/>:<></>}
@@ -40,21 +45,21 @@ const RoleItem = ({item,role,ownerId}) => {
                 </div>
             </div>
         </div>
-  )  
+    )
 
 }
 
-function ManageButtons(item,role,onOpen,ownerId){
+function ManageButtons(item, role, onOpen, ownerId) {
 
-    if(item.roleName=="Owner" || item.order<=role.order){
+    if (item.roleName == "Owner" || item.order <= role.order) {
         return <></>
     }
 
-    if(role.adminPower){
+    if (role.adminPower) {
         return (<>
-        {<FaUserPlus className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('invite-member',{inviteRole:item,role,ownerId})}/>}
-        {<BiSolidEdit className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('Edit-role-Permission',{editrole:item,role})}/>}
-        {<MdDelete className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('Delete-role',{deleterole:item,rolefordelete:role})} />}
+            {<FaUserPlus className="cursor-pointer m-auto" size={22} onClick={() => onOpen('invite-member', { inviteRole: item, role, ownerId })} />}
+            {<BiSolidEdit className="cursor-pointer m-auto" size={22} onClick={() => onOpen('Edit-role-Permission', { editrole: item, role })} />}
+            {<MdDelete className="cursor-pointer m-auto" size={22} onClick={() => onOpen('Delete-role', { deleterole: item, rolefordelete: role })} />}
         </>)
     }
 
@@ -65,11 +70,11 @@ function ManageButtons(item,role,onOpen,ownerId){
     //    )
     // }
 
-    if(!role.adminPower && role.canManageRoles){
-        return(<>
-        {role.canAddMember&&(<FaUserPlus className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('invite-member',{inviteRole:item,role,ownerId})}/>)}
-        {<BiSolidEdit className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('Edit-role-Permission',{editrole:item,role})}/>}
-        {<MdDelete className="cursor-pointer m-auto" size={22} onClick={()=>onOpen('Delete-role',{deleterole:item,rolefordelete:role})} />}
+    if (!role.adminPower && role.canManageRoles) {
+        return (<>
+            {role.canAddMember && (<FaUserPlus className="cursor-pointer m-auto" size={22} onClick={() => onOpen('invite-member', { inviteRole: item, role, ownerId })} />)}
+            {<BiSolidEdit className="cursor-pointer m-auto" size={22} onClick={() => onOpen('Edit-role-Permission', { editrole: item, role })} />}
+            {<MdDelete className="cursor-pointer m-auto" size={22} onClick={() => onOpen('Delete-role', { deleterole: item, rolefordelete: role })} />}
         </>)
     }
 

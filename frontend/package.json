@@ -37,6 +37,7 @@
     "country-state-city": "^3.2.1",
     "dialog": "^0.3.1",
     "dotenv": "^16.4.5",
+    "immer": "^10.1.1",
     "lucide-react": "^0.400.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

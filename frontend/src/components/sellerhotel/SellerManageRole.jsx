@@ -118,7 +118,7 @@ const SellerManageRole = () => {
     }),
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 3
+        distance: 0
       }
     })
   )
