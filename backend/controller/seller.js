@@ -120,7 +120,7 @@ router.post('/login', catchAsyncErrors(async (req, res, next) => {
         //     sameSite: 'None' 
         // };
         res.status(200).cookie("seller_token", seller_token, {
-            domain: '.vercel.app',
+            // domain: '.vercel.app',
             expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             secure: true,

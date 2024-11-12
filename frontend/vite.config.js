@@ -8,4 +8,13 @@ export default defineConfig({
       input: '/index.html',
     },
   },
+  server:{
+    proxy:{
+      '/api':{
+        target:'https://food-app-backend-green.vercel.app',
+        changeOrigin:true,
+        // rewrite: (path) => path.replace(/^\/api/, ''),
+      }
+    }
+  }
 });
